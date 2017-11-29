@@ -1,0 +1,33 @@
+<?php
+
+		define("MAIN_DIR", $_SERVER["DOCUMENT_ROOT"] . "/pamira_stone/");
+		define("INC_DIR", MAIN_DIR . "inc/");
+		define("CLASS_DIR", INC_DIR . "class/");
+		define("TEMPLATES_DIR", INC_DIR . "templates/");
+		define("RES_DIR", MAIN_DIR . "res/");
+		define("RES_CSS_DIR", MAIN_DIR . "res/css/");
+		define("RES_JS_DIR", MAIN_DIR . "res/js/");
+		define("RES_VENDORS_DIR", MAIN_DIR . "res/vendors/");
+
+
+		define("MAIN_URL", "http://localhost/pamira_stone/");
+
+
+		define("URL_CARILER", MAIN_URL . "cariler.php");
+		define("URL_CARI_FORM", MAIN_URL . "cari_form.php");
+		define("URL_CARI_DUZENLE_FORM", URL_CARI_FORM . "?cid=");
+
+
+		define("URL_STOK_HAREKETLERI", MAIN_URL . "stok_hareketleri.php");
+		define("URL_STOK_HAREKET_FORM", MAIN_URL . "stok_hareket_form.php");
+		define("URL_STOK_GIRIS_FORM", URL_STOK_HAREKET_FORM . "?tip=giris");
+		define("URL_STOK_CIKIS_FORM", URL_STOK_HAREKET_FORM . "?tip=cikis");
+		define("URL_STOK_KARTLARI", MAIN_URL . "stok_kartlari.php");
+		define("URL_STOK_KART_FORM", MAIN_URL . "stok_kart_form.php");
+
+		define("URL_RES", MAIN_URL . "res/");
+		define("URL_CSS", URL_RES . "css/");
+		define("URL_JS", URL_RES . "js/");
+		define("URL_VENDORS",  URL_RES . "vendors/" );
+
+		ini_set('error_log', MAIN_DIR . "error.log");
