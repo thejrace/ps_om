@@ -31,3 +31,12 @@
 		define("URL_VENDORS",  URL_RES . "vendors/" );
 
 		ini_set('error_log', MAIN_DIR . "error.log");
+
+		define("DB_NAME", "pamira_stone");
+		define("DB_USER", "root");
+		define("DB_PASS", "Dogansaringulu9");
+		define("DB_IP", "localhost:3306");
+
+
+		define("DBT_CARILER", "cariler");
+		define("DBT_CARI_YETKILILER", "cari_yetkililer");

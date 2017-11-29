@@ -147,7 +147,12 @@ class Validation {
 	}
 
 	protected function not_zero( $input, $value, $rule_value  ){
+		if( trim($value) == "" ) return true;
 		return !( $value <= 0 );
+	}
+
+	protected function select_not_zero( $input, $value, $rule_value ){
+		return (int)$value != 0;
 	}
 
 	protected function matches($input, $value, $rule_value){
@@ -164,22 +169,27 @@ class Validation {
 	}
 
 	protected function minlen($input, $value, $rule_value){
+		if( trim($value) == "" ) return true;
 		return mb_strlen($value) >= $rule_value;
 	}
 
 	protected function maxlen($input, $value, $rule_value){
+		if( trim($value) == "" ) return true;
 		return mb_strlen($value) <= $rule_value;
 	}
 
 	protected function numerik($input, $value, $rule_value){
+		if( trim($value) == "" ) return true;
 		return is_numeric($value) ? true : false;
 	}
 
 	protected function pozNumerik($input, $value, $rule_value){
+		if( trim($value) == "" ) return true;
 		return is_numeric($value) && $value >= 0;
 	}
 
 	protected function email($input, $value, $rule_value){
+		if( trim($value) == "" ) return true;
 		return filter_var($value, FILTER_VALIDATE_EMAIL);
 	}
 

@@ -42,21 +42,21 @@
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Telefon 1</label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control" placeholder="Telefon Numarası" name="cari_telefon_1" id="cari_telefon_1" />
+                          <input type="text" class="form-control" data-inputmask="'mask' : '(999) 999 99 99'" placeholder="Telefon" name="cari_telefon_1" id="cari_telefon_1" />
                         </div>
                       </div>
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Telefon 2</label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control" placeholder="Telefon Numarası" name="cari_telefon_2" id="cari_telefon_2" />
+                          <input type="text" class="form-control" data-inputmask="'mask' : '(999) 999 99 99'" placeholder="Telefon" name="cari_telefon_2" id="cari_telefon_2" />
                         </div>
                       </div>
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Faks</label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control" placeholder="Faks Numarası" name="cari_faks_no" id="cari_faks_no" />
+                          <input type="text" class="form-control" data-inputmask="'mask' : '(999) 99 99'" placeholder="Faks Numarası" name="cari_faks_no" id="cari_faks_no" />
                         </div>
                       </div>
 
@@ -123,7 +123,7 @@
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">VKN / TCKN</label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control posnum" placeholder="VKN / TCKN" name="cari_v_tck_no" id="cari_v_tck_no" />
+                          <input type="text" class="form-control posnum" placeholder="VKN / TCKN" name="cari_vkn_tckn" id="cari_vkn_tckn" />
                         </div>
                       </div>
 
@@ -134,7 +134,7 @@
                         </div>
                       </div>
                       <input type="hidden" name="req" value="<?php echo $FORM_REQ ?>" />
-                      <input type="hidden" name="cid" value="<?php echo Input::get("cid") ?>" />
+                      <input type="hidden" name="cid" value="<?php echo $CID ?>" id="cid_val"/>
                       
                    
                   </div>
@@ -196,7 +196,7 @@
                   </td>
                   <td>
                        <div class="col-md-11 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control yetkili_telefon" placeholder="Telefon" value="%%TELEFON_VAL%%" />
+                        <input type="text" class="form-control yetkili_telefon"  data-inputmask="'mask' : '(999) 999 99 99'" placeholder="Telefon" value="%%TELEFON_VAL%%" />
                       </div>
                   </td>
                   <td>
@@ -209,33 +209,67 @@
                         <input type="text" class="form-control yetkili_not" placeholder="Not"  value="%%NOT_VAL%%" />
                       </div>
                   </td>
-                  
+                  <input type="hidden" class="yetkili_id" value="%%ID_VAL%%" />
                   <td><button type="button" class="btn btn-sm btn-danger satir_sil" parent="yetkili_%%YSIL%%" ><i class="fa fa-remove"></button></td>
                 </tr>
           </script>
 
            <script type="text/javascript">  
 
-
+              var DUZENLEME = false;
               var YCOUNT = 0;
-              function yetkili_row_ekle( isim, eposta, telefon, not ){
-                  UI.YETKILILER_TBODY.append(TEMPLATE.YETKILI_SATIR.replace("%%YID%%", YCOUNT).replace("%%YSIL%%", YCOUNT).replace("%%ISIM_VAL%%", isim).replace("%%TELEFON_VAL%%", telefon).replace("%%EPOSTA_VAL%%", eposta).replace("%%NOT_VAL%%", not));
+              function yetkili_row_ekle( isim, eposta, telefon, not, id ){
+                  UI.YETKILILER_TBODY.append(TEMPLATE.YETKILI_SATIR.replace("%%YID%%", YCOUNT).replace("%%YSIL%%", YCOUNT).replace("%%ISIM_VAL%%", isim).replace("%%TELEFON_VAL%%", telefon).replace("%%EPOSTA_VAL%%", eposta).replace("%%NOT_VAL%%", not).replace("%%ID_VAL%%", id));
                   YCOUNT++;
+                  UI.YETKILILER_TBODY.find(":input").inputmask();
               }
 
               var UI = {
-                  CARI_FORM: document.getElementById("cari_form"),
-                  YETKILILER_TBODY: $("#yetkililer_tbody"),
-                  SATIR_EKLE: $("#satir_ekle"),
-                  SATIR_SIL: $(".satir_sil")
+                  CARI_FORM           : document.getElementById("cari_form"),
+                  YETKILILER_TBODY    : $("#yetkililer_tbody"),
+                  SATIR_EKLE          : $("#satir_ekle"),
+                  SATIR_SIL           : $(".satir_sil"),
+                  SUBMIT_BTN          : $("#btn_form_submit"),
+                  CID_VAL             : $("#cid_val"),
+                  RADIO_GK            : $("[value='Gerçek Kişi']"),
+                  RADIO_TK            : $("[value='Tüzel Kişi']")
               };
               var TEMPLATE = {
-                  YETKILI_SATIR: $("#yetkili_row").html()
+                  YETKILI_SATIR       : $("#yetkili_row").html()
               };  
             
               $(document).ready(function(){
 
-                  $("#btn_form_submit").click(function(){
+                  var cid_val = trim(UI.CID_VAL.val());
+                  if( cid_val != "" ){
+                      PamiraNotify("info", "Yükleniyor", "Cari kaydın verileri alınıyor...");
+                      REQ.ACTION("", { req:"cari_data_download", cid:cid_val }, function(res){
+                          console.log(res);
+                          PNotify.removeAll();
+                          if( !res.ok ){
+                             PamiraNotify("error", "Hata", res.text );
+                             return;
+                          }
+                          for( var key in res.data.form ){
+                              if( key != "id" && key != "mali_tur" || key !="eklenme_tarihi" || key != "son_duzenlenme_tarihi") $("#cari_"+key).val( res.data.form[key] );
+                          }
+                          for( var k = 0; k < res.data.yetkililer.length; k++ ) yetkili_row_ekle(res.data.yetkililer[k].isim, res.data.yetkililer[k].eposta, res.data.yetkililer[k].telefon, res.data.yetkililer[k].notlar, res.data.yetkililer[k].id );
+
+                          UI.YETKILILER_TBODY.find(":input").inputmask();
+                          if( res.data.form.mali_tur == "Gerçek Kişi" ){
+                              UI.RADIO_GK.attr("checked", true).parent().addClass("active");
+                              UI.RADIO_TK.attr("checked", false).parent().removeClass("active");
+                          } else {
+                              UI.RADIO_TK.attr("checked", true).parent().addClass("active");
+                              UI.RADIO_GK.attr("checked", false).parent().removeClass("active");
+                          }
+                          DUZENLEME = true;
+                      });
+                  }
+
+                  UI.SUBMIT_BTN.click(function(){
+                      
+                      UI.SUBMIT_BTN.get(0).disabled = true;
                       var yetkililer_data = [];
                       // yetkilileri ayıkla önce
                       var yrow = $(".yetkili_row"), temp_row;
@@ -245,36 +279,55 @@
                               isim = temp_row.find(".yetkili_isim");
                               // isim boşsa ipleme o row u
                               if( isim[0].value != "" ){
-                                  var eposta = temp_row.find(".yetkili_eposta"),
+                                  var eposta  = temp_row.find(".yetkili_eposta"),
                                       telefon = temp_row.find(".yetkili_telefon"),
-                                      not     = temp_row.find(".yetkili_not");
-                                  yetkililer_data.push( isim[0].value+"##"+eposta[0].value+"##"+telefon[0].value+"##"+not[0].value );
+                                      not     = temp_row.find(".yetkili_not"),
+                                      id      = temp_row.find(".yetkili_id");
+                                  yetkililer_data.push( isim[0].value+"##"+eposta[0].value+"##"+telefon[0].value+"##"+not[0].value+"##"+id[0].value );
                               }
                           }
                       }
+                      console.log($(UI.CARI_FORM).serialize()+"&yetkililer_str="+yetkililer_data.join("||"));
+                   
                       if( FormValidation.check(UI.CARI_FORM) ){
                           REQ.ACTION("", $(UI.CARI_FORM).serialize()+"&yetkililer_str="+yetkililer_data.join("||"), function(res){
                             console.log(res);
                             if( res.ok ){
-                                PamiraNotify("success", "İşlem Tamamlandı", res.text );
+                                  PamiraNotify("success", "İşlem Tamamlandı", res.text );
+                                  // form reset
+                                  if( !DUZENLEME ){
+                                      UI.CARI_FORM.reset();
+                                      YCOUNT = 0;
+                                      UI.YETKILILER_TBODY.html("");
+                                      UI.RADIO_TK.attr("checked", true).parent().addClass("active");
+                                      UI.RADIO_GK.attr("checked", false).parent().removeClass("active");
+                                  } else {
+                                      // duzenleme sonrasi refresh yap yetkililer id si alabilmel için
+                                      setTimeout(function(){ location.reload() }, 2000);
+
+                                  }
+
+                                  
                             } else {
                                 if( Object.size(res.inputret) > 0 ){
                                     // sside form kontrol
                                     PamiraNotify("error", "Hata", FormValidation.error_to_pnotfiy( res.inputret ));
+
                                 } else {
                                     // form ok, baska bisi yanlis olmussa
                                     PamiraNotify("error", "Hata", res.text );
                                 }
-                                
+                                UI.SUBMIT_BTN.get(0).disabled = false;
                             }
                           });
                       } else {
                           PamiraNotify("error", "Hata", "Formda eksiklikler var.");
+                          UI.SUBMIT_BTN.get(0).disabled = false;
                       }
                   });
 
                   UI.SATIR_EKLE.click(function(){
-                      yetkili_row_ekle("","","","");
+                      yetkili_row_ekle("","","","", "");
                   });
 
                   $(document).on("click", ".satir_sil", function(){

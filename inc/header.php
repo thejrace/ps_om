@@ -53,6 +53,9 @@
     <script src="<?php echo URL_VENDORS; ?>pnotify/dist/pnotify.buttons.js"></script>
     <script src="<?php echo URL_VENDORS; ?>pnotify/dist/pnotify.nonblock.js"></script>
 
+    <!-- jquery.inputmask -->
+    <script src="<?php echo URL_VENDORS; ?>jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+
 
 
 

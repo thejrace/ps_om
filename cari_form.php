@@ -1,9 +1,14 @@
 <?php
   	
-	include 'inc/defs.php';
-	include CLASS_DIR . "Input.php";
-	include CLASS_DIR . "InputErrorHandler.php";
-	include CLASS_DIR . "Validation.php";
+	require 'inc/defs.php';
+	require CLASS_DIR . "Common.php";
+	require CLASS_DIR . "Input.php";
+	require CLASS_DIR . "InputErrorHandler.php";
+	require CLASS_DIR . "Validation.php";
+	require CLASS_DIR . "DB.php";
+	require CLASS_DIR . "DataCommon.php";
+	require CLASS_DIR . "CariYetkili.php";
+	require CLASS_DIR . "Cari.php";
 
 	if( $_POST ){
 
@@ -13,19 +18,19 @@
         $INPUT_RET = array();
 
 		$INPUT_LIST = array(
-			"cari_tur" 				=> array( array( "req" => true, "not_zero" => true ),  null ),
+			"cari_tur" 				=> array( array( "req" => true, "select_not_zero" => true ),  null ),
 			'cari_unvan'			=> array( array( "req" => true ), "" ),
-			'cari_eposta'  			=> array( array(), null ),
-			'cari_telefon_1'  		=> array( array(), null ),
-			'cari_telefon_2' 		=> array( array(), null ),
-			'cari_faks_no'  		=> array( array(), null ),
+			//'cari_eposta'  		=> array( array(), null ),
+			//'cari_telefon_1' 		=> array( array(), null ),
+			//'cari_telefon_2'		=> array( array(), null ),
+			//'cari_faks_no'  		=> array( array(), null ),
 			'cari_adres'  			=> array( array( "req" => true ), null ),
 			'cari_il' 				=> array( array( "req" => true ), null ),
 			'cari_ilce' 			=> array( array( "req" => true ), null ),
 			'cari_mali_tur' 		=> array( array( "req" => true ), null ),
 			'cari_iban' 			=> array( array(), null ),
-			'cari_v_tck_no'  		=> array( array(), null ),
-			'cari_vergi_dairesi'	=> array( array(), null )
+			'vkn_tckn'  			=> array( array( "pozNumerik" => true ), null )
+			//'cari_vergi_dairesi'	=> array( array(), null )
 		);
 
 		switch( Input::get("req") ){
@@ -38,7 +43,11 @@
 					$OK = 0;
 					$INPUT_RET = $Validation->errors()->js_format_ref();
 				} else {	
-					
+					$Cari = new Cari();
+					if( !$Cari->ekle( Input::escape($_POST) ) ){
+						$OK = 0;
+					}
+					$TEXT = $Cari->get_return_text();
 				}
 				
 			break;
@@ -52,12 +61,32 @@
 					$OK = 0;
 					$INPUT_RET = $Validation->errors()->js_format_ref();
 				} else {	
-					
+					$Cari = new Cari( Input::get("cid") );
+					if( $Cari->is_ok() ){
+						if( !$Cari->duzenle( Input::escape($_POST) ) ){
+							$OK = 0;
+						}
+					} else {
+						$OK = 0;
+					}
+					$TEXT = $Cari->get_return_text();
 				}
 
-			
+			break;
+
+			case 'cari_data_download':
+
+				$Cari = new Cari( Input::get("cid") );
+				if( $Cari->is_ok() ){
+					$DATA["form"] = $Cari->get_details();
+					$DATA["yetkililer"] = $Cari->get_yetkililer();
+				} else {
+					$OK = 0;
+				}
+				$TEXT = $Cari->get_return_text();
 
 			break;
+
 		}
 
 		$output = json_encode(array(
@@ -65,22 +94,12 @@
             "text"         => $TEXT,         
             "data"         => $DATA,
             "inputret"	   => $INPUT_RET,
-            "oh"           => $_POST
+            "oh"           => Input::escape($_POST)
         ));
 
         echo $output;
         die;
 	}
-
-	if( Input::exists(Input::$GET, "cid") ){
-		// duzenleme
-		$FORM_REQ = "cari_duzenle";
-	} else {
-		// yeni cari ekleme 
-		$FORM_REQ = "cari_ekle";
-
-	}
-
 
 	$PAGE = array(
 		"title" 		=> "Cari Tanımlama",
@@ -89,13 +108,27 @@
 		"html_libs" 	=> array()
 	);
 
-	include 'inc/header.php';
+
+	if( Input::exists(Input::$GET, "cid") ){
+		// duzenleme
+		$FORM_REQ = "cari_duzenle";
+		$PAGE["title"] = "Cari Düzenleme";
+		$PAGE["top_title"] = "Cari Düzenleme";
+		$CID = Input::get("cid");
+	} else {
+		// yeni cari ekleme 
+		$FORM_REQ = "cari_ekle";
+		$CID = "";
+	}
+
+
+	require 'inc/header.php';
 
 
 
-  include TEMPLATES_DIR . $PAGE["template"];
+  	require TEMPLATES_DIR . $PAGE["template"];
 
 
-  include 'inc/footer.php';
+  	require 'inc/footer.php';
 
 ?>

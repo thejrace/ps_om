@@ -1,6 +1,6 @@
 <?php
 	
-	include 'inc/defs.php';
+	require 'inc/defs.php';
 	
 	if( $_GET["tip"] != "giris" && $_GET["tip"] != "cikis"  ) header("Location:index.php");
 	
@@ -21,12 +21,12 @@
 		$PAGE["top_title"] = "Stok Çıkışı Oluştur";
 	}
 
-	include 'inc/header.php';
+	require 'inc/header.php';
 
 
-	include TEMPLATES_DIR . $PAGE["template"];
+	require TEMPLATES_DIR . $PAGE["template"];
 
 
-	include 'inc/footer.php';
+	require 'inc/footer.php';
 
 ?>
