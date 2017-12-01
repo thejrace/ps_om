@@ -3,19 +3,15 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <a href="<?php echo URL_CARI_FORM ?>"><button type="button" class="btn btn-md btn-info">+ Cari Ekle</button></a>
+                    <a href="<?php echo URL_STOK_KARTLARI_URUN_GRUPLARI_FORM ?>"><button type="button" class="btn btn-md btn-info">+ Ürün Grubu Ekle</button></a>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                    <table id="cari_table" class="table table-striped table-bordered bulk_action">
+                    <table id="datatable" class="table table-striped table-bordered bulk_action">
                       <thead>
                         <tr>
                           <th class="tr_cb">#</th>
-                          <th>Ünvan</th>
-                          <th>Tür</th>
-                          <th>İl</th>
-                          <th>İlçe</th>
-                          <th>Bakiye</th>
+                          <th>İsim</th>
                           <th class="tr_cb"></th>
                         </tr>
                       </thead>
@@ -36,19 +32,10 @@
 
                 $(document).ready(function(){
 
-                    $("#cari_table").DataTable({
+                    $("#datatable").DataTable({
                       "columns": [
                         null,
                         null,
-                        null,
-                        null,
-                        null,
-                        {
-                          render: function ( data, type, row ) {
-                            return bakiye_dt_format( data );
-                            //return format_currency( data );
-                          }
-                        },
                         {
                           "data": null,
                           "defaultContent": '<button type="button" class="btn btn-xs btn-success duzenle">Düzenle</button>'
@@ -64,7 +51,7 @@
                     });
 
                     $(document).on("click", ".duzenle", function(){
-                        window.location = "<?php echo URL_CARI_DUZENLE_FORM ?>"+$(this).parent().parent().find("td").get(0).innerText;
+                        window.location = "<?php echo URL_STOK_KARTLARI_URUN_GRUPLARI_FORM_DUZENLE ?>"+$(this).parent().parent().find("td").get(0).innerText;
                     });
 
                 });

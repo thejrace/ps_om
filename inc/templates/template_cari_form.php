@@ -134,7 +134,7 @@
                         </div>
                       </div>
                       <input type="hidden" name="req" value="<?php echo $FORM_REQ ?>" />
-                      <input type="hidden" name="cid" value="<?php echo $CID ?>" id="cid_val"/>
+                      <input type="hidden" name="item_id" value="<?php echo $CID ?>" id="item_id"/>
                       
                    
                   </div>
@@ -230,33 +230,23 @@
                   SATIR_EKLE          : $("#satir_ekle"),
                   SATIR_SIL           : $(".satir_sil"),
                   SUBMIT_BTN          : $("#btn_form_submit"),
-                  CID_VAL             : $("#cid_val"),
+                  CID_VAL             : $("#item_id"),
                   RADIO_GK            : $("[value='Gerçek Kişi']"),
                   RADIO_TK            : $("[value='Tüzel Kişi']")
               };
               var TEMPLATE = {
                   YETKILI_SATIR       : $("#yetkili_row").html()
               };  
-            
+
+
               $(document).ready(function(){
 
                   var cid_val = trim(UI.CID_VAL.val());
                   if( cid_val != "" ){
-                      PamiraNotify("info", "Yükleniyor", "Cari kaydın verileri alınıyor...");
-                      REQ.ACTION("", { req:"cari_data_download", cid:cid_val }, function(res){
-                          console.log(res);
-                          PNotify.removeAll();
-                          if( !res.ok ){
-                             PamiraNotify("error", "Hata", res.text );
-                             return;
-                          }
-                          for( var key in res.data.form ){
-                              if( key != "id" && key != "mali_tur" || key !="eklenme_tarihi" || key != "son_duzenlenme_tarihi") $("#cari_"+key).val( res.data.form[key] );
-                          }
-                          for( var k = 0; k < res.data.yetkililer.length; k++ ) yetkili_row_ekle(res.data.yetkililer[k].isim, res.data.yetkililer[k].eposta, res.data.yetkililer[k].telefon, res.data.yetkililer[k].notlar, res.data.yetkililer[k].id );
-
+                    data_download( cid_val, [ "id", "mali_tur", "eklenme_tarihi", "son_duzenlenme_tarihi" ], "#cari_", function(res){
+                        for( var k = 0; k < res.data.yetkililer.length; k++ ) yetkili_row_ekle(res.data.yetkililer[k].isim, res.data.yetkililer[k].eposta, res.data.yetkililer[k].telefon, res.data.yetkililer[k].notlar, res.data.yetkililer[k].id );
                           UI.YETKILILER_TBODY.find(":input").inputmask();
-                          if( res.data.form.mali_tur == "Gerçek Kişi" ){
+                          if( res.data.mali_tur == "Gerçek Kişi" ){
                               UI.RADIO_GK.attr("checked", true).parent().addClass("active");
                               UI.RADIO_TK.attr("checked", false).parent().removeClass("active");
                           } else {
@@ -264,11 +254,10 @@
                               UI.RADIO_GK.attr("checked", false).parent().removeClass("active");
                           }
                           DUZENLEME = true;
-                      });
+                    });
                   }
 
                   UI.SUBMIT_BTN.click(function(){
-                      
                       UI.SUBMIT_BTN.get(0).disabled = true;
                       var yetkililer_data = [];
                       // yetkilileri ayıkla önce
@@ -288,42 +277,19 @@
                           }
                       }
                       console.log($(UI.CARI_FORM).serialize()+"&yetkililer_str="+yetkililer_data.join("||"));
-                   
-                      if( FormValidation.check(UI.CARI_FORM) ){
-                          REQ.ACTION("", $(UI.CARI_FORM).serialize()+"&yetkililer_str="+yetkililer_data.join("||"), function(res){
-                            console.log(res);
-                            if( res.ok ){
-                                  PamiraNotify("success", "İşlem Tamamlandı", res.text );
-                                  // form reset
-                                  if( !DUZENLEME ){
-                                      UI.CARI_FORM.reset();
-                                      YCOUNT = 0;
-                                      UI.YETKILILER_TBODY.html("");
-                                      UI.RADIO_TK.attr("checked", true).parent().addClass("active");
-                                      UI.RADIO_GK.attr("checked", false).parent().removeClass("active");
-                                  } else {
-                                      // duzenleme sonrasi refresh yap yetkililer id si alabilmel için
-                                      setTimeout(function(){ location.reload() }, 2000);
-
-                                  }
-
-                                  
-                            } else {
-                                if( Object.size(res.inputret) > 0 ){
-                                    // sside form kontrol
-                                    PamiraNotify("error", "Hata", FormValidation.error_to_pnotfiy( res.inputret ));
-
-                                } else {
-                                    // form ok, baska bisi yanlis olmussa
-                                    PamiraNotify("error", "Hata", res.text );
-                                }
-                                UI.SUBMIT_BTN.get(0).disabled = false;
-                            }
-                          });
-                      } else {
-                          PamiraNotify("error", "Hata", "Formda eksiklikler var.");
-                          UI.SUBMIT_BTN.get(0).disabled = false;
-                      }
+                      form_submit(UI.CARI_FORM, UI.SUBMIT_BTN, $(UI.CARI_FORM).serialize()+"&yetkililer_str="+yetkililer_data.join("||"), function(res){
+                          // form reset
+                          if( !DUZENLEME ){
+                              UI.CARI_FORM.reset();
+                              YCOUNT = 0;
+                              UI.YETKILILER_TBODY.html("");
+                              UI.RADIO_TK.attr("checked", true).parent().addClass("active");
+                              UI.RADIO_GK.attr("checked", false).parent().removeClass("active");
+                          } else {
+                              // duzenleme sonrasi refresh yap yetkililer id si alabilmel için
+                              setTimeout(function(){ location.reload() }, 1000);
+                          }
+                      });
                   });
 
                   UI.SATIR_EKLE.click(function(){

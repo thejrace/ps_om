@@ -4294,3 +4294,17 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 .redborder {
     border-color:#ff0000;
 }
+
+.bakiye_text {
+    font-size: 15px;
+    font-weight: 600;
+}
+.bakiye_0{
+    color: #6f6f6f;
+}
+.bakiye_n{
+    color: #ff6464;
+}
+.bakiye_p{
+    color: #40c550;
+}

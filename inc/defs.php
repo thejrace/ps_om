@@ -15,15 +15,20 @@
 
 		define("URL_CARILER", MAIN_URL . "cariler.php");
 		define("URL_CARI_FORM", MAIN_URL . "cari_form.php");
-		define("URL_CARI_DUZENLE_FORM", URL_CARI_FORM . "?cid=");
+		define("URL_CARI_DUZENLE_FORM", URL_CARI_FORM . "?item_id=");
 
 
 		define("URL_STOK_HAREKETLERI", MAIN_URL . "stok_hareketleri.php");
 		define("URL_STOK_HAREKET_FORM", MAIN_URL . "stok_hareket_form.php");
 		define("URL_STOK_GIRIS_FORM", URL_STOK_HAREKET_FORM . "?tip=giris");
 		define("URL_STOK_CIKIS_FORM", URL_STOK_HAREKET_FORM . "?tip=cikis");
+
+
 		define("URL_STOK_KARTLARI", MAIN_URL . "stok_kartlari.php");
 		define("URL_STOK_KART_FORM", MAIN_URL . "stok_kart_form.php");
+		define("URL_STOK_KARTLARI_URUN_GRUPLARI", MAIN_URL . "stok_kartlari_urun_gruplari.php");
+		define("URL_STOK_KARTLARI_URUN_GRUPLARI_FORM", MAIN_URL . "stok_kartlari_urun_gruplari_form.php");
+		define("URL_STOK_KARTLARI_URUN_GRUPLARI_FORM_DUZENLE", URL_STOK_KARTLARI_URUN_GRUPLARI_FORM . "?item_id=");
 
 		define("URL_RES", MAIN_URL . "res/");
 		define("URL_CSS", URL_RES . "css/");
@@ -40,3 +45,7 @@
 
 		define("DBT_CARILER", "cariler");
 		define("DBT_CARI_YETKILILER", "cari_yetkililer");
+		define("DBT_STOK_KARTLARI", "stok_kartlari");
+		define("DBT_STOK_KARTLARI_STOKLAR", "stok_kartlari_stoklar");
+		define("DBT_STOK_KARTLARI_URUN_GRUPLARI", "stok_kartlari_urun_gruplari");
+		define("DBT_STOK_YERLERI", "stok_yerler");

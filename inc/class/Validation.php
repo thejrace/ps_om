@@ -78,7 +78,10 @@ class Validation {
 			'cari_mali_tur' 		=> "Mali Tür",
 			'cari_iban' 			=> "IBAN",
 			'cari_v_tck_no'  		=> "VNO / TCKN",
-			'cari_vergi_dairesi'	=> "Vergi Dairesi"
+			'cari_vergi_dairesi'	=> "Vergi Dairesi",
+			'alis_fiyati'			=> "Alış Fiyatı",
+			'satis_fiyati'			=> "Satış Fiyatı",
+			'kdv_dahil'				=> "KDV Dahil Fiyat"
 		);
 
 		return isset( $list[$field] ) ? $list[$field] : $field;

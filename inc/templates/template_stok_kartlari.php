@@ -3,7 +3,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <button type="button" class="btn btn-md btn-info">+ Stok Kartı Ekle</button>
+                    <a href="<?php echo URL_STOK_KART_FORM ?>"><button type="button" class="btn btn-md btn-info">+ Stok Kartı Ekle</button></a>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">

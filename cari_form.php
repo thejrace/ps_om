@@ -3,14 +3,15 @@
 	require 'inc/defs.php';
 	require CLASS_DIR . "Common.php";
 	require CLASS_DIR . "Input.php";
-	require CLASS_DIR . "InputErrorHandler.php";
-	require CLASS_DIR . "Validation.php";
-	require CLASS_DIR . "DB.php";
-	require CLASS_DIR . "DataCommon.php";
-	require CLASS_DIR . "CariYetkili.php";
-	require CLASS_DIR . "Cari.php";
 
 	if( $_POST ){
+
+		require CLASS_DIR . "InputErrorHandler.php";
+		require CLASS_DIR . "Validation.php";
+		require CLASS_DIR . "DB.php";
+		require CLASS_DIR . "DataCommon.php";
+		require CLASS_DIR . "CariYetkili.php";
+		require CLASS_DIR . "Cari.php";
 
 		$OK = 1;
         $TEXT = "";
@@ -61,7 +62,7 @@
 					$OK = 0;
 					$INPUT_RET = $Validation->errors()->js_format_ref();
 				} else {	
-					$Cari = new Cari( Input::get("cid") );
+					$Cari = new Cari( Input::get("item_id") );
 					if( $Cari->is_ok() ){
 						if( !$Cari->duzenle( Input::escape($_POST) ) ){
 							$OK = 0;
@@ -74,11 +75,11 @@
 
 			break;
 
-			case 'cari_data_download':
+			case 'data_download':
 
-				$Cari = new Cari( Input::get("cid") );
+				$Cari = new Cari( Input::get("item_id") );
 				if( $Cari->is_ok() ){
-					$DATA["form"] = $Cari->get_details();
+					$DATA = $Cari->get_details();
 					$DATA["yetkililer"] = $Cari->get_yetkililer();
 				} else {
 					$OK = 0;
@@ -109,12 +110,12 @@
 	);
 
 
-	if( Input::exists(Input::$GET, "cid") ){
+	if( Input::exists(Input::$GET, "item_id") ){
 		// duzenleme
 		$FORM_REQ = "cari_duzenle";
 		$PAGE["title"] = "Cari Düzenleme";
 		$PAGE["top_title"] = "Cari Düzenleme";
-		$CID = Input::get("cid");
+		$CID = Input::get("item_id");
 	} else {
 		// yeni cari ekleme 
 		$FORM_REQ = "cari_ekle";
@@ -123,7 +124,6 @@
 
 
 	require 'inc/header.php';
-
 
 
   	require TEMPLATES_DIR . $PAGE["template"];

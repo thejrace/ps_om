@@ -1,1 +1,9 @@
-[29-Nov-2017 22:45:46 Europe/Berlin] PHP Fatal error:  Call to undefined function implde() in C:\xampp\htdocs\pamira_stone\inc\class\Cari.php on line 140
+[01-Dec-2017 20:11:36 Europe/Berlin] PHP Fatal error:  Class 'DB' not found in C:\xampp\htdocs\pamira_stone\stok_kart_form.php on line 9
+[01-Dec-2017 20:11:38 Europe/Berlin] PHP Fatal error:  Class 'DB' not found in C:\xampp\htdocs\pamira_stone\stok_kart_form.php on line 9
+[01-Dec-2017 20:11:42 Europe/Berlin] PHP Fatal error:  Class 'DB' not found in C:\xampp\htdocs\pamira_stone\stok_kart_form.php on line 9
+[01-Dec-2017 20:12:16 Europe/Berlin] PHP Fatal error:  Class 'DB' not found in C:\xampp\htdocs\pamira_stone\stok_kart_form.php on line 9
+[01-Dec-2017 20:12:17 Europe/Berlin] PHP Fatal error:  Class 'DB' not found in C:\xampp\htdocs\pamira_stone\stok_kart_form.php on line 9
+[01-Dec-2017 20:12:49 Europe/Berlin] PHP Fatal error:  Class 'DB' not found in C:\xampp\htdocs\pamira_stone\stok_kart_form.php on line 9
+[01-Dec-2017 20:12:51 Europe/Berlin] PHP Fatal error:  Class 'DB' not found in C:\xampp\htdocs\pamira_stone\stok_kart_form.php on line 9
+[01-Dec-2017 20:12:52 Europe/Berlin] PHP Fatal error:  Class 'DB' not found in C:\xampp\htdocs\pamira_stone\stok_kart_form.php on line 9
+[01-Dec-2017 20:13:19 Europe/Berlin] PHP Fatal error:  Class 'DB' not found in C:\xampp\htdocs\pamira_stone\stok_kart_form.php on line 9

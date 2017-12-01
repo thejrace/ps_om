@@ -6,33 +6,31 @@
  *     // code here
  * });
  */
-(function($,sr){
-    // debouncing function from John Hann
+
+ // debouncing function from John Hann
     // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
-    var debounce = function (func, threshold, execAsap) {
-      var timeout;
-
-        return function debounced () {
-            var obj = this, args = arguments;
-            function delayed () {
-                if (!execAsap)
-                    func.apply(obj, args); 
-                timeout = null; 
-            }
-
-            if (timeout)
-                clearTimeout(timeout);
-            else if (execAsap)
+Function.prototype.debounce = function (threshold, execAsap) {
+ 
+    var func = this, timeout;
+ 
+    return function debounced () {
+        var obj = this, args = arguments;
+        function delayed () {
+            if (!execAsap)
                 func.apply(obj, args);
-
-            timeout = setTimeout(delayed, threshold || 100); 
+            timeout = null; 
         };
+ 
+        if (timeout)
+            clearTimeout(timeout);
+        else if (execAsap)
+            func.apply(obj, args);
+ 
+        timeout = setTimeout(delayed, threshold || 100); 
     };
+ 
+}
 
-    // smartresize 
-    jQuery.fn[sr] = function(fn){  return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr); };
-
-})(jQuery,'smartresize');
 /**
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -127,10 +125,6 @@ $MENU_TOGGLE.on('click', function() {
 		setContentHeight();
 	}).parent().addClass('active');
 
-	// recompute content when resizing
-	$(window).smartresize(function(){  
-		setContentHeight();
-	});
 
 	setContentHeight();
 
@@ -5099,9 +5093,11 @@ if (typeof NProgress != 'undefined') {
 		list: [],
 		error_messages: {
 			posnum: "Numerik ve sıfırdan büyük olmalıdır.",
+			numeric: "Numerik değer giriniz.",
 			req: "Boş bırakılamaz.",
 			not_zero: "Sıfırdan büyük olmalıdır.",
-			email: "Lütfen geçerli bir email adresi girin."
+			email: "Lütfen geçerli bir email adresi girin.",
+			select_not_zero: "Lütfen seçim yapınız."
 		},
 		submit_btns:[],
 		find_inputs: function (f){
@@ -5114,8 +5110,10 @@ if (typeof NProgress != 'undefined') {
 				if( form.elements[i] != undefined ) {
 					if( 
 						hasClass( form.elements[i], "posnum" ) ||
+						hasClass( form.elements[i], "posnum" ) ||
 						hasClass( form.elements[i], "req" )  ||
 						hasClass( form.elements[i], "not_zero" )  ||
+						hasClass( form.elements[i], "select_not_zero" )  ||
 						hasClass( form.elements[i], "email" ) 
 					) {
 						if( form.elements[i].type == "text" ||
@@ -5217,6 +5215,9 @@ if (typeof NProgress != 'undefined') {
 		close_error_dialogue: function( error_div ){
 			console.log( error_div );
 		},
+		numeric: function( val ){
+			return !isNaN(val);
+		},
 		posnum: function( val ){
 			// console.log( val );
 			// Bos birakilmissa true don, onu kontrol icin req() fonksiyonu var
@@ -5229,7 +5230,9 @@ if (typeof NProgress != 'undefined') {
 		req: function( val ){
 			return !( trim( val ) == "" || val == undefined );
 		},
-
+		select_not_zero: function(val){
+			return val != 0;
+		},
 		email: function( val ){
 			if( trim(val) == "" ) return true;
 			var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -5238,6 +5241,9 @@ if (typeof NProgress != 'undefined') {
 		// keyuta error gizleme
 		keyup: function (form){
 			$(form).on("keyup", ".req, .posnum, .email, .not_zero", function(){
+				if(hasClass(this, "redborder")) removeClass(this, "redborder");
+			});
+			$(form).on("change", ".select_not_zero", function(){
 				if(hasClass(this, "redborder")) removeClass(this, "redborder");
 			});
 		},
@@ -5259,3 +5265,182 @@ if (typeof NProgress != 'undefined') {
           });
 	}
 
+	//
+	// Pipelining function for DataTables. To be used to the `ajax` option of DataTables
+	//
+	
+	if (typeof $.fn.dataTable !== 'undefined') {
+		$.fn.dataTable.pipeline = function ( opts ) {
+		    // Configuration options
+		    var conf = $.extend( {
+		        pages: 5,     // number of pages to cache
+		        url: '',      // script url
+		        data: null,   // function or object with parameters to send to the server
+		                      // matching how `ajax.data` works in DataTables
+		        method: 'GET' // Ajax HTTP method
+		    }, opts );
+		 
+		    // Private variables for storing the cache
+		    var cacheLower = -1;
+		    var cacheUpper = null;
+		    var cacheLastRequest = null;
+		    var cacheLastJson = null;
+		 
+		    return function ( request, drawCallback, settings ) {
+		        var ajax          = false;
+		        var requestStart  = request.start;
+		        var drawStart     = request.start;
+		        var requestLength = request.length;
+		        var requestEnd    = requestStart + requestLength;
+		         
+		        if ( settings.clearCache ) {
+		            // API requested that the cache be cleared
+		            ajax = true;
+		            settings.clearCache = false;
+		        }
+		        else if ( cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper ) {
+		            // outside cached data - need to make a request
+		            ajax = true;
+		        }
+		        else if ( JSON.stringify( request.order )   !== JSON.stringify( cacheLastRequest.order ) ||
+		                  JSON.stringify( request.columns ) !== JSON.stringify( cacheLastRequest.columns ) ||
+		                  JSON.stringify( request.search )  !== JSON.stringify( cacheLastRequest.search )
+		        ) {
+		            // properties changed (ordering, columns, searching)
+		            ajax = true;
+		        }
+		         
+		        // Store the request for checking next time around
+		        cacheLastRequest = $.extend( true, {}, request );
+		 
+		        if ( ajax ) {
+		            // Need data from the server
+		            if ( requestStart < cacheLower ) {
+		                requestStart = requestStart - (requestLength*(conf.pages-1));
+		 
+		                if ( requestStart < 0 ) {
+		                    requestStart = 0;
+		                }
+		            }
+		             
+		            cacheLower = requestStart;
+		            cacheUpper = requestStart + (requestLength * conf.pages);
+		 
+		            request.start = requestStart;
+		            request.length = requestLength*conf.pages;
+		 
+		            // Provide the same `data` options as DataTables.
+		            if ( $.isFunction ( conf.data ) ) {
+		                // As a function it is executed with the data object as an arg
+		                // for manipulation. If an object is returned, it is used as the
+		                // data object to submit
+		                var d = conf.data( request );
+		                if ( d ) {
+		                    $.extend( request, d );
+		                }
+		            }
+		            else if ( $.isPlainObject( conf.data ) ) {
+		                // As an object, the data given extends the default
+		                $.extend( request, conf.data );
+		            }
+		 
+		            settings.jqXHR = $.ajax( {
+		                "type":     conf.method,
+		                "url":      conf.url,
+		                "data":     request,
+		                "dataType": "json",
+		                "cache":    false,
+		                "success":  function ( json ) {
+		                	//console.log(json);
+		                    cacheLastJson = $.extend(true, {}, json);
+		 
+		                    if ( cacheLower != drawStart ) {
+		                        json.data.splice( 0, drawStart-cacheLower );
+		                    }
+		                    if ( requestLength >= -1 ) {
+		                        json.data.splice( requestLength, json.data.length );
+		                    }
+		                     
+		                    drawCallback( json );
+		                }
+		            } );
+		        }
+		        else {
+		            json = $.extend( true, {}, cacheLastJson );
+		            json.draw = request.draw; // Update the echo for each response
+		            json.data.splice( 0, requestStart-cacheLower );
+		            json.data.splice( requestLength, json.data.length );
+		 
+		            drawCallback(json);
+		        }
+		    }
+		};
+	 
+		// Register an API method that will empty the pipelined data, forcing an Ajax
+		// fetch on the next draw (i.e. `table.clearPipeline().draw()`)
+		$.fn.dataTable.Api.register( 'clearPipeline()', function () {
+		    return this.iterator( 'table', function ( settings ) {
+		        settings.clearCache = true;
+		    } );
+		} );
+	}
+	 
+	function format_currency(_data, n = 2, x = 3, s = '.', c = ',') {
+		var data = Number(_data);
+	    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+	        num = data.toFixed(Math.max(0, ~~n));
+
+	    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+	}
+
+	function bakiye_dt_format( _data ){
+		var ctext;
+		if( _data == 0 ){
+			ctext = "bakiye_0";
+		} else if( _data > 0 ){
+			ctext = "bakiye_p";
+		} else {
+			ctext = "bakiye_n";
+		}
+		return '<font class="bakiye_text '+ctext+'">'+format_currency(_data)+'</font>';
+	}
+
+	function data_download( item_id, exc_keys, domprefix, cb ){
+      PamiraNotify("info", "Yükleniyor", "Veriler alınıyor...");
+      REQ.ACTION("", { req:"data_download", item_id:item_id }, function(res){
+          console.log(res);
+          PNotify.removeAll();
+          if( !res.ok ){
+             PamiraNotify("error", "Hata", res.text );
+             return;
+          }
+          for( var key in res.data ){
+              if( exc_keys.indexOf(key) == -1 ) $(domprefix+key).val( res.data[key] );
+          }
+          if( typeof cb == 'function' ) cb( res );
+      });
+   }
+
+   function form_submit( form, btnelem, data, cb ){
+      if( FormValidation.check(form) ){
+          REQ.ACTION("", data, function(res){
+            console.log(res);
+            if( res.ok ){
+                  PamiraNotify("success", "İşlem Tamamlandı", res.text );
+                   if( typeof cb == 'function' ) cb( res );
+            } else {
+                if( Object.size(res.inputret) > 0 ){
+                    // sside form kontrol
+                    PamiraNotify("error", "Hata", FormValidation.error_to_pnotfiy( res.inputret ));
+                } else {
+                    // form ok, baska bisi yanlis olmussa
+                    PamiraNotify("error", "Hata", res.text );
+                }
+                btnelem.get(0).disabled = false;
+            }
+          });
+      } else {
+          PamiraNotify("error", "Hata", "Formda eksiklikler var.");
+          btnelem.get(0).disabled = false;
+      }
+  }

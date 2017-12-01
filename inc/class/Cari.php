@@ -7,7 +7,7 @@
 			$this->dt_table = DBT_CARILER;
 			if( isset($id) ) $this->check( array("id", "unvan", "eposta", "vkn_tckn"), $id);
 		}
-
+		
 		public function ekle( $input ){
 
 			$unvan_kontrol = $this->pdo->query("SELECT * FROM " . $this->dt_table . " WHERE unvan = ?", array( $input["cari_unvan"] ) )->results();
@@ -29,6 +29,8 @@
 				"iban"						=> $input["cari_iban"],
 				"vkn_tckn"					=> $input["cari_vkn_tckn"],
 				"vergi_dairesi" 			=> $input["cari_vergi_dairesi"],
+				"bakiye" 					=> 0,
+				"durum"						=> 1,
 				"eklenme_tarihi"			=> Common::get_current_datetime(),
 				"son_duzenlenme_tarihi"		=> Common::get_current_datetime()
 			));

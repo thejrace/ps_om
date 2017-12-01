@@ -31,8 +31,17 @@
     <link href="<?php echo URL_CSS; ?>custom.css" rel="stylesheet">
 
 
-      <!-- jQuery -->
+    <!-- jQuery -->
     <script src="<?php echo URL_VENDORS; ?>jquery/dist/jquery.min.js"></script>
+
+    <?php if( in_array("jquery-ui", $PAGE["html_libs"]) ){ ?>
+
+    <!-- jQuery UI-->
+    <script src="<?php echo URL_VENDORS; ?>jquery-ui/jquery-ui.js"></script>
+    <link href="<?php echo URL_VENDORS; ?>jquery-ui/jquery-ui.css" rel="stylesheet">
+
+    <?php } ?>
+
     <!-- Bootstrap -->
     <script src="<?php echo URL_VENDORS; ?>bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- FastClick -->
@@ -138,6 +147,7 @@
                       <li><a href="<?php echo URL_STOK_KARTLARI ?>">Stok Kartları</a></li>
                       <li><a href="<?php echo URL_STOK_HAREKETLERI ?>">Stok Hareketleri</a></li>
                       <li><a href="#">Stok Raporu</a></li>
+                      <li><a href="<?php echo URL_STOK_KARTLARI_URUN_GRUPLARI ?>">Ürün Grupları</a></li>
                     </ul>
                   </li>
                 </ul>
