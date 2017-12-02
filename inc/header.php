@@ -120,7 +120,7 @@
                   <li><a href="<?php echo MAIN_URL ?>" ><i class="fa fa-tachometer"></i> Güncel Durum</a></li>
                   <li><a><i class="fa fa-download"></i> Satışlar <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="#">Faturalar</a></li>
+                      <li><a href="<?php echo URL_FATURALAR ?>">Faturalar</a></li>
                       <li><a href="<?php echo URL_CARILER ?>">Cariler</a></li>
                       <li><a href="#">Satış Raporları</a></li>
                       <li><a href="#">Tahsilat Raporları</a></li>

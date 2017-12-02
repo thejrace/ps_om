@@ -10,7 +10,6 @@
 		$q = array();
 		foreach( DB::getInstance()->query("SELECT isim FROM " . DBT_STOK_KARTLARI_URUN_GRUPLARI . " WHERE isim LIKE ? || isim LIKE ? || isim LIKE ?", array("%".Input::get("term"), Input::get("term")."%", "%".Input::get("term")."%"))->results() as $res ) $q[] = $res["isim"];
 		die( json_encode($q));
-
 	}
 
 	if( $_POST ){
@@ -101,9 +100,7 @@
 
         echo $output;
         die;
-
 	}
-
 
 	$PAGE = array(
 		"title" 		=> "Stok Kart Tanımlama",
@@ -124,33 +121,8 @@
 		$ITEM_ID = "";
 	}
 
-
     require 'inc/header.php';
 
-
-	  	/**
-
-			DB - stok_kartlari
-			*******************
-			{ 
-				"Adı":			{ "db":"ad",			"form":"stok_adi" },
-				"Ürün Grubu":	{ "db":"urun_grubu", 	"form":"stok_urun_grubu" },
-				"Alış Fiyatı":	{ "db":"alis_fiyati", 	"form":"stok_alis_fiyati" },
-				"Satış Fiyatı":	{ "db":"satis_fiyati", 	"form":"stok_satis_fiyati" },
-				"KDV":			{ "db":"kdv", 			"form":"stok_kdv" },
-				"KDV Dahil":	{ "db":"kdv_dahil", 	"form":"stok_kdv_dahil" },
-				"Birim":		{ "db":"birim", 		"form":"stok_birim" }
-			}
-			
-
-	  */
-
-
-	           
 	require TEMPLATES_DIR . $PAGE["template"];
 
-
 	require 'inc/footer.php';
-
-
-?>

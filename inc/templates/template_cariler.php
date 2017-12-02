@@ -7,7 +7,7 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                    <table id="cari_table" class="table table-striped table-bordered bulk_action">
+                    <table id="cari_table" class="table table-striped table-bordered bulk_action dtable-obarey">
                       <thead>
                         <tr>
                           <th class="tr_cb">#</th>
@@ -51,6 +51,7 @@
                         },
                         {
                           "data": null,
+                          "orderable": false,
                           "defaultContent": '<button type="button" class="btn btn-xs btn-success duzenle">Düzenle</button>'
                         }
                       ],

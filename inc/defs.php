@@ -17,6 +17,14 @@
 		define("URL_CARI_FORM", MAIN_URL . "cari_form.php");
 		define("URL_CARI_DUZENLE_FORM", URL_CARI_FORM . "?item_id=");
 
+		define("URL_FATURALAR", MAIN_URL . "faturalar.php");
+		define("URL_FATURA_FORM", MAIN_URL . "fatura_form.php");
+		define("URL_FATURA_FORM_ALIS", URL_FATURA_FORM . "?tur=1");
+		define("URL_FATURA_FORM_SATIS", URL_FATURA_FORM . "?tur=2");
+		define("URL_SATIS_FISI_FORM", URL_FATURA_FORM . "?tur=3");
+
+		// verisinden otomatik çözecegiz türünü
+		define("URL_FATURA_FORM_DUZENLE", URL_FATURA_FORM . "?item_id=");
 
 		define("URL_STOK_HAREKETLERI", MAIN_URL . "stok_hareketleri.php");
 		define("URL_STOK_HAREKET_FORM", MAIN_URL . "stok_hareket_form.php");
@@ -26,6 +34,7 @@
 
 		define("URL_STOK_KARTLARI", MAIN_URL . "stok_kartlari.php");
 		define("URL_STOK_KART_FORM", MAIN_URL . "stok_kart_form.php");
+		define("URL_STOK_KART_FORM_DUZENLE", URL_STOK_KART_FORM . "?item_id=");
 		define("URL_STOK_KARTLARI_URUN_GRUPLARI", MAIN_URL . "stok_kartlari_urun_gruplari.php");
 		define("URL_STOK_KARTLARI_URUN_GRUPLARI_FORM", MAIN_URL . "stok_kartlari_urun_gruplari_form.php");
 		define("URL_STOK_KARTLARI_URUN_GRUPLARI_FORM_DUZENLE", URL_STOK_KARTLARI_URUN_GRUPLARI_FORM . "?item_id=");
@@ -49,3 +58,6 @@
 		define("DBT_STOK_KARTLARI_STOKLAR", "stok_kartlari_stoklar");
 		define("DBT_STOK_KARTLARI_URUN_GRUPLARI", "stok_kartlari_urun_gruplari");
 		define("DBT_STOK_YERLERI", "stok_yerler");
+		define("DBT_FATURALAR", "faturalar");
+		define("DBT_FATURA_STOK_DETAYLARI", "fatura_stok_detaylari");
+		define("DBT_FATURA_CARI_DETAYLARI", "fatura_cari_detaylari");

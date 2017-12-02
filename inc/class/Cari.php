@@ -143,12 +143,58 @@
 			return true;
 		}
 
+		public function bakiye_guncelle( $fis_turu, $miktar ){
+			if( $fis_turu == Fatura::$ALIS || $fis_turu == Fatura::$GR_ALIS ){
+				$bakiye_carpan = -1;
+			} else if( $fis_turu == Fatura::$SATIS || $fis_turu == Fatura::$GR_SATIS ){
+				$bakiye_carpan = 1;
+			}
+			$this->pdo->query("UPDATE " . $this->dt_table . " SET bakiye = ? WHERE id = ?", array( ($this->details["bakiye"] + ($miktar * $bakiye_carpan) ), $this->details["id"]));
+			if( $this->pdo->error() ){
+				$this->return_text = "Bir hata oluştu.[BakiyeGuncelleme1][".$this->pdo->get_error_message()."]";
+				return false;
+			}
+			$this->return_text = "Bakiye güncellendi.";
+			return true;
+		}
+
+		public function faturaya_ekle( $fatura_id ){
+			$this->pdo->insert(DBT_FATURA_CARI_DETAYLARI, array(
+				"fatura_id" 		=> $fatura_id,
+				"unvan" 			=> $this->details["unvan"],
+				"adres" 			=> $this->details["adres"],
+				"il" 				=> $this->details["il"],
+				"ilce" 				=> $this->details["ilce"],
+				"mali_tur" 			=> $this->details["mali_tur"],
+				"telefon_1" 		=> $this->details["telefon_1"],
+				"telefon_2" 		=> $this->details["telefon_2"],
+				"tur" 				=> $this->details["tur"],
+				"vkn_tckn" 			=> $this->details["vkn_tckn"],
+				"vergi_dairesi" 	=> $this->details["vergi_dairesi"],
+				"eposta" 			=> $this->details["eposta"],
+				"iban" 				=> $this->details["iban"],
+				"faks_no" 			=> $this->details["faks_no"]
+			));
+			if( $this->pdo->error() ){
+				$this->return_text = "Bir hata oluştu.[CariFaturayaEkleme][".$this->pdo->get_error_message()."]";
+				return false;
+			}
+			$this->details["fatura_detay_id"] = $this->pdo->lastInsertedId();
+			return true;
+		}
+
 		public function get_yetkililer(){
 			return $this->pdo->query("SELECT * FROM " . DBT_CARI_YETKILILER . " WHERE cari_id = ?", array($this->details["id"]))->results();
 		}
 
 		public function sil(){
 
+		}
+
+		public static function ac_arama( $term ){
+			$q = array();
+			foreach( DB::getInstance()->query("SELECT unvan FROM " . DBT_CARILER . " WHERE unvan LIKE ? || unvan LIKE ? || unvan LIKE ?", array("%".$term, $term."%", "%".$term."%"))->results() as $res ) $q[] = $res["unvan"];
+			return $q;
 		}
 
 	}

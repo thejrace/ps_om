@@ -10,9 +10,7 @@
  // debouncing function from John Hann
     // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
 Function.prototype.debounce = function (threshold, execAsap) {
- 
     var func = this, timeout;
- 
     return function debounced () {
         var obj = this, args = arguments;
         function delayed () {
@@ -28,8 +26,8 @@ Function.prototype.debounce = function (threshold, execAsap) {
  
         timeout = setTimeout(delayed, threshold || 100); 
     };
- 
 }
+
 
 /**
  * To change this license header, choose License Headers in Project Properties.
@@ -124,6 +122,7 @@ $MENU_TOGGLE.on('click', function() {
 	}).parent('li').addClass('current-page').parents('ul').slideDown(function() {
 		setContentHeight();
 	}).parent().addClass('active');
+
 
 
 	setContentHeight();
@@ -5032,6 +5031,15 @@ if (typeof NProgress != 'undefined') {
 				
 	});	
 
+	function extend(x, y) {
+		var i;
+		if (!x) x = {};
+		for (i in y) {
+			x[i] = y[i];
+		}
+		return x;
+	};
+
 	var REQ = {
 	    URL_DOWNLOAD: "",
 	    ACTION: function( url, data, cb ){
@@ -5048,6 +5056,32 @@ if (typeof NProgress != 'undefined') {
 	                console.log(errorThrown);
 	            }
 	        });
+	    },
+	    AC: function( elem, url, ekstra_data, cb ){
+	    	elem.autocomplete({
+	    		source: function( request, response ){
+	    			//console.log("obarey");
+	    			$.ajax({
+			            url: url,
+			         	type: "POST",
+			            dataType: "json",
+			            data: extend(ekstra_data, { req:"ac", term: request.term }),
+	           		 	success: function (data){
+	           		 		//console.log(data);
+	                		response(data);
+	                		
+	            		},
+	            		error: function(data) {
+			                console.log("AutoComplete hata");
+			            }
+       				 });
+	    		},
+	    		select: function(event, ui) {
+        			//console.log( "secildi");
+        			if( typeof cb == 'function' ) cb( ui.item.value );
+        		},
+        		minLength: 3
+	    	});
 	    }
 	};
 
@@ -5402,7 +5436,7 @@ if (typeof NProgress != 'undefined') {
 		} else {
 			ctext = "bakiye_n";
 		}
-		return '<font class="bakiye_text '+ctext+'">'+format_currency(_data)+'</font>';
+		return '<font class="bakiye_text '+ctext+'">'+format_currency(_data)+' ₺</font>';
 	}
 
 	function data_download( item_id, exc_keys, domprefix, cb ){
