@@ -5069,6 +5069,7 @@ if (typeof NProgress != 'undefined') {
 	           		 	success: function (data){
 	           		 		//console.log(data);
 	                		response(data);
+
 	                		
 	            		},
 	            		error: function(data) {
@@ -5078,9 +5079,10 @@ if (typeof NProgress != 'undefined') {
 	    		},
 	    		select: function(event, ui) {
         			//console.log( "secildi");
-        			if( typeof cb == 'function' ) cb( ui.item.value );
+        			if( elem.hasClass("redborder") ) elem.removeClass("redborder");
+        			if( typeof cb == 'function' ) cb( ui.item.value, elem );
         		},
-        		minLength: 3
+        		minLength: 2
 	    	});
 	    }
 	};
@@ -5121,6 +5123,13 @@ if (typeof NProgress != 'undefined') {
 	    return size;
 	};
 
+	function escapeRegExp(str) {
+	    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+	}
+
+	function replaceAll(str, find, replace) {
+	    return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+	}
 
 	var FormValidation = {
 		errors: [],
@@ -5424,7 +5433,7 @@ if (typeof NProgress != 'undefined') {
 	    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
 	        num = data.toFixed(Math.max(0, ~~n));
 
-	    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+	    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ',')) + " ₺";
 	}
 
 	function bakiye_dt_format( _data ){
@@ -5436,7 +5445,7 @@ if (typeof NProgress != 'undefined') {
 		} else {
 			ctext = "bakiye_n";
 		}
-		return '<font class="bakiye_text '+ctext+'">'+format_currency(_data)+' ₺</font>';
+		return '<font class="bakiye_text '+ctext+'">'+format_currency(_data)+'</font>';
 	}
 
 	function data_download( item_id, exc_keys, domprefix, cb ){
@@ -5478,3 +5487,13 @@ if (typeof NProgress != 'undefined') {
           btnelem.get(0).disabled = false;
       }
   }
+
+  function kdv_dahil_hesapla( birimfiyat, kdv_oran ){
+  		return parseFloat(parseFloat(birimfiyat) + ( parseFloat(birimfiyat) * parseFloat(kdv_oran) / 100 )).toFixed(2);
+  }
+
+  function kdv_haric_hesapla( toplam, kdv_oran ){
+  		return parseFloat(parseFloat(toplam) / ( (parseFloat(kdv_oran) / 100 ) + 1 ) ).toFixed(2);
+  }	
+
+  var DATETIMEPICKER_DEF_OPTIONS = {useCurrent: true, sideBySide: true, format: 'DD-MM-YYYY HH:mm:ss', locale:"tr"};

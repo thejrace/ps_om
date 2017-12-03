@@ -2199,8 +2199,8 @@ span.section {
     width: 100%
 }
 .table-row-form .form-control{
-        position: relative;
-    left: -13px;
+        /*position: relative;
+    left: -13px;*/
 }
 .form-horizontal .control-label {
     padding-top: 8px;
@@ -4324,4 +4324,9 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 .fatura-cari-detay li:hover {
     background:#fff;
     color:#000;
+}
+
+.yetkili_row .form-control-feedback {
+    width: 100px !important;
+    margin-top:6px !important;
 }

@@ -81,7 +81,8 @@ class Validation {
 			'cari_vergi_dairesi'	=> "Vergi Dairesi",
 			'alis_fiyati'			=> "Alış Fiyatı",
 			'satis_fiyati'			=> "Satış Fiyatı",
-			'kdv_dahil'				=> "KDV Dahil Fiyat"
+			'kdv_dahil'				=> "KDV Dahil Fiyat",
+			'stok_str'				=> "Stok Detayları Kısmı"
 		);
 
 		return isset( $list[$field] ) ? $list[$field] : $field;

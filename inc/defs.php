@@ -11,6 +11,7 @@
 
 
 		define("MAIN_URL", "http://localhost/pamira_stone/");
+		//define("MAIN_URL", "http://ahsaphobby.net/pamira_stone/");
 
 
 		define("URL_CARILER", MAIN_URL . "cariler.php");
@@ -22,6 +23,7 @@
 		define("URL_FATURA_FORM_ALIS", URL_FATURA_FORM . "?tur=1");
 		define("URL_FATURA_FORM_SATIS", URL_FATURA_FORM . "?tur=2");
 		define("URL_SATIS_FISI_FORM", URL_FATURA_FORM . "?tur=3");
+		define("URL_FATURA_INCELE", MAIN_URL . "fatura_incele.php?item_id=");
 
 		// verisinden otomatik çözecegiz türünü
 		define("URL_FATURA_FORM_DUZENLE", URL_FATURA_FORM . "?item_id=");
@@ -50,6 +52,12 @@
 		define("DB_USER", "root");
 		define("DB_PASS", "Dogansaringulu9");
 		define("DB_IP", "localhost:3306");
+
+		/*define("DB_NAME", "pamira_stone");
+		define("DB_USER", "pamira_stone");
+		define("DB_PASS", "WAzzabii308");
+		define("DB_IP", "94.73.147.252");*/
+
 
 
 		define("DBT_CARILER", "cariler");

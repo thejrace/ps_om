@@ -45,9 +45,22 @@
                         null,
                         null,
                         null,
+                        {
+                          render: function ( data, type, row ) {
+                            return format_currency( data );
+                          }
+                        },
+                        {
+                          render: function ( data, type, row ) {
+                            return format_currency( data );
+                          }
+                        },
                         null,
-                        null,
-                        null
+                        {
+                          "data": null,
+                          "orderable": false,
+                          "defaultContent": '<button type="button" class="btn btn-xs btn-success duzenle">Detaylar</button>'
+                        }
                       ],
                       "processing": true,
                       "serverSide": true,
@@ -59,7 +72,7 @@
                     });
 
                     $(document).on("click", ".duzenle", function(){
-                        window.location = "<?php echo URL_CARI_DUZENLE_FORM ?>"+$(this).parent().parent().find("td").get(0).innerText;
+                        window.location = "<?php echo URL_FATURA_INCELE ?>"+$(this).parent().parent().find("td").get(0).innerText;
                     });
 
                 });

@@ -165,11 +165,11 @@
                     <table class="table table-hover">
                       <thead>
                         <tr>
-                          <th>İsim</th>
-                          <th>Telefon</th>
-                          <th>Eposta</th>
-                          <th>Not</th>
-                          <th></th>
+                          <th class="col-md-1 col-sm-9 col-xs-12">İsim</th>
+                          <th class="col-md-1 col-sm-9 col-xs-12">Telefon</th>
+                          <th class="col-md-1 col-sm-9 col-xs-12">Eposta</th>
+                          <th class="col-md-1 col-sm-9 col-xs-12">Not</th>
+                          <th class="col-md-1 col-sm-9 col-xs-12"></th>
                         </tr>
                       </thead>
                       <tbody class="table-row-form" id="yetkililer_tbody" ></tbody>
@@ -190,27 +190,27 @@
           <script type="text/template" id="yetkili_row">
                 <tr id="yetkili_%%YID%%" class="yetkili_row" >
                   <td>
-                      <div class="col-md-11 col-sm-9 col-xs-12">
+                      <div>
                         <input type="text" class="form-control yetkili_isim" placeholder="İsim"  value="%%ISIM_VAL%%"  />
                       </div>
                   </td>
                   <td>
-                       <div class="col-md-11 col-sm-9 col-xs-12">
+                       <div>
                         <input type="text" class="form-control yetkili_telefon"  data-inputmask="'mask' : '(999) 999 99 99'" placeholder="Telefon" value="%%TELEFON_VAL%%" />
                       </div>
                   </td>
                   <td>
-                     <div class="col-md-11 col-sm-9 col-xs-12">
+                     <div>
                         <input type="text" class="form-control yetkili_eposta" placeholder="Eposta" value="%%EPOSTA_VAL%%" />
                       </div>
                   </td>
                   <td>
-                     <div class="col-md-11 col-sm-9 col-xs-12">
+                     <div>
                         <input type="text" class="form-control yetkili_not" placeholder="Not"  value="%%NOT_VAL%%" />
                       </div>
                   </td>
                   <input type="hidden" class="yetkili_id" value="%%ID_VAL%%" />
-                  <td><button type="button" class="btn btn-sm btn-danger satir_sil" parent="yetkili_%%YSIL%%" ><i class="fa fa-remove"></button></td>
+                  <td style="text-align:right"><button type="button" class="btn btn-sm btn-danger satir_sil" parent="yetkili_%%YSIL%%" ><i class="fa fa-remove"></i></button></td>
                 </tr>
           </script>
 
@@ -277,6 +277,7 @@
                           }
                       }
                       console.log($(UI.CARI_FORM).serialize()+"&yetkililer_str="+yetkililer_data.join("||"));
+                      // return;
                       form_submit(UI.CARI_FORM, UI.SUBMIT_BTN, $(UI.CARI_FORM).serialize()+"&yetkililer_str="+yetkililer_data.join("||"), function(res){
                           // form reset
                           if( !DUZENLEME ){

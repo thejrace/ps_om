@@ -183,6 +183,14 @@
 			return true;
 		}
 
+		public function get_kesilmis_faturalar( $tur = null  ){
+			if( !isset($tur) ){
+				return $this->pdo->query("SELECT * FROM " . DBT_FATURALAR . " WHERE cari_id = ? ORDER BY duzenlenme_tarihi DESC" . $limit, array( $this->details["id"] ) )->results();
+			} else {
+				return $this->pdo->query("SELECT * FROM " . DBT_FATURALAR . " WHERE cari_id = ? && fis_turu = ? ORDER BY duzenlenme_tarihi DESC", array( $this->details["id"], $tur ) )->results();
+			}
+		}
+
 		public function get_yetkililer(){
 			return $this->pdo->query("SELECT * FROM " . DBT_CARI_YETKILILER . " WHERE cari_id = ?", array($this->details["id"]))->results();
 		}

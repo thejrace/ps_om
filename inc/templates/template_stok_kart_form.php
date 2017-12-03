@@ -124,7 +124,7 @@
                       var val = this.value;
                       if( trim(val) == "" ) return;
                         if( FormValidation.numeric(val) && FormValidation.posnum(val) ){
-                            satis_fiyati_hesapla();
+                            UI.SATIS_FIYATI_INPUT.val(kdv_haric_hesapla( UI.KDV_DAHIL_INPUT.val(), UI.KDV_ORAN_INPUT.val() ));
                         } else {
                             PNotify.removeAll();
                             PamiraNotify("error", "Hata", "Lütfen geçerli bir fiyat değeri giriniz.");
@@ -135,7 +135,7 @@
                         var val = this.value;
                         if( trim(val) == "" ) return;
                         if( FormValidation.numeric(val) && FormValidation.posnum(val) ){
-                            kdv_dahil_fiyati_hesapla();
+                            UI.KDV_DAHIL_INPUT.val(kdv_dahil_hesapla( UI.SATIS_FIYATI_INPUT.val(), UI.KDV_ORAN_INPUT.val()) );
                         } else {
                             PNotify.removeAll();
                             PamiraNotify("error", "Hata", "Lütfen geçerli bir fiyat değeri giriniz.");
@@ -143,7 +143,7 @@
                     }.debounce(200, false));
 
                     UI.KDV_ORAN_INPUT.change(function(){
-                        kdv_dahil_fiyati_hesapla();
+                        UI.KDV_DAHIL_INPUT.val(kdv_dahil_hesapla( UI.SATIS_FIYATI_INPUT.val(), UI.KDV_ORAN_INPUT.val()) );
                     });
 
                     $( "#urun_grubu" ).autocomplete({
@@ -152,14 +152,6 @@
                     });
 
                 });
-
-                function satis_fiyati_hesapla(){
-                    UI.SATIS_FIYATI_INPUT.val( parseFloat(parseFloat(UI.KDV_DAHIL_INPUT.val()) / ( (parseFloat(UI.KDV_ORAN_INPUT.val()) / 100 ) + 1 ) ).toFixed(2));
-                }
-
-                function kdv_dahil_fiyati_hesapla(){
-                    UI.KDV_DAHIL_INPUT.val( parseFloat(parseFloat(UI.SATIS_FIYATI_INPUT.val()) + ( parseFloat(UI.SATIS_FIYATI_INPUT.val()) * parseFloat(UI.KDV_ORAN_INPUT.val()) / 100 )).toFixed(2) );
-                }
 
 
            </script>

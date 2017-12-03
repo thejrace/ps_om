@@ -105,11 +105,24 @@
 			return count($kontrol) > 0;
 		}
 
-		// fiş / fatura yazarken stok karti eklendiginde, kullaniciya verilen son fiyati alma
-		public function cariye_verilen_son_fiyati_al( $cari, $fis_turu ){
 
-			return 0;
-
+		// fiş fatura yazarken stok karti eklendiginde, kullaniciya verilen son fiyati alma
+		public function cari_fiyat_gecmisi( Cari $Cari, $fis_turu ){
+			$faturalar = array();
+			foreach( $Cari->get_kesilmis_faturalar( $fis_turu ) as $fatura ){
+				$Fatura = new Fatura( $fatura["id"] );
+				if( $Fatura->stok_detaylari_arama( array( $this->details["stok_adi"] ) ) ){
+					$faturalar[] = array(
+						"fatura_id" => $fatura["id"],
+						"fatura_tipi" => Fatura::$TUR_STR[$fis_turu],
+						"fiyat" 	=> $Fatura->get_details("fiyat"),
+						"kdv" 		=> $Fatura->get_details("kdv"),
+						"tarih" 	=> Common::datetime_reverse($fatura["duzenlenme_tarihi"]),
+						"miktar" 	=> $Fatura->get_details("miktar")
+					);	
+				}
+			}
+			return $faturalar;
 		}
 
 		public function sil(){
@@ -190,6 +203,10 @@
 			}
 			$this->return_text = "Stok güncellendi.";
 			return true;
+		}
+
+		public function get_stok_detaylari(){
+			return $this->pdo->query("SELECT * FROM " . DBT_STOK_KARTLARI_STOKLAR . " WHERE stok_karti = ?", array( $this->details["stok_kodu"]))->results();
 		}
 
 

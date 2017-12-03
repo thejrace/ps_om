@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
     <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 	  
     <title>Obarey <?php echo $PAGE["title"] ?></title>
 
@@ -52,9 +51,7 @@
     <script src="<?php echo URL_VENDORS; ?>bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
     <!-- iCheck -->
     <script src="<?php echo URL_VENDORS; ?>iCheck/icheck.min.js"></script>
-    <!-- bootstrap-daterangepicker -->
-    <script src="<?php echo URL_VENDORS; ?>moment/min/moment.min.js"></script>
-    <script src="<?php echo URL_VENDORS; ?>bootstrap-daterangepicker/daterangepicker.js"></script>
+
     <!-- Select2 -->
     <script src="<?php echo URL_VENDORS; ?>select2/dist/js/select2.full.min.js"></script>
     <!-- PNotify -->
@@ -66,7 +63,14 @@
     <script src="<?php echo URL_VENDORS; ?>jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
 
 
+    <?php if( in_array("datetimepicker", $PAGE["html_libs"] ) ) { ?>
 
+    <script src="<?php echo URL_VENDORS; ?>moment/min/moment.min.js"></script>
+    <script src="<?php echo URL_VENDORS; ?>moment/min/locales.min.js"></script>
+    <script src="<?php echo URL_VENDORS; ?>bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+    <link href="<?php echo URL_VENDORS; ?>bootstrap-datetimepicker/bootstrap-datetimepicker.css" rel="stylesheet">
+
+    <?php } ?>
 
     <?php if( in_array("datatables", $PAGE["html_libs"] ) ){ ?>
 
@@ -122,31 +126,31 @@
                     <ul class="nav child_menu">
                       <li><a href="<?php echo URL_FATURALAR ?>">Faturalar</a></li>
                       <li><a href="<?php echo URL_CARILER ?>">Cariler</a></li>
-                      <li><a href="#">Satış Raporları</a></li>
-                      <li><a href="#">Tahsilat Raporları</a></li>
-                      <li><a href="#">Gelir - Gider Raporları</a></li>
+                      <!-- <li><a href="#">Satış Raporları</a></li> -->
+                      <!-- <li><a href="#">Tahsilat Raporları</a></li> -->
+                      <!-- <li><a href="#">Gelir - Gider Raporları</a></li> -->
                     </ul>
                   </li>
                   <li><a><i class="fa fa-upload"></i> Giderler <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="#">Gider Listesi</a></li>
-                      <li><a href="#">Ödemeler Raporu</a></li>
-                      <li><a href="#">KDV Raporu</a></li>
+                      <!-- <li><a href="#">Gider Listesi</a></li> -->
+                      <!-- <li><a href="#">Ödemeler Raporu</a></li> -->
+                      <!-- <li><a href="#">KDV Raporu</a></li> -->
                     </ul>
                   </li>
                   <li><a><i class="fa fa-money"></i> Nakit <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="#">Kasa ve Bankalar</a></li>
-                      <li><a href="#">Çekler</a></li>
-                      <li><a href="#">Kasa - Banka Raporları</a></li>
-                      <li><a href="#">Nakit Akış Raporu</a></li>
+                      <!-- <li><a href="#">Kasa ve Bankalar</a></li> -->
+                      <!-- <li><a href="#">Çekler</a></li> -->
+                      <!-- <li><a href="#">Kasa - Banka Raporları</a></li> -->
+                      <!-- <li><a href="#">Nakit Akış Raporu</a></li> -->
                     </ul>
                   </li>
                   <li><a><i class="fa fa-cubes"></i> Stok <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="<?php echo URL_STOK_KARTLARI ?>">Stok Kartları</a></li>
-                      <li><a href="<?php echo URL_STOK_HAREKETLERI ?>">Stok Hareketleri</a></li>
-                      <li><a href="#">Stok Raporu</a></li>
+                      <!-- <li><a href="<?php echo URL_STOK_HAREKETLERI ?>">Stok Hareketleri</a></li> -->
+                      <!-- <li><a href="#">Stok Raporu</a></li> -->
                       <li><a href="<?php echo URL_STOK_KARTLARI_URUN_GRUPLARI ?>">Ürün Grupları</a></li>
                     </ul>
                   </li>

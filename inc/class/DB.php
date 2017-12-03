@@ -174,7 +174,7 @@ class DB {
 	}
 
     public function get_error_message(){
-        return $this->_error_message;
+        return implode(",",$this->_error_message);
     }
 
 	public function first(){

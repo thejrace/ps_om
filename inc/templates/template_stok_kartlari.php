@@ -52,7 +52,7 @@
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <div class="x_panel tile">
                                   
-                                  <div class="x_content tile_count">
+                                  <div class="x_content tile_count" id="stok_detay_modal_content">
                                     
                                       <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
                                         <span class="count_top"><i class="fa fa-cubes"></i> Mağaza</span>
@@ -88,7 +88,8 @@
 
                 var UI = {
 
-                    STOK_MODAL_TITLE: $("#stok_detay_modal_title")
+                    STOK_MODAL_TITLE: $("#stok_detay_modal_title"),
+                    STOK_MODAL_CONTENT : $("#stok_detay_modal_content")
                 };
                 $(document).ready(function(){ 
 
@@ -131,9 +132,23 @@
 
 
                     $(document).on("click", ".stok_detaylari", function(){
-
-                        UI.STOK_MODAL_TITLE.html( $(this).parent().parent().find("td").get(1).innerText + " Stok Detayları");
-
+                        var tds = $(this).parent().parent().find("td");
+                        REQ.ACTION("", { stok_karti: tds.get(0).innerText, req: "stok_karti_stok_detay_download" }, function(res){
+                            console.log(res);
+                            var html = "";
+                            for( var k = 0; k < res.data.length; k++ ){
+                              html += '<div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">'+
+                                          '<span class="count_top"><i class="fa fa-cubes"></i> '+res.data[k].yer+'</span>';
+                                if( res.data[k].miktar > 0 ){
+                                    html += '<div class="count green">'+res.data[k].miktar+'<small style="font-size:12px">'+res.data[k].birim+'</small></div></div>';
+                                } else {
+                                    html += '<div class="count red">'+res.data[k].miktar+'<small style="font-size:12px">'+res.data[k].birim+'</small></div></div>';
+                                }
+                            }
+                            UI.STOK_MODAL_TITLE.html( tds.get(1).innerText + " Stok Detayları");
+                            UI.STOK_MODAL_CONTENT.html( html );
+                        });
+                        
                     });
 
 
