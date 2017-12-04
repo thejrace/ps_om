@@ -5479,12 +5479,22 @@ if (typeof NProgress != 'undefined') {
                     // form ok, baska bisi yanlis olmussa
                     PamiraNotify("error", "Hata", res.text );
                 }
-                btnelem.get(0).disabled = false;
+                if( btnelem instanceof Array ){
+                	for( var k = 0; k < btnelem.length; k++ ) btnelem[k].get(0).disabled = false;
+                } else {
+                	btnelem.get(0).disabled = false;
+                }
+
+                
             }
           });
       } else {
           PamiraNotify("error", "Hata", "Formda eksiklikler var.");
-          btnelem.get(0).disabled = false;
+          if( btnelem instanceof Array ){
+        	for( var k = 0; k < btnelem.length; k++ ) btnelem[k].get(0).disabled = false;
+	      } else {
+	    	btnelem.get(0).disabled = false;
+	      }
       }
   }
 
@@ -5497,3 +5507,4 @@ if (typeof NProgress != 'undefined') {
   }	
 
   var DATETIMEPICKER_DEF_OPTIONS = {useCurrent: true, sideBySide: true, format: 'DD-MM-YYYY HH:mm:ss', locale:"tr"};
+  var DATEPICKER_DEF_OPTIONS = {useCurrent: true, sideBySide: true, format: 'DD-MM-YYYY', locale:"tr"};

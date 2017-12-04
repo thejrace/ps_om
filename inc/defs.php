@@ -25,6 +25,10 @@
 		define("URL_SATIS_FISI_FORM", URL_FATURA_FORM . "?tur=3");
 		define("URL_FATURA_INCELE", MAIN_URL . "fatura_incele.php?item_id=");
 
+		define("URL_TAHSILAT_MAKBUZU", MAIN_URL . "tahsilat_makbuzu_form.php");
+		define("URL_TAHSILAT_MAKBUZU_TAHSILAT", URL_TAHSILAT_MAKBUZU . "?tip=1");
+		define("URL_TAHSILAT_MAKBUZU_ODEME", URL_TAHSILAT_MAKBUZU . "?tip=2");
+
 		// verisinden otomatik çözecegiz türünü
 		define("URL_FATURA_FORM_DUZENLE", URL_FATURA_FORM . "?item_id=");
 
@@ -68,4 +72,6 @@
 		define("DBT_STOK_YERLERI", "stok_yerler");
 		define("DBT_FATURALAR", "faturalar");
 		define("DBT_FATURA_STOK_DETAYLARI", "fatura_stok_detaylari");
-		define("DBT_FATURA_CARI_DETAYLARI", "fatura_cari_detaylari");
+		// define("DBT_FATURA_CARI_DETAYLARI", "fatura_cari_detaylari");
+		define("DBT_TAHSILAT_MAKBUZLARI", "tahsilat_makbuzlari");
+		define("DBT_ITEM_CARI_KAYITLARI", "item_cari_kayitlar");

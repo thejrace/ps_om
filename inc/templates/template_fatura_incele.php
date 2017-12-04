@@ -122,7 +122,6 @@
                       <div class="row no-print">
                         <div class="col-xs-12">
                           <button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> Yazdır</button>
-                          <button class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Tahsilat Tanımla</button>
                         </div>
                       </div>
                     </section>

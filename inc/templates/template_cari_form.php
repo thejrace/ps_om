@@ -1,10 +1,10 @@
             <div class="row">
 
             <form class="form-horizontal form-label-left" id="cari_form" >
-              <div class="col-md-6">
+              <div class="col-md-6 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><small>Genel Bilgiler</small></h2>
+                    <h4>Genel Bilgiler</h4>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
@@ -89,10 +89,10 @@
                 </div>
               </div>  <!--  COL -->
 
-              <div class="col-md-6">
+              <div class="col-md-6 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><small>Mali Detaylar</small></h2>
+                    <h4>Mali Detaylar</h4>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
@@ -150,10 +150,10 @@
 
             <div class="row">
 
-              <div class="col-md-12">
+              <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><small>Yetkili Kişiler</small></h2>
+                    <h4>Yetkili Kişiler</h4>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>

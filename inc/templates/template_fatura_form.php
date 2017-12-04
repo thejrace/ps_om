@@ -1,10 +1,10 @@
             <div class="row">
 
             <form class="form-horizontal form-label-left" id="fatura_form" >
-              <div class="col-md-6">
+              <div class="col-md-6  col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><small>Genel Bilgiler</small></h2>
+                    <h4>Genel Bilgiler<small></small></h4>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
@@ -24,7 +24,7 @@
                             <option value="0">Seçiniz..</option>
                             <option value="1">Alış</option>
                             <option value="2">Satış</option>
-                            <option value="3">Satış Fişi</option>
+                            <option value="3">Sipariş Fişi</option>
                             <option value="4">Gayriresmi Alış</option>
                             <option value="5">Gayriresmi Satış</option>
                           </select>
@@ -77,10 +77,10 @@
                 </div>
               </div>  <!--  COL -->
 
-              <div class="col-md-6">
+              <div class="col-md-6 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><small>Tarih Detayları</small></h2>
+                    <h4>Tarih Detayları<small></small></h4>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
@@ -258,10 +258,10 @@
 
             <div class="row">
 
-              <div class="col-md-12">
+              <div class="col-md-12  col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><small>Stok Detayları </small></h2>
+                    <h4>Stok Detayları<small> </small></h4>
 
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -467,11 +467,24 @@
               };  
 
               var YENI_CARI = true;
-              var fis_turu = "<?php echo $FORM_SELECT ?>";
+              var fis_turu = "<?php echo $FORM_SELECT ?>",
+                  cari_get = "<?php echo $FORM_CARI ?>";
+
+              function cari_detay_download( item ){
+                  REQ.ACTION("", { req:"cari_ozet_download", cari_unvan: item }, function(res){
+                      //console.log(res);
+                      UI.CARI_BAKIYE_LABEL.html("Carinin <br/> " + bakiye_dt_format(res.data.bakiye) + " <br/> bakiyesi bulunmaktadır.");
+                      UI.CARI_ADRES_LABEL.html(res.data.adres + "<br/>" + res.data.telefon_1 + "<br/>" + res.data.eposta );
+                      YENI_CARI = false;
+                  });
+              }
 
               $(document).ready(function(){
 
-
+                  if( cari_get != "" ){
+                      cari_detay_download( cari_get );
+                      UI.CARI_INPUT.val(cari_get);
+                  }
 
                   var item_id = trim(UI.ITEM_ID.val());
                   if( item_id != "" ){
@@ -579,7 +592,6 @@
                   });
 
                   UI.CARI_INPUT.keyup(function(){
-    
                       YENI_CARI = true;
                       UI.CARI_BAKIYE_LABEL.html("- Veri yok");
                       UI.CARI_ADRES_LABEL.html("- Veri yok");
@@ -587,13 +599,8 @@
 
 
                   REQ.AC( UI.CARI_INPUT, "", { tip:"cari" }, function( item ){
-                        YENI_CARI = true;
-                        REQ.ACTION("", { req:"cari_ozet_download", cari_unvan: item }, function(res){
-                            //console.log(res);
-                            UI.CARI_BAKIYE_LABEL.html("Carinin <br/> " + bakiye_dt_format(res.data.bakiye) + " <br/> bakiyesi bulunmaktadır.");
-                            UI.CARI_ADRES_LABEL.html(res.data.adres + "<br/>" + res.data.telefon_1 + "<br/>" + res.data.eposta );
-                            YENI_CARI = false;
-                        });
+                      YENI_CARI = true;
+                      cari_detay_download( item );
                   });
 
 

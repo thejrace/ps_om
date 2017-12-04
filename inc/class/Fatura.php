@@ -2,11 +2,12 @@
 
 	class Fatura extends DataCommon {
 
-		public static $ALIS = 1, $SATIS = 2, $SATIS_FISI = 3, $GR_ALIS = 4, $GR_SATIS = 5;
+		public static $ITEM_TIP = 1; // cari kayit icin
+		public static $ALIS = 1, $SATIS = 2, $SIPARIS_FISI = 3, $GR_ALIS = 4, $GR_SATIS = 5;
 		public static $TUR_STR = array(
 			1 => "Alış",
 			2 => "Satış",
-			3 => "Satış Fişi",
+			3 => "Sipariş Fişi",
 			4 => "Gayriresmi Alış",
 			5 => "Gayriresmi Satış"
 		);
@@ -80,11 +81,11 @@
 			$this->details["id"] = $this->pdo->lastInsertedId();
 
 			// carinin detaylarini kaydet
-			if( !$Cari->faturaya_ekle( $this->details["id"] ) ){
+			if( !$Cari->item_kayit_ekle( self::$ITEM_TIP, $this->details["id"] ) ){
 				$this->return_text = $Cari->get_return_text();
 				return false;
 			}
-			$cari_detay_id = $Cari->get_details("fatura_detay_id");
+			$cari_detay_id = $Cari->get_details("item_detay_id");
 
 			$bakiye_toplam = 0;
 			$ara_toplam = 0;
@@ -153,7 +154,7 @@
 				$kdv_miktar = $genel_toplam - $ara_toplam;
 			}
 
-			if( $input["tur"] != Fatura::$SATIS_FISI ){
+			if( $input["tur"] != Fatura::$SIPARIS_FISI ){
 				// fis harici bakiye hareketi yapiyoruz
 				if( !$Cari->bakiye_guncelle( $input["tur"], $bakiye_toplam ) ){
 					$this->return_text = $Cari->get_return_text();
@@ -193,7 +194,7 @@
 		}
 
 		public function get_cari_kayit(){
-			return $this->pdo->query("SELECT * FROM " . DBT_FATURA_CARI_DETAYLARI . " WHERE fatura_id = ?", array( $this->details["id"] ))->results();
+			return $this->pdo->query("SELECT * FROM " . DBT_ITEM_CARI_KAYITLARI . " WHERE item_tip = ? && item_id = ?", array( self::$ITEM_TIP, $this->details["id"] ))->results();
 		}
 
 		public function stok_detaylari_arama( $kw_array ){

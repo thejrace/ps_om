@@ -174,13 +174,20 @@
 			require CLASS_DIR . "DataCommon.php";
 			require CLASS_DIR . "Fatura.php";	
 
-			if( Input::get("tur") != Fatura::$ALIS && Input::get("tur") != Fatura::$SATIS && Input::get("tur") != Fatura::$SATIS_FISI &&  Input::get("tur") != Fatura::$GR_ALIS && Input::get("tur") != Fatura::$GR_SATIS  ){
+			if( Input::get("tur") != Fatura::$ALIS && Input::get("tur") != Fatura::$SATIS && Input::get("tur") != Fatura::$SIPARIS_FISI &&  Input::get("tur") != Fatura::$GR_ALIS && Input::get("tur") != Fatura::$GR_SATIS  ){
 				die("Form türü belirtilmedi.");
 			}
 			$FORM_SELECT = Input::get("tur");
 		}
 		$FORM_REQ = "fatura_ekle";
 		$ITEM_ID = "";
+
+		if( Input::exists(Input::$GET, "cari") ){
+			require CLASS_DIR . "Cari.php";
+			$FORM_CARI = Input::get("cari");
+		} else {
+			$FORM_CARI = "";
+		}
 		
 	}
 
