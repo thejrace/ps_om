@@ -14,7 +14,7 @@
 
 		public function ekle( Cari &$Cari, $input ){
 			$this->pdo->insert( $this->dt_table, array(
-				"cari" 				=> $Cari->get_details("id"),
+				"cari_id" 			=> $Cari->get_details("id"),
 				"cari_kayit_id" 	=> 0,
 				"tutar" 			=> $input["tutar"],
 				"tip" 				=> $input["tip"],

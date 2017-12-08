@@ -37,6 +37,7 @@
 		define("URL_STOK_GIRIS_FORM", URL_STOK_HAREKET_FORM . "?tip=giris");
 		define("URL_STOK_CIKIS_FORM", URL_STOK_HAREKET_FORM . "?tip=cikis");
 
+		define("URL_AC_COMMON", MAIN_URL . "inc/ac_common.php");
 
 		define("URL_STOK_KARTLARI", MAIN_URL . "stok_kartlari.php");
 		define("URL_STOK_KART_FORM", MAIN_URL . "stok_kart_form.php");
@@ -52,11 +53,20 @@
 
 		ini_set('error_log', MAIN_DIR . "error.log");
 
+		// laptop local
+		/*define("DB_NAME", "pamira_stone");
+		define("DB_USER", "root");
+		define("DB_PASS", "");
+		define("DB_IP", "localhost:3306");*/
+
+
+		// PC local
 		define("DB_NAME", "pamira_stone");
 		define("DB_USER", "root");
 		define("DB_PASS", "Dogansaringulu9");
 		define("DB_IP", "localhost:3306");
 
+		// hosting
 		/*define("DB_NAME", "pamira_stone");
 		define("DB_USER", "pamira_stone");
 		define("DB_PASS", "WAzzabii308");

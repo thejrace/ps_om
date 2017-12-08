@@ -29,4 +29,5 @@
 			return $this->details;
 		}
 
+
 	}

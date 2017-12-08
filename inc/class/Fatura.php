@@ -8,8 +8,8 @@
 			1 => "Alış",
 			2 => "Satış",
 			3 => "Sipariş Fişi",
-			4 => "Gayriresmi Alış",
-			5 => "Gayriresmi Satış"
+			4 => "Alış Fişi",
+			5 => "Satış Fişi"
 		);
 		// alis faturalarnda fiyatlari - olarak ekle
 

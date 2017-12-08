@@ -200,18 +200,23 @@ class SSP {
 			 $order
 			 $limit"
 		);
+
+
 		// Data set length after filtering
 		$resFilterLength = self::sql_exec( $db, $bindings,
 			"SELECT COUNT(`{$primaryKey}`)
 			 FROM   `$table`
 			 $where"
 		);
+
 		$recordsFiltered = $resFilterLength[0][0];
+	
 		// Total data set length
 		$resTotalLength = self::sql_exec( $db,
 			"SELECT COUNT(`{$primaryKey}`)
 			 FROM   `$table`"
 		);
+
 		$recordsTotal = $resTotalLength[0][0];
 		/*
 		 * Output
@@ -321,6 +326,11 @@ class SSP {
 	{
 		try {
 			$db = new PDO('mysql:host='.DB_IP.';dbname='.DB_NAME, DB_USER, DB_PASS);
+
+			$stmt = $db->prepare( "SET NAMES 'ISO-8859-9'; SET CHARSET 'ISO-8859-9'" );
+			$stmt->execute();
+
+			
 		}
 		catch (PDOException $e) {
 			self::fatal(
@@ -341,12 +351,14 @@ class SSP {
 	 * @return array         Result from the query (all rows)
 	 */
 	static function sql_exec ( $db, $bindings, $sql=null )
-	{
+	{	
+
 		// Argument shifting
 		if ( $sql === null ) {
 			$sql = $bindings;
 		}
 		$stmt = $db->prepare( $sql );
+
 		//echo $sql;
 		// Bind parameters
 		if ( is_array( $bindings ) ) {

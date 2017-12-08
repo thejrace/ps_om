@@ -1,7 +1,6 @@
 <?php
 	
 	require 'inc/defs.php';
-
 	if( $_GET ){
 
 		require CLASS_DIR . 'DB.php';

@@ -4,14 +4,6 @@
 	require CLASS_DIR . "Common.php";
 	require CLASS_DIR . "Input.php";
 
-	if( Input::exists(Input::$GET, "term") ){
-		// ürün grubu otokompilit
-		require CLASS_DIR . "DB.php";
-		$q = array();
-		foreach( DB::getInstance()->query("SELECT isim FROM " . DBT_STOK_KARTLARI_URUN_GRUPLARI . " WHERE isim LIKE ? || isim LIKE ? || isim LIKE ?", array("%".Input::get("term"), Input::get("term")."%", "%".Input::get("term")."%"))->results() as $res ) $q[] = $res["isim"];
-		die( json_encode($q));
-	}
-
 	if( $_POST ){
 
 		require CLASS_DIR . "InputErrorHandler.php";

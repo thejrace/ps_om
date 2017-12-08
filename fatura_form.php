@@ -68,10 +68,10 @@
 
 				$Cari = new Cari( Input::get("cari_unvan") );
 				if( $Cari->is_ok() ){
-					$DATA["adres"] = $Cari->get_details("adres") . " " . $Cari->get_details("ilce") . " / " . $Cari->get_details("il");
-					$DATA["telefon_1"] = $Cari->get_details("telefon_1");
-					$DATA["eposta"] = $Cari->get_details("eposta");
-					$DATA["bakiye"] = $Cari->get_details("bakiye");
+					$DATA["adres"] 			= $Cari->get_details("adres") . " " . $Cari->get_details("ilce") . " / " . $Cari->get_details("il");
+					$DATA["telefon_1"] 		= $Cari->get_details("telefon_1");
+					$DATA["eposta"] 		= $Cari->get_details("eposta");
+					$DATA["bakiye"] 		= $Cari->get_details("bakiye");
 				} else {
 					$OK = 0;
 				}
@@ -124,16 +124,6 @@
 					$OK = 0;
 				}
 
-			break;
-
-			case 'ac':
-				$q = array();
-				if( Input::get("tip") == "cari" ){
-					$q = Cari::ac_arama(Input::get("term"));
-				} else {
-					$q = StokKarti::ac_arama(Input::get("term"));
-				}
-				die( json_encode($q));
 			break;
 
 		}

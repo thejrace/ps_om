@@ -3,7 +3,7 @@
   <head>
 
     <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 	  
     <title>Obarey <?php echo $PAGE["title"] ?></title>
@@ -195,6 +195,15 @@
           </div>
         </div>
         <!-- /top navigation -->
+
+
+        <script type="text/javascript">
+
+            var PSGLOBAL = {
+               AC_COMMON: "<?php echo URL_AC_COMMON; ?>"
+            }
+
+        </script>
 
         <!-- page content -->
         <div class="right_col" role="main">

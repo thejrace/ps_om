@@ -146,10 +146,8 @@
                         UI.KDV_DAHIL_INPUT.val(kdv_dahil_hesapla( UI.SATIS_FIYATI_INPUT.val(), UI.KDV_ORAN_INPUT.val()) );
                     });
 
-                    $( "#urun_grubu" ).autocomplete({
-                      source: "",
-                      minLength: 2
-                    });
+                    REQ.AC( $("#urun_grubu"), PSGLOBAL.AC_COMMON, { tip:"urun_grubu" }, null );
+
 
                 });
 

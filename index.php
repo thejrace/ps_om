@@ -1,7 +1,7 @@
 <?php
 	
 	require 'inc/defs.php';
-	
+
 	$PAGE = array(
 		"title" 		=> "Pamira Stone",
 		"top_title"		=> "Pamira Stone",

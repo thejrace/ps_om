@@ -44,5 +44,10 @@
 			return count($kontrol) == 0;
 		}	
 
+		public static function ac_arama( $term ){
+			$q = array();
+			foreach( DB::getInstance()->query("SELECT isim FROM " . DBT_STOK_KARTLARI_URUN_GRUPLARI . " WHERE isim LIKE ? || isim LIKE ? || isim LIKE ?", array("%".$term, $term."%", "%".$term."%"))->results() as $res ) $q[] = $res["isim"];
+			return $q;
+		}
 
 	}

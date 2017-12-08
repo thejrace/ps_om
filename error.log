@@ -1,0 +1,5 @@
+[08-Dec-2017 10:02:42 Europe/Berlin] PHP Fatal error:  Uncaught exception 'Exception' with message 'req INPUT ERROR' in C:\xampp\htdocs\pamira_stone\inc\class\Input.php:59
+Stack trace:
+#0 C:\xampp\htdocs\pamira_stone\inc\ac_common.php(9): Input::get('req')
+#1 {main}
+  thrown in C:\xampp\htdocs\pamira_stone\inc\class\Input.php on line 59

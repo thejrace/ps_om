@@ -25,8 +25,8 @@
                             <option value="1">Alış</option>
                             <option value="2">Satış</option>
                             <option value="3">Sipariş Fişi</option>
-                            <option value="4">Gayriresmi Alış</option>
-                            <option value="5">Gayriresmi Satış</option>
+                            <option value="4">Alış Fişi</option>
+                            <option value="5">Satış Fişi</option>
                           </select>
                         </div>
                       </div>
@@ -434,7 +434,7 @@
                   var aktif_row = $("#yetkili_"+YCOUNT);
                   var yer_select = aktif_row.find(".yer");
                   if( yer != "" ) yer_select[0].value = yer;
-                  REQ.AC( $(".kart_"+YCOUNT), "", { tip:"stok_karti" }, function( item, elem ){
+                  REQ.AC( $(".kart_"+YCOUNT), PSGLOBAL.AC_COMMON, { tip:"stok_karti" }, function( item, elem ){
                       REQ.ACTION("", { req:"stok_karti_data_download", stok_karti: item, cari: UI.CARI_INPUT.val(), fis_turu:UI.TUR_INPUT.val()  }, function(res){
                           //console.log(res);
                           var parent = $("#yetkili_"+elem.attr("parent"));
@@ -598,7 +598,7 @@
                   }.debounce(100, false));
 
 
-                  REQ.AC( UI.CARI_INPUT, "", { tip:"cari" }, function( item ){
+                  REQ.AC( UI.CARI_INPUT, PSGLOBAL.AC_COMMON, { tip:"cari" }, function( item ){
                       YENI_CARI = true;
                       cari_detay_download( item );
                   });

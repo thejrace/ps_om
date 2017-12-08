@@ -5427,13 +5427,34 @@ if (typeof NProgress != 'undefined') {
 		    } );
 		} );
 	}
+
+	function format_fatura_row( data, row ){
+		var ctext;
+		if( data == "Tahsilat" || data == "Satış" || data == "Gayriresmi Satış" ){
+			ctext = "yesil_row";
+		} else if( data == "Ödeme" || data == "Alış" || data == "Gayriresmi Alış" ){
+			ctext = "kirmizi_row";
+		}
+		addClass(row, "renkli_row");
+		addClass(row, ctext);
+	}
+
+	function format_fatura_tip( data ){
+		var ctext;
+		if( data == "Tahsilat" || data == "Satış" || data == "Gayriresmi Satış" ){
+			ctext = "bakiye_p";
+		} else if( data == "Ödeme" || data == "Alış" || data == "Gayriresmi Alış" ){
+			ctext = "bakiye_n";
+		}
+		return '<font class="bakiye_text '+ctext+'">'+data+'</font>';
+	}
 	 
 	function format_currency(_data, n = 2, x = 3, s = '.', c = ',') {
 		var data = Number(_data);
 	    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
 	        num = data.toFixed(Math.max(0, ~~n));
 
-	    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ',')) + " ₺";
+	    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ',')) + " <span class=\"simge-tl\">&#8378;</span>";
 	}
 
 	function bakiye_dt_format( _data ){
