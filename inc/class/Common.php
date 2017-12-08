@@ -18,6 +18,7 @@
 		}
 
 		public function date_reverse( $date ){
+			if( trim($date) == "" ) return null;
 			$tarih_parcala = explode( "-", $date );
 			$tarih_tr_format = "";
 			for( $i = count($tarih_parcala)-1; $i > -1; $i-- ){

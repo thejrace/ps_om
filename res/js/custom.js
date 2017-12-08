@@ -5527,5 +5527,44 @@ if (typeof NProgress != 'undefined') {
   		return parseFloat(parseFloat(toplam) / ( (parseFloat(kdv_oran) / 100 ) + 1 ) ).toFixed(2);
   }	
 
-  var DATETIMEPICKER_DEF_OPTIONS = {useCurrent: true, sideBySide: true, format: 'DD-MM-YYYY HH:mm:ss', locale:"tr"};
-  var DATEPICKER_DEF_OPTIONS = {useCurrent: true, sideBySide: true, format: 'DD-MM-YYYY', locale:"tr"};
+  function get_current_datetime(){
+	var dt 		= new Date(),
+		gun 	= dt.getDate(),
+		ay  	= dt.getMonth(),
+		yil 	= dt.getFullYear(),
+		saat 	= dt.getHours(),
+		dk 		= dt.getMinutes(),
+		sn 		= dt.getSeconds();
+
+		console.log( "GÜN: " + gun );
+		console.log( "AY: " + ay );
+		console.log( "YIL: " + yil );
+		console.log( "SAAT: " + saat );
+		console.log( "DK: " + dk );
+		console.log( "SN: " + sn );
+
+	function sifir_ekle( val ){
+		if( val.length == 1 ) return "0"+val;
+		return val;
+	}
+	return sifir_ekle(gun) + "-" + sifir_ekle(ay) + "-" + yil + " " + sifir_ekle(saat) + ":" + sifir_ekle(dk) + ":" + sifir_ekle(sn);
+  }
+
+  function get_current_date(){
+		var 	dt 		= new Date(),
+				gun 	= dt.getDate(),
+				ay  	= dt.getMonth(),
+				yil 	= dt.getFullYear(),
+				saat 	= dt.getHours(),
+				dk 		= dt.getMinutes(),
+				sn 		= dt.getSeconds();
+		function sifir_ekle( val ){
+		if( val.length == 1 ) return "0"+val;
+		return val;
+		}
+		return sifir_ekle(gun) + "-" + sifir_ekle(ay) + "-" + yil;
+	}
+
+  var DATETIMEPICKER_DEF_OPTIONS = {useCurrent: true, defaultDate: moment(), sideBySide: true, format: 'DD-MM-YYYY HH:mm:ss', locale:"tr"};
+  var DATEPICKER_DEF_OPTIONS = {useCurrent: true, defaultDate: moment(), format: 'DD-MM-YYYY', locale:"tr"};
+  var DATEPICKER_DEF_OPTIONS_NO_PLACEHOLDER = {useCurrent: true, format: 'DD-MM-YYYY', locale:"tr"};

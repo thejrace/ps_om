@@ -129,6 +129,8 @@
                           <th>Ara Toplam</th>
                           <th>Genel Toplam</th>
                           <th>Düzenlenme Tarihi</th>
+                          <th class="tr_cb">#</th>
+                          <th class="tr_cb">#</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -164,7 +166,17 @@
                           render: function ( data, type, row ) {
                               return format_currency( data );
                           }},
-                        { "searchable": false }
+                        { "searchable": false },
+                        {
+                          "data": null,
+                          "orderable": false,
+                          "defaultContent": '<button type="button" class="btn btn-xs btn-danger tahsil_et" >Tahsil Et</button>'
+                        },
+                        {
+                          "data": null,
+                          "orderable": false,
+                          "defaultContent": '<button type="button" class="btn btn-xs btn-info detaylar" >İncele</button>'
+                        }
                       ],
                       "processing": true,
                       "serverSide": true,
@@ -183,7 +195,7 @@
 
                     init_server_side_table( TABLE );
 
-                    $("[dtpicker]").datetimepicker(DATEPICKER_DEF_OPTIONS);
+                    $("[dtpicker]").datetimepicker(DATEPICKER_DEF_OPTIONS_NO_PLACEHOLDER);
 
                     REQ.AC( $("#cari"), PSGLOBAL.AC_COMMON, { tip:"cari" }, null);
 
@@ -226,7 +238,18 @@
                                       render: function ( data, type, row ) {
                                         return format_currency( data );
                                     }},
-                                    { "searchable": false }
+                                    { "searchable": false },
+                                    {
+                                      "data": null,
+                                      "orderable": false,
+                                      "defaultContent": '<button type="button" class="btn btn-xs btn-danger tahsil_et" >Makbuz Kes</button>'
+                                    },
+                                    {
+                                      "data": null,
+                                      "orderable": false,
+                                      "defaultContent": '<button type="button" class="btn btn-xs btn-info detaylar" >İncele</button>'
+                                    }
+                                    
                                   ]
                               });
                               TABLE.DataTable().clear();
@@ -242,8 +265,20 @@
 
                     });
               
-                    $(document).on("click", ".duzenle", function(){
-                        window.location = "<?php echo URL_FATURA_INCELE ?>"+$(this).parent().parent().find("td").get(0).innerText;
+                    $(document).on("click", ".detaylar", function(){
+                        window.open("<?php echo URL_FATURA_INCELE ?>"+$(this).parent().parent().find("td").get(0).innerText, "_blank");
+                    });
+
+                     $(document).on("click", ".tahsil_et", function(){
+                        var tds = $(this).parent().parent().find("td");
+                        //console.log(tds);
+                        if( tds[3].innerText == "Alış" ){
+                            window.open("<?php echo URL_TAHSILAT_MAKBUZU_ODEME ?>&cari="+tds[1].innerText+"&tutar="+tds[5].innerText.substring(0, tds[5].innerText.length - 2).replace(",", "."), "_blank");
+                        } else if( tds[3].innerText == "Satış" ){
+                            window.open("<?php echo URL_TAHSILAT_MAKBUZU_TAHSILAT ?>&cari="+tds[1].innerText+"&tutar="+tds[5].innerText.substring(0, tds[5].innerText.length - 2).replace(",", "."), "_blank");
+                        } else {
+                            PamiraNotify("error", "Hata", "Fişi önce faturalandırmalısınz.");
+                        }
                     });
 
                 });

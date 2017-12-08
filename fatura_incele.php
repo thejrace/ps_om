@@ -23,12 +23,10 @@
 
     require 'inc/header.php';
 
-
-
     $cari_kayit = $Fatura->get_cari_kayit();
     $stok_detaylari = $Fatura->get_stok_detaylari();
 
-	
+
 	require TEMPLATES_DIR . $PAGE["template"];
 
 

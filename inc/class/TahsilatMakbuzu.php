@@ -6,75 +6,94 @@
 		public static $TAHSILAT = 1, $ODEME = 2;
 		public static $TIP_STR = array( 1 => "Tahsilat", 2 => "Ödeme" );
 
+		private $makbuz_ids = array();
+
 		public function __construct( $id = null ){
 			$this->pdo = DB::getInstance();
 			$this->dt_table = DBT_TAHSILAT_MAKBUZLARI;
 			if( isset($id) ) $this->check( array("id"), $id);
 		}
 
-		public function ekle( Cari &$Cari, $input ){
-			$this->pdo->insert( $this->dt_table, array(
-				"cari_id" 			=> $Cari->get_details("id"),
-				"cari_kayit_id" 	=> 0,
-				"tutar" 			=> $input["tutar"],
-				"tip" 				=> $input["tip"],
-				"tahsilat_tipi" 	=> $input["tahsilat_tipi"],
-				"tarih" 			=> Common::date_reverse( $input["tarih"] ),
-				"eklenme_tarihi" 	=> Common::get_current_datetime(),
-				"user" 				=> 0
-			));
+
+		private function makbuz_kes( $data ){
+			$this->pdo->insert( $this->dt_table, $data );
 			if( $this->pdo->error() ){
-				$this->return_text = "Bir hata oluştu.[1][".$this->pdo->get_error_message()."]";
+				$this->return_text = "Hata oluştu[3][".$this->pdo->get_error_message()."]";
 				return false;
 			}
-			$this->details["id"] = $this->pdo->lastInsertedId();
-
-			if( !$Cari->item_kayit_ekle( self::$ITEM_TIP, $this->details["id"] ) ){
-				$this->return_text = $Cari->get_return_text();
-				return false;
-			}
-			$cari_kayit_id = $Cari->get_details("item_detay_id");
-
-			if( !$Cari->bakiye_guncelle( $input["tip"], $input["tutar"] ) ){
-				$this->return_text = $Cari->get_return_text();
-				return false;
-			}
-
-			// TODO kasa, çek hesaplari falan guncellenecek burada
-			if( $input["tahsilat_tipi"] == "Havale" ){
-				$this->pdo->query("UPDATE " . $this->dt_table . " SET 
-					cari_kayit_id = ?,
-					banka = ? WHERE id = ?", array(
-						$cari_kayit_id,
-						$input["banka"],
-						$this->details["id"]
-				));
-			} else if( $input["tahsilat_tipi"] == "Çek" ){
-				$this->pdo->query("UPDATE " . $this->dt_table . " SET 
-					cari_kayit_id = ?,
-					cek_no = ?,
-					cek_vade = ? WHERE id = ?", array(
-						$cari_kayit_id,
-						$input["cek_no"],
-						Common::date_reverse($input["cek_vade"]),
-						$this->details["id"]
-				));
-			} else {
-				$this->pdo->query("UPDATE " . $this->dt_table . " SET 
-					cari_kayit_id = ? WHERE id = ?", array(
-						$cari_kayit_id,
-						$this->details["id"]
-				));
-			}
-
-			if( $this->pdo->error() ){
-				$this->return_text = "Bir hata oluştu.[1][".$this->pdo->get_error_message()."]";
-				return false;
-			}
-
-			$this->return_text = "Tahsilat makbuzu kesildi.";
+			$this->makbuz_ids[] = $this->pdo->lastInsertedId();
 			return true;
 		}
+
+		public function ekle( Cari &$Cari, $input ){
+			if( trim($input["tarih"]) == "" ){
+				$this->return_text = "Tarih girilmedi.";
+				return false;
+			}
+
+			$db_exec_array = array(
+				"cari_id" 				=> $Cari->get_details("id"),
+				"tarih" 				=> Common::date_reverse($input["tarih"]),
+				"cari_kayit_id" 		=> 0,
+				"tip"					=> $input["tip"],
+				"eklenme_tarihi" 		=> Common::get_current_datetime(),
+				"user" 					=> 0
+			);
+
+			$toplam_tutar = 0;
 		
+
+			if( trim($input["pesin_tutar"]) != "" ){
+				$db_exec_array["tutar"] = $input["pesin_tutar"];
+				$db_exec_array["tahsilat_tipi"] = "Peşin";
+				if( !$this->makbuz_kes( $db_exec_array ) ) return false;
+				$toplam_tutar += (double)$input["pesin_tutar"];
+			}
+
+			if( trim($input["havale_tutar"]) != "" ){
+				$db_exec_array["tutar"] = $input["havale_tutar"];
+				$db_exec_array["tahsilat_tipi"] = "Havale";
+				$db_exec_array["banka"] = $input["havale_banka"];
+				if( !$this->makbuz_kes( $db_exec_array ) ) return false;
+				$toplam_tutar += (double)$input["havale_tutar"];
+			}
+
+			if( trim($input["kredi_karti_tutar"]) != "" ){
+				$db_exec_array["tutar"] = $input["kredi_karti_tutar"];
+				$db_exec_array["tahsilat_tipi"] = "Kredi Kartı";
+				$db_exec_array["banka"] = $input["havale_banka"];
+				if( !$this->makbuz_kes( $db_exec_array ) ) return false;
+				$toplam_tutar += (double)$input["kredi_karti_tutar"];
+			}
+
+			if( trim($input["cek_tutar"]) != "" ){
+				$db_exec_array["tutar"] = $input["cek_tutar"];
+				$db_exec_array["tahsilat_tipi"] = "Çek";
+				$db_exec_array["cek_no"] = $input["cek_no"];
+				$db_exec_array["cek_vade"] = Common::date_reverse($input["cek_vade"]);
+				if( !$this->makbuz_kes( $db_exec_array ) ) return false;
+				$toplam_tutar += (double)$input["cek_tutar"];
+			}
+
+			foreach( $this->makbuz_ids as $makbuz_id ){
+				if( !$Cari->item_kayit_ekle( self::$ITEM_TIP, $makbuz_id ) ){
+					$this->return_text = $Cari->get_return_text();
+					return false;
+				}
+				$cari_kayit_id = $Cari->get_details("item_detay_id");
+				$this->pdo->query("UPDATE " . $this->dt_table . " SET cari_kayit_id = ? WHERE id = ?", array( $cari_kayit_id, $makbuz_id));
+				if( $this->pdo->error() ){
+					$this->return_text = "Bir hata oluştu.[2]";
+					return false;
+				}	
+
+			}
+			if( !$Cari->bakiye_guncelle( $input["tip"], $toplam_tutar ) ){
+				$this->return_text = $Cari->get_return_text();
+				return false;
+			}	
+			$this->return_text = "Makbuz(lar) kesildi.";
+			return true;
+		}
 
 	}

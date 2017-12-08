@@ -121,7 +121,7 @@
                         {
                           "data": null,
                           "orderable": false,
-                          "defaultContent": '<button type="button" class="btn btn-xs btn-danger detaylar">İncele</button>'
+                          "defaultContent": '<button type="button" class="btn btn-xs btn-danger incele">İncele</button>'
                         },
                         {
                           "data": null,
@@ -150,8 +150,13 @@
                     });
 
                     $(document).on("click", ".duzenle", function(){
-                        window.location = "<?php echo URL_CARI_DUZENLE_FORM ?>"+$(this).parent().parent().find("td").get(0).innerText;
+                        window.open("<?php echo URL_CARI_DUZENLE_FORM ?>"+$(this).parent().parent().find("td").get(0).innerText, "_blank");
                     });
+
+                    $(document).on("click", ".incele", function(){
+                        window.open("<?php echo URL_CARI_INCELE ?>"+$(this).parent().parent().find("td").get(0).innerText, "_blank");
+                    });
+
 
                 });
 

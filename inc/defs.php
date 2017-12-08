@@ -17,6 +17,7 @@
 		define("URL_CARILER", MAIN_URL . "cariler.php");
 		define("URL_CARI_FORM", MAIN_URL . "cari_form.php");
 		define("URL_CARI_DUZENLE_FORM", URL_CARI_FORM . "?item_id=");
+		define("URL_CARI_INCELE", MAIN_URL . "cari_incele.php?item_id=");
 
 		define("URL_FATURALAR", MAIN_URL . "faturalar.php");
 		define("URL_FATURA_FORM", MAIN_URL . "fatura_form.php");
@@ -28,6 +29,8 @@
 		define("URL_TAHSILAT_MAKBUZU", MAIN_URL . "tahsilat_makbuzu_form.php");
 		define("URL_TAHSILAT_MAKBUZU_TAHSILAT", URL_TAHSILAT_MAKBUZU . "?tip=1");
 		define("URL_TAHSILAT_MAKBUZU_ODEME", URL_TAHSILAT_MAKBUZU . "?tip=2");
+
+		
 
 		// verisinden otomatik çözecegiz türünü
 		define("URL_FATURA_FORM_DUZENLE", URL_FATURA_FORM . "?item_id=");

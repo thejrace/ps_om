@@ -20,12 +20,11 @@
         $INPUT_RET = array();
 
 		$INPUT_LIST = array(
-			"tutar" 			=> array( array( "req" => true, "pozNumerik" => true ),  null ),
-			'tahsilat_tipi'		=> array( array( "req" => true ), "" ),
-			'tarih'  			=> array( array( "req" => true ), null ),
-			'banka' 			=> array( array( "req" => true, "select_not_zero" => true ), null ),
-			'cek_no' 			=> array( array( "req" => true ), null ),
-			'cek_vade' 			=> array( array( "req" => true ), null )
+			"pesin_tutar" 			=> array( array( "pozNumerik" => true ),  null ),
+			'havale_tutar'			=> array( array( "pozNumerik" => true ),  null ),
+			'kredi_karti_tutar'		=> array( array( "pozNumerik" => true ),  null ),
+			'cek_tutar'				=> array( array( "pozNumerik" => true ),  null ),
+			'tarih'  				=> array( array( "req" => true ), null )
 		);
 
 		switch( Input::get("req") ){
@@ -88,6 +87,12 @@
 		if( !$Cari->is_ok() ) header("Location: index.php");
 
 		$TIP = Input::get("tip");
+
+		if( Input::exists(Input::$GET, "tutar") ){
+			$TUTAR = Input::get("tutar");
+		} else {
+			$TUTAR = 0;
+		}
 	}
 
 

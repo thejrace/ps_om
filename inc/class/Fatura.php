@@ -143,12 +143,12 @@
 			}
 
 			// resmiyet kontrolu
-			if( $input["tur"] == Fatura::$GR_ALIS || $input["tur"] == Fatura::$GR_SATIS ){
+			if( $input["tur"] == Fatura::$GR_ALIS || $input["tur"] == Fatura::$GR_SATIS  ){
 				// gayri resmi
 				$bakiye_toplam = $ara_toplam;
 				$genel_toplam = $ara_toplam;
 				$kdv_miktar = 0;
-			} else if( $input["tur"] == Fatura::$SATIS || $input["tur"] == Fatura::$ALIS ){
+			} else if( $input["tur"] == Fatura::$SATIS || $input["tur"] == Fatura::$ALIS || $input["tur"] == Fatura::$SIPARIS_FISI){
 				// resmi
 				$bakiye_toplam = $genel_toplam;
 				$kdv_miktar = $genel_toplam - $ara_toplam;

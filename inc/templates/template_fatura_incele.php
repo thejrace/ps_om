@@ -121,6 +121,13 @@
                       <!-- this row will not appear when printing -->
                       <div class="row no-print">
                         <div class="col-xs-12">
+
+                          <?php if( $Fatura->get_details("fis_turu") == Fatura::$SIPARIS_FISI ) { ?>
+
+                                <button class="btn btn-success"><i class="fa fa-file-text"></i> Faturalandır</button>
+
+                          <?php } ?>
+
                           <button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> Yazdır</button>
                         </div>
                       </div>

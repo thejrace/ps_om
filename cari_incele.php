@@ -2,27 +2,30 @@
 	
 	require 'inc/defs.php';
 
-	session_start();
-
 	require CLASS_DIR . 'Common.php';
 	require CLASS_DIR . 'DB.php';
+	require CLASS_DIR . 'Input.php';
+	require CLASS_DIR . 'DataCommon.php';
+	require CLASS_DIR . 'Cari.php';
+
+
+	if( Input::exists(Input::$GET, "item_id") ){
+		$Cari = new Cari(Input::get("item_id"));
+		if( !$Cari->is_ok() ) header("Location: index.php");
+	} else {
+		header("Location: index.php");
+	}
+	
 
 	if( $_GET ){
 
-		require CLASS_DIR . 'Input.php';
+		
 		require CLASS_DIR . 'SSP.php';
-		require CLASS_DIR . 'DataCommon.php';
-		require CLASS_DIR . 'CariYetkili.php';
-		require CLASS_DIR . 'Cari.php';
 		require CLASS_DIR . 'Fatura.php';
 		require CLASS_DIR . 'TahsilatMakbuzu.php';
 
 		if( Input::exists(Input::$GET, "dt_download")){
-
-			$Cari = new Cari(Input::get("cari"));
-
 			if( Input::get("dt_id") == "faturalar" ){
-
 				$DATA_TABLES_ROWS = array(
 					"primary_key" 	=> "id",
 					"table"			=> DBT_FATURALAR,
@@ -35,9 +38,7 @@
 					    array( 'db' => 'duzenlenme_tarihi',  	'dt' => 5, 'formatter' => function($d, $row){ return Common::datetime_reverse($d);  } )
 				    )
 				);
-
 			} else {
-
 				$DATA_TABLES_ROWS = array(
 					"primary_key" 	=> "id",
 					"table"			=> DBT_TAHSILAT_MAKBUZLARI,
@@ -50,24 +51,12 @@
 					    
 				    )
 				);
-				
-
 			}	
-				$_SESSION["test"] = $_GET;
-
-				die(json_encode(
-				    SSP::complex( $_GET, $DATA_TABLES_ROWS["table"], $DATA_TABLES_ROWS["primary_key"], $DATA_TABLES_ROWS["cols"], null, " cari_id = '".$Cari->get_details("id")."'" )
-				));
-
-			
-
-
+			die(json_encode(
+			    SSP::complex( $_GET, $DATA_TABLES_ROWS["table"], $DATA_TABLES_ROWS["primary_key"], $DATA_TABLES_ROWS["cols"], null, " cari_id = '".$Cari->get_details("id")."'" )
+			));
 		}
-
-		
 	}
-	
-
 	
 	$PAGE = array(
 		"title" 		=> "Cari İncele",
@@ -84,5 +73,3 @@
 
 
 	require 'inc/footer.php';
-
-?>
