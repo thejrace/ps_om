@@ -363,7 +363,7 @@ body .container.body .right_col {
 .nav_title {
     width: 230px;
     float: left;
-    background: #663300;
+        background: #ededed;
     border-radius: 0;
     height: 57px
 }

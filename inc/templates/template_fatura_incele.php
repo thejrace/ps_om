@@ -122,9 +122,9 @@
                       <div class="row no-print">
                         <div class="col-xs-12">
 
-                          <?php if( $Fatura->get_details("fis_turu") == Fatura::$SIPARIS_FISI ) { ?>
+                          <?php if( $Fatura->get_details("fis_turu") == Fatura::$SIPARIS_FISI && User::izin_kontrol( User::$IZ_FIS_FATURALANDIRMA ) ) { ?>
 
-                                <button class="btn btn-success"><i class="fa fa-file-text"></i> Faturalandır</button>
+                                <button class="btn btn-success" data-toggle="modal" data-target=".faturalandir_modal"><i class="fa fa-file-text"></i> Faturalandır</button>
 
                           <?php } ?>
 
@@ -133,18 +133,61 @@
                       </div>
                     </section>
 
+                    <div class="modal fade faturalandir_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                      <div class="modal-dialog modal-md">
+                        <div class="modal-content">
+
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title">Faturalandır</h4>
+                          </div>
+                          <div class="modal-body">
+                            
+                              <div class="row">
+                                  <div class="col-md-12 col-sm-12 col-xs-12">
+                                      <div class="x_panel tile">
+                                        
+                                        <div class="x_content " style="text-align:center">
+                                          
+                                           <button class="btn btn-info fcevir" data="satis_fisi" ><i class="fa fa-file-text"></i> Satış Fişine Çevir</button><br /><br />
+                                           <button class="btn btn-danger fcevir"  data="satis_faturasi"><i class="fa fa-file-text"></i> Satış Faturasına Çevir</button>
+
+                                        </div>
+                                    </div>
+                              </div>
+                            
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">İptal</button>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
  
-<script type="text/javascript">
+                  <script type="text/javascript">
 
 
-    $(document).ready(function(){
+                      $(document).ready(function(){
 
-        var formatlar = $("[format-cur]");
-        for( var k = 0; k < formatlar.length; k++ ){
-            formatlar[k].innerHTML = format_currency(formatlar[k].innerHTML);
-        }
+                          $(".fcevir").click(function(){
 
-    });
+                              REQ.ACTION("", { req:"fcevir", item_id: <?php echo Input::get("item_id") ?>, convert:this.getAttribute("data") }, function(res){
+                                  console.log(res);
+                              });
 
-</script>
+                          });
+
+
+                          var formatlar = $("[format-cur]");
+                          for( var k = 0; k < formatlar.length; k++ ){
+                              formatlar[k].innerHTML = format_currency(formatlar[k].innerHTML);
+                          }
+
+                      });
+
+                  </script>
 

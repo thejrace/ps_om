@@ -2,13 +2,11 @@
 	
 	require 'defs.php';
 
-	require CLASS_DIR . 'Common.php';
-	require CLASS_DIR . 'DB.php';
+
 	require CLASS_DIR . 'Input.php';
 
 	if( Input::get("req") == "ac" ){
 
-		require CLASS_DIR . "DataCommon.php";
 		$q = array();
 
 		switch( Input::get("tip") ){

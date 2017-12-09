@@ -10,8 +10,8 @@
 		define("RES_VENDORS_DIR", MAIN_DIR . "res/vendors/");
 
 
-		define("MAIN_URL", "http://localhost/pamira_stone/");
-		//define("MAIN_URL", "http://ahsaphobby.net/pamira_stone/");
+		//define("MAIN_URL", "http://localhost/pamira_stone/");
+		define("MAIN_URL", "http://ahsaphobby.net/pamira_stone/");
 
 
 		define("URL_CARILER", MAIN_URL . "cariler.php");
@@ -32,6 +32,8 @@
 
 		define("URL_LOGIN", MAIN_URL . "login.php");
 		define("URL_LOGOUT", MAIN_URL . "logout.php");
+		define("URL_REGISTER", MAIN_URL . "register.php");
+
 
 		// verisinden otomatik çözecegiz türünü
 		define("URL_FATURA_FORM_DUZENLE", URL_FATURA_FORM . "?item_id=");
@@ -53,6 +55,7 @@
 		define("URL_RES", MAIN_URL . "res/");
 		define("URL_CSS", URL_RES . "css/");
 		define("URL_JS", URL_RES . "js/");
+		define("URL_IMG", URL_RES . "img/");
 		define("URL_VENDORS",  URL_RES . "vendors/" );
 
 		ini_set('error_log', MAIN_DIR . "error.log");
@@ -65,16 +68,16 @@
 
 
 		// PC local
-		define("DB_NAME", "pamira_stone");
+		/*define("DB_NAME", "pamira_stone");
 		define("DB_USER", "root");
 		define("DB_PASS", "Dogansaringulu9");
 		define("DB_IP", "localhost:3306");
-
+*/
 		// hosting
-		/*define("DB_NAME", "pamira_stone");
+		define("DB_NAME", "pamira_stone");
 		define("DB_USER", "pamira_stone");
 		define("DB_PASS", "WAzzabii308");
-		define("DB_IP", "94.73.147.252");*/
+		define("DB_IP", "94.73.147.252");
 
 		define("DBT_CARILER", "cariler");
 		define("DBT_CARI_YETKILILER", "cari_yetkililer");
@@ -130,7 +133,7 @@
 					User::$IZ_FIS_FATURALANDIRMA
 				),
 				User::$SEVIYE_NORMAL => array(
-					User::$IZ_CARILER_GORUNTULEME,
+					//User::$IZ_CARILER_GORUNTULEME,
 					User::$IZ_CARI_INCELEME,
 					User::$IZ_FATURALAR_GORUNTULEME,
 					User::$IZ_FATURA_INCELEME,

@@ -11,6 +11,44 @@
 	require CLASS_DIR . "Cari.php";
 	require CLASS_DIR . "StokKarti.php";
 	require CLASS_DIR . "Fatura.php";
+
+    $Fatura = new Fatura( Input::get("item_id") );
+    if( !$Fatura->is_ok() ) header("Location: index.php");
+
+	if( $_POST ){
+
+		$OK = 1;
+        $TEXT = "";
+        $DATA = array();
+
+		switch( Input::get("req") ){
+
+			case 'fcevir':
+
+				if( Input::get("convert") == "satis_faturasi" ){
+					$cto = Fatura::$SATIS;
+				} else {
+					$cto = Fatura::$GR_SATIS;
+				}
+				if( !$Fatura->fis_convert( $cto ) ){
+					$OK = 0;
+				}
+				$TEXT = $Fatura->get_return_text();
+
+			break;
+
+		}
+
+		$output = json_encode(array(
+            "ok"           => $OK,           
+            "text"         => $TEXT,         
+            "data"         => $DATA,
+            "oh"		   => $_POST
+        ));
+
+        echo $output;
+        die;
+	}
   
 
 	$PAGE = array(
@@ -20,8 +58,7 @@
 		"html_libs" 	=> array()
 	);
 
-    $Fatura = new Fatura( Input::get("item_id") );
-    if( !$Fatura->is_ok() ) header("Location: index.php");
+
 
     require 'inc/header.php';
 

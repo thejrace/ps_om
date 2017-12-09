@@ -182,11 +182,11 @@
 
 		// direk stok hareketi objesiyle halledebilirk ?
 		public function stok_ekle( $yer, $eklenecek_miktar ){
-			$this->stok_guncelle( $yer, ($eklenecek_miktar)  ); 
+			return $this->stok_guncelle( $yer, ($eklenecek_miktar)  ); 
 		}
 
 		public function stok_cikar( $yer, $cikarilacak_miktar ){
-			$this->stok_guncelle( $yer, ($cikarilacak_miktar * -1)  ); 
+			return $this->stok_guncelle( $yer, ($cikarilacak_miktar * -1)  ); 
 		}
 
 		// yer bazlı

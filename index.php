@@ -13,9 +13,6 @@
 	require 'inc/header.php';
 
 
-	echo User::get_data("user_email");
-
-
 	require TEMPLATES_DIR . $PAGE["template"];
 
 

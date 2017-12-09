@@ -97,7 +97,7 @@
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>Pamira Stone</span></a>
+              <a href="<?php echo MAIN_URL ?>"><img src="<?php echo URL_IMG ?>logo.png" /></a>
             </div>
 
             <div class="clearfix"></div>
@@ -105,7 +105,7 @@
             <!-- menu profile quick info -->
             <div class="profile clearfix">
               <div class="profile_pic">
-                <img src="images/img.jpg" alt="..." class="img-circle profile_img">
+                <img src="<?php echo URL_IMG ?>icmailabi.jpg" alt="..." class="img-circle profile_img">
               </div>
               <div class="profile_info">
                 <span>Hoşgeldin,</span>
@@ -154,6 +154,11 @@
                       <li><a href="<?php echo URL_STOK_KARTLARI_URUN_GRUPLARI ?>">Ürün Grupları</a></li>
                     </ul>
                   </li>
+                   <?php if( User::izin_kontrol( User::$IZ_REGISTER ) ){ ?>
+
+                   <li><a href="<?php echo URL_REGISTER ?>" ><i class="fa fa-users"></i> Hesap Oluştur</a></li>
+        
+                    <?php } ?>
                 </ul>
               </div>
 
@@ -182,7 +187,7 @@
                     <li>
                       <a href="javascript:;">
                         <span class="badge bg-red pull-right">50%</span>
-                        <span>Kullanıcı Ayarları</span>
+                        <!-- <span>Kullanıcı Ayarları</span> -->
                       </a>
                     </li>
                     

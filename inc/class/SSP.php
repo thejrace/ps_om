@@ -327,7 +327,7 @@ class SSP {
 		try {
 			$db = new PDO('mysql:host='.DB_IP.';dbname='.DB_NAME, DB_USER, DB_PASS);
 
-			$stmt = $db->prepare( "SET NAMES 'ISO-8859-9'; SET CHARSET 'ISO-8859-9'" );
+			$stmt = $db->prepare( "SET NAMES 'utf8'; SET CHARSET 'utf8'" );
 			$stmt->execute();
 
 			

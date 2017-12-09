@@ -218,6 +218,59 @@
 			return false;
 		}
 
+		// siparis fisini faturaya cevirme
+		// - fatura kaydininin tipini guncelle
+		// - carinin bakiyeyi guncelle
+		// - stok kartlarinin stoklarini guncelle
+		public function fis_convert( $cto ){
+
+			if( $cto == self::$GR_SATIS ){
+				// kdv sizse genel toplami ara toplama esitliyoruz
+				$this->details["genel_toplam"] = $this->details["ara_toplam"];
+			}
+			// kdv yi yeniden hesapla
+			$kdv_miktar = (double)$this->details["genel_toplam"] - (double)$this->details["ara_toplam"];
+
+			$Cari = new Cari( $this->details["cari_id"] );
+			if( $Cari->is_ok() ){
+				if( !$Cari->bakiye_guncelle( $cto, $this->details["genel_toplam"] ) ){
+					$this->return_text = $Cari->get_return_text();
+					return false;
+				}
+			}
+
+			foreach( $this->get_stok_detaylari() as $stok_detay ){
+				$StokKarti = new StokKarti( $stok_detay["stok_kodu"] );
+				if( $StokKarti->is_ok() ){
+					if( !$StokKarti->stok_cikar( $stok_detay["yer"], $stok_detay["miktar"] ) ){
+						$this->return_text = $StokKarti->get_return_text();
+						return false;
+					}
+				}
+			}
+
+			$this->pdo->query("UPDATE " . $this->dt_table . " SET 
+				fis_turu = ?,
+				ara_toplam = ?,
+				genel_toplam = ?,
+				kdv_miktar = ?,
+				genel_toplam_yaziyla = ? WHERE id = ?", array(
+					$cto,
+					$this->details["ara_toplam"],
+					$this->details["genel_toplam"],
+					$kdv_miktar,
+					Common::fiyat_yaziyla($this->details["genel_toplam"]),
+					$this->details["id"]
+			));
+			if( $this->pdo->error() ){ 
+				$this->return_text = "Bir hata oluştu.[1][".$this->pdo->get_error_message()."]";
+				return false;
+			}
+
+			$this->return_text = "Sipariş fişi faturalandırıldı.";
+			return true;
+		}
+
 		public function duzenle( $input ){
 
 		}

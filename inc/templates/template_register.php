@@ -55,6 +55,13 @@
                 <input type="password" name="pass" class="form-control" placeholder="Şifre" />
               </div>
               <div>
+                <select name="seviye" class="form-control">
+                    <option value="2">Normal</option>
+                    <option value="1">Muhasebeci</option>
+                    <option value="3">Admin</option>
+                </select>
+              </div>
+              <div>
                 <a class="btn btn-default submit">Oluştur</a>
               </div>
 
@@ -98,7 +105,7 @@
                     $.ajax({
                         type:"POST",
                         dataType:"json",
-                        data: { req:"register", eposta:eposta.val(), pass:pass.val(), isim:isim.val() },
+                        data: { req:"register", eposta:eposta.val(), pass:pass.val(), isim:isim.val(), seviye: $("[name='seviye']").val() },
                         success: function(res){
 
                             if( res.ok ){

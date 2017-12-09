@@ -13,8 +13,14 @@
                <li>
                   <i class="fa fa-map-marker user-profile-icon"></i> <?php echo $Cari->get_details("ilce") ?> / <?php echo $Cari->get_details("il") ?>
                </li>
-               <li class="m-top-xs">
-                  <i class="fa fa-phone user-profile-icon"></i> <?php echo $Cari->get_details("telefon_1") ?>
+               <li class="m-top-xs"  title="Eposta">
+                  <i class="fa fa-inbox user-profile-icon"></i> <?php echo $Cari->get_details("eposta") ?>
+               </li>
+               <li class="m-top-xs" title="Telefon 1 / Telefon 2">
+                  <i class="fa fa-phone user-profile-icon"></i> <?php echo $Cari->get_details("telefon_1") ?> <i class="fa fa-phone user-profile-icon" ></i> <?php echo $Cari->get_details("telefon_2") ?>
+               </li>
+               <li class="m-top-xs" title="Faks No">
+                  <i class="fa fa-fax user-profile-icon"></i> <?php echo $Cari->get_details("faks_no") ?>
                </li>
             </ul>
             <a class="btn btn-success" href="<?php echo URL_CARI_DUZENLE_FORM . $Cari->get_details("id") ?>" target="_blank"><i class="fa fa-edit m-right-xs"></i> Düzenle</a>
@@ -68,7 +74,7 @@
 
       <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="x_panel">
-              <div class="x_title"><h4>Faturalar</h4><div class="clearfix"></div></div>     
+              <div class="x_title"><h4>Faturalar </h4><button type="button" class="btn btn-xs btn-danger fgoster"> Listele</button><div class="clearfix"></div></div>     
               <div class="x_content">
                   <table id="cari_fatura_table" class="table table-striped table-bordered bulk_action dtable-obarey">
                        <thead>
@@ -91,7 +97,7 @@
 
       <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="x_panel">
-              <div class="x_title"><h4>Makbuzlar</h4><div class="clearfix"></div></div>
+              <div class="x_title"><h4>Makbuzlar </h4><button type="button" class="btn btn-xs btn-danger mgoster"> Listele</button><div class="clearfix"></div></div>
               <div class="x_content">
                   <table id="cari_tahsilat_table" class="table table-striped table-bordered bulk_action dtable-obarey">
                      <thead>
@@ -127,67 +133,81 @@
           bakiye_elem.addClass("sifir");
        }
    
-       $("#cari_tahsilat_table").DataTable({
-         "pageLength": 50,
-         "lengthMenu": [ 50, 75, 100 ],
-         "searching": false,
-         rowCallback: function( row, data, index ){
-             format_fatura_row( data[1], row );
-         },
-         "columns": [
-           null,
-           null,
-           null,
-           {
-             render: function ( data, type, row ) {      
-                 return format_currency( data );
-             }
-           },
-           null
-         ],
-         "processing": true,
-         "serverSide": true,
-         "ajax": $.fn.dataTable.pipeline({
-             url: window.location.href+"&dt_download=true&dt_id=makbuzlar",
-             pages: 5
-         })
+       
+       var minited = false, finited = false;
+       $(".mgoster").click(function(){
+          if( minited ) return;
+          $("#cari_tahsilat_table").DataTable({
+             "pageLength": 50,
+             "lengthMenu": [ 50, 75, 100 ],
+             "searching": false,
+             rowCallback: function( row, data, index ){
+                 format_fatura_row( data[1], row );
+             },
+             "columns": [
+               null,
+               null,
+               null,
+               {
+                 render: function ( data, type, row ) {      
+                     return format_currency( data );
+                 }
+               },
+               null
+             ],
+             "processing": true,
+             "serverSide": true,
+             "ajax": $.fn.dataTable.pipeline({
+                 url: window.location.href+"&dt_download=true&dt_id=makbuzlar",
+                 pages: 5
+             })
+           });  
+          minited = true;
        });
-       $("#cari_fatura_table").DataTable({
-         "pageLength": 50,
-         "lengthMenu": [ 50, 75, 100 ],
-         "searching": false,
-         rowCallback: function( row, data, index ){
-             format_fatura_row( data[2], row );
-         },
-         "columns": [
-           null,
-           null,
-           null,
-           {
-             render: function ( data, type, row ) {      
-               return format_currency( data );
-             }
-           },
-           {
-             render: function ( data, type, row ) {      
-               return format_currency( data );
-             }
-           },
-           null,
-           {
-             "data": null,
-             "orderable": false,
-             "searchable": false,
-             "defaultContent": '<button type="button" class="btn btn-xs btn-danger f_incele">İncele</button>'
-           }
-         ],
-         "processing": true,
-         "serverSide": true,
-         "ajax": $.fn.dataTable.pipeline({
-             url: window.location.href+"&dt_download=true&dt_id=faturalar",
-             pages: 5
-         })
+
+       $(".fgoster").click(function(){
+          if( finited ) return;
+          $("#cari_fatura_table").DataTable({
+             "pageLength": 50,
+             "lengthMenu": [ 50, 75, 100 ],
+             "searching": false,
+             rowCallback: function( row, data, index ){
+                 format_fatura_row( data[2], row );
+             },
+             "columns": [
+               null,
+               null,
+               null,
+               {
+                 render: function ( data, type, row ) {      
+                   return format_currency( data );
+                 }
+               },
+               {
+                 render: function ( data, type, row ) {      
+                   return format_currency( data );
+                 }
+               },
+               null,
+               {
+                 "data": null,
+                 "orderable": false,
+                 "defaultContent": '<button type="button" class="btn btn-xs btn-danger f_incele">İncele</button>'
+               }
+             ],
+             "processing": true,
+             "serverSide": true,
+             "ajax": $.fn.dataTable.pipeline({
+                 url: window.location.href+"&dt_download=true&dt_id=faturalar",
+                 pages: 5
+             })
+           });
+          finited = true;
        });
+       // ayni anda init edince ikinci sıçıyor o yuzden delay koydum !! daha önceden çalışıyodu, sebebini bulmak lazim
+
+
+       
 
         $(document).on("click", ".f_incele", function(){
             window.open("<?php echo URL_FATURA_INCELE ?>"+$(this).parent().parent().find("td").get(0).innerText, "_blank");

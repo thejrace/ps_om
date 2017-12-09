@@ -120,7 +120,7 @@
 				"eposta" 		=> $input["eposta"],
 				"salt" 			=> $salt,
 				"pass" 			=> $hash,
-				"seviye" 		=> self::$SEVIYE_NORMAL,
+				"seviye" 		=> $input["seviye"],
 				"durum" 		=> 1,
 				"son_giris" 	=> Common::get_current_datetime()
 			));
