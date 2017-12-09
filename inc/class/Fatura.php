@@ -20,6 +20,12 @@
 		}
 
 		public function ekle( $input ){
+
+			if( !User::izin_kontrol( User::$IZ_FATURA_EKLE ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
+			
 			// yeni cari kontrol
 			$Cari = new Cari( $input["cari"] );
 			if( !$Cari->is_ok() ){
@@ -64,7 +70,7 @@
 				"cari_kayit_id"			=> 0,
 				"duzenlenme_tarihi" 	=> Common::datetime_reverse($input["duzenlenme_tarihi"]),
 				"tahsilat_tarihi" 		=> Common::datetime_reverse($input["tahsilat_tarihi"]),
-				"user" 					=> 0,
+				"user" 					=> User::get_data("user_id"),
 				"eklenme_tarihi" 		=> Common::get_current_datetime(),
 				"fis_turu" 				=> $input["tur"],
 				"durum" 				=> 1,

@@ -2,10 +2,12 @@
   
 	require 'inc/defs.php';
 
-	require CLASS_DIR . "Common.php";
+
+	if( !User::izin_kontrol( User::$IZ_FATURA_INCELEME ) ){
+		header("Location: " . MAIN_URL );
+	}
+
 	require CLASS_DIR . "Input.php";
-	require CLASS_DIR . "DB.php";
-	require CLASS_DIR . "DataCommon.php";
 	require CLASS_DIR . "Cari.php";
 	require CLASS_DIR . "StokKarti.php";
 	require CLASS_DIR . "Fatura.php";

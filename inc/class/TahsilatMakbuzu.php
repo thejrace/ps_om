@@ -26,6 +26,12 @@
 		}
 
 		public function ekle( Cari &$Cari, $input ){
+
+			if( !User::izin_kontrol( User::$IZ_TAHSILAT_MAKBUZU_EKLE ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
+			
 			if( trim($input["tarih"]) == "" ){
 				$this->return_text = "Tarih girilmedi.";
 				return false;
@@ -37,7 +43,7 @@
 				"cari_kayit_id" 		=> 0,
 				"tip"					=> $input["tip"],
 				"eklenme_tarihi" 		=> Common::get_current_datetime(),
-				"user" 					=> 0
+				"user" 					=> User::get_data("user_id")
 			);
 
 			$toplam_tutar = 0;

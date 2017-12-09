@@ -30,7 +30,8 @@
 		define("URL_TAHSILAT_MAKBUZU_TAHSILAT", URL_TAHSILAT_MAKBUZU . "?tip=1");
 		define("URL_TAHSILAT_MAKBUZU_ODEME", URL_TAHSILAT_MAKBUZU . "?tip=2");
 
-		
+		define("URL_LOGIN", MAIN_URL . "login.php");
+		define("URL_LOGOUT", MAIN_URL . "logout.php");
 
 		// verisinden otomatik çözecegiz türünü
 		define("URL_FATURA_FORM_DUZENLE", URL_FATURA_FORM . "?item_id=");
@@ -75,8 +76,6 @@
 		define("DB_PASS", "WAzzabii308");
 		define("DB_IP", "94.73.147.252");*/
 
-
-
 		define("DBT_CARILER", "cariler");
 		define("DBT_CARI_YETKILILER", "cari_yetkililer");
 		define("DBT_STOK_KARTLARI", "stok_kartlari");
@@ -88,3 +87,86 @@
 		// define("DBT_FATURA_CARI_DETAYLARI", "fatura_cari_detaylari");
 		define("DBT_TAHSILAT_MAKBUZLARI", "tahsilat_makbuzlari");
 		define("DBT_ITEM_CARI_KAYITLARI", "item_cari_kayitlar");
+		define("DBT_USERS", "kullanicilar");
+		define("DBT_COOKIE_TOKENS", "cookie_tokens");
+
+		session_start();
+
+		require CLASS_DIR . 'Common.php';
+		require CLASS_DIR . 'DB.php';
+		require CLASS_DIR . "DataCommon.php";
+		require CLASS_DIR . "User.php";
+
+		// her giriste cookie çaktığım için sadece remember_me kontrolu yeter
+		// giriş sayfasina girdiyse, zaten giriş yapilmis mi kontrol et
+		if( isset($REG_OR_LOG) ){
+			if( User::remember() ){
+				header("Location: ".MAIN_URL);
+			} 
+		} else {
+			// diger sayfalarda giris yapilmamissa login sayfasına yönlendir
+			if( !User::remember() ) header("Location: ".URL_LOGIN);
+			
+			User::$IZINLER_TEMPLATE = array(
+				User::$SEVIYE_MUHASEBE => array(
+					User::$IZ_CARI_EKLE,
+					User::$IZ_CARI_DUZENLE,
+					User::$IZ_CARILER_GORUNTULEME,
+					User::$IZ_CARI_INCELEME,
+					User::$IZ_FATURA_EKLE,
+					//self::$IZ_FATURA_DUZENLE,
+					User::$IZ_FATURALAR_GORUNTULEME,
+					User::$IZ_FATURA_INCELEME,
+					User::$IZ_STOK_KARTI_EKLE,
+					User::$IZ_STOK_KARTI_DUZENLE,
+					User::$IZ_STOK_KARTLARI_GORUNTULEME,
+					User::$IZ_STOK_KARTI_INCELEME,
+					User::$IZ_URUN_GRUBU_EKLE,
+					User::$IZ_URUN_GRUBU_DUZENLE,
+					User::$IZ_URUN_GRUPLARI_GORUNTULEME,
+					User::$IZ_TAHSILAT_MAKBUZU_EKLE,
+					//self::$IZ_TAHSILAT_MAKBUZU_DUZENLE,
+					User::$IZ_TAHSILAT_MAKBUZU_INCELEME,
+					User::$IZ_FIS_FATURALANDIRMA
+				),
+				User::$SEVIYE_NORMAL => array(
+					User::$IZ_CARILER_GORUNTULEME,
+					User::$IZ_CARI_INCELEME,
+					User::$IZ_FATURALAR_GORUNTULEME,
+					User::$IZ_FATURA_INCELEME,
+					User::$IZ_STOK_KARTLARI_GORUNTULEME,
+					User::$IZ_STOK_KARTI_INCELEME,
+					User::$IZ_URUN_GRUPLARI_GORUNTULEME,
+					User::$IZ_TAHSILAT_MAKBUZU_INCELEME
+				),
+				User::$SEVIYE_ADMIN => array(
+					User::$IZ_CARI_EKLE,
+					User::$IZ_CARI_DUZENLE,
+					User::$IZ_CARILER_GORUNTULEME,
+					User::$IZ_CARI_INCELEME,
+					User::$IZ_FATURA_EKLE,
+					User::$IZ_FATURA_DUZENLE,
+					User::$IZ_FATURALAR_GORUNTULEME,
+					User::$IZ_FATURA_INCELEME,
+					User::$IZ_STOK_KARTI_EKLE,
+					User::$IZ_STOK_KARTI_DUZENLE,
+					User::$IZ_STOK_KARTLARI_GORUNTULEME,
+					User::$IZ_STOK_KARTI_INCELEME,
+					User::$IZ_URUN_GRUBU_EKLE,
+					User::$IZ_URUN_GRUBU_DUZENLE,
+					User::$IZ_URUN_GRUPLARI_GORUNTULEME,
+					User::$IZ_TAHSILAT_MAKBUZU_EKLE,
+					User::$IZ_TAHSILAT_MAKBUZU_DUZENLE,
+					User::$IZ_TAHSILAT_MAKBUZU_INCELEME,
+					User::$IZ_FIS_FATURALANDIRMA,
+					User::$IZ_REGISTER
+				)
+
+			);
+
+			User::$IZINLER = User::$IZINLER_TEMPLATE[User::get_data("user_level")];
+		}
+		
+
+		
+

@@ -1,16 +1,13 @@
 <?php
   	
 	require 'inc/defs.php';
-	require CLASS_DIR . "Common.php";
-	require CLASS_DIR . "Input.php";
-	require CLASS_DIR . "DB.php";
 
+	require CLASS_DIR . "Input.php";
 
 	if( $_POST ){
 
 		require CLASS_DIR . "InputErrorHandler.php";
 		require CLASS_DIR . "Validation.php";
-		require CLASS_DIR . "DataCommon.php";
 		require CLASS_DIR . "RKod.php";
 		require CLASS_DIR . "UrunGrubu.php";
 		require CLASS_DIR . "StokKarti.php";
@@ -161,7 +158,6 @@
 		if( !Input::exists(Input::$GET, "tur") ){
 			$FORM_SELECT = "0"; // seçiniz
 		} else {
-			require CLASS_DIR . "DataCommon.php";
 			require CLASS_DIR . "Fatura.php";	
 
 			if( Input::get("tur") != Fatura::$ALIS && Input::get("tur") != Fatura::$SATIS && Input::get("tur") != Fatura::$SIPARIS_FISI &&  Input::get("tur") != Fatura::$GR_ALIS && Input::get("tur") != Fatura::$GR_SATIS  ){

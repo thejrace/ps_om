@@ -1,10 +1,7 @@
 <?php
   
 	require 'inc/defs.php';
-	require CLASS_DIR . "Common.php";
 	require CLASS_DIR . "Input.php";
-	require CLASS_DIR . "DB.php";
-	require CLASS_DIR . "DataCommon.php";
 	require CLASS_DIR . "Cari.php";
 	require CLASS_DIR . "RKod.php";
 
@@ -42,9 +39,11 @@
 					$Cari = new Cari(Input::get("cari"));
 					if( !$TahsilatMakbuzu->ekle( $Cari, Input::escape($_POST))){
 						$OK = 0;
+					} else {
+						$DATA = $Cari->get_details("yeni_bakiye");
 					}
 					$TEXT = $TahsilatMakbuzu->get_return_text();
-					$DATA = $Cari->get_details("yeni_bakiye");
+					
 				}
 
 			break;

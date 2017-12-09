@@ -2,12 +2,13 @@
 	
 	require 'inc/defs.php';
 
-	require CLASS_DIR . 'Common.php';
-	require CLASS_DIR . 'DB.php';
 	require CLASS_DIR . 'Input.php';
-	require CLASS_DIR . 'DataCommon.php';
 	require CLASS_DIR . 'Cari.php';
 
+
+	if( !User::izin_kontrol( User::$IZ_CARI_INCELEME ) ){
+		header("Location: " . MAIN_URL );
+	}
 
 	if( Input::exists(Input::$GET, "item_id") ){
 		$Cari = new Cari(Input::get("item_id"));

@@ -2,11 +2,13 @@
 
 	require 'inc/defs.php';
 
+	if( !User::izin_kontrol( User::$IZ_STOK_KARTLARI_GORUNTULEME ) ){
+		header("Location: " . MAIN_URL );
+	}
+
 	if( $_GET ){
 
-		require CLASS_DIR . 'DB.php';
 		require CLASS_DIR . 'SSP.php';
-		require CLASS_DIR . 'DataCommon.php';
 		require CLASS_DIR . 'UrunGrubu.php';
 
 		$DATA_TABLES_ROWS = array(
@@ -33,8 +35,6 @@
 	if( $_POST ){
 
 		require CLASS_DIR . 'Input.php';
-		require CLASS_DIR . 'DB.php';
-		require CLASS_DIR . 'DataCommon.php';
 		require CLASS_DIR . 'StokKarti.php';
 
 

@@ -9,6 +9,11 @@
 		}
 
 		public function ekle( $input ){
+
+			if( !User::izin_kontrol( User::$IZ_STOK_KARTI_EKLE ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
 			// ürün grubu yoksa oluştur
 			$UrunGrubu = new UrunGrubu( $input["urun_grubu"] );
 			if( !$UrunGrubu->is_ok() ){
@@ -52,6 +57,12 @@
 		}
 
 		public function duzenle( $input ){
+
+			if( !User::izin_kontrol( User::$IZ_STOK_KARTI_DUZENLE ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
+
 			if( $this->mukerrer_kontrol( $input["stok_adi"] ) ) return false;
 			$GelenUrunGrubu = new UrunGrubu( $input["urun_grubu"] );
 			if( !$GelenUrunGrubu->is_ok() ){

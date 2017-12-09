@@ -9,6 +9,12 @@
 		}
 
 		public function ekle( $input ){
+
+			if( !User::izin_kontrol( User::$IZ_URUN_GRUBU_EKLE ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
+
 			if( !$this->isim_kontrol( $input["isim"] ) ) return false;
 			$this->pdo->insert( $this->dt_table, array(
 				"isim" 	=> $input["isim"],
@@ -24,6 +30,12 @@
 		} 
 
 		public function duzenle( $input ){
+
+			if( !User::izin_kontrol( User::$IZ_URUN_GRUBU_DUZENLE ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
+
 			if( !$this->isim_kontrol( $input["isim"] ) ) return false;
 			$this->pdo->query("UPDATE " . $this->dt_table . " SET isim = ? WHERE id = ?", array( $input["isim"], $this->details["id"] ) );
 			if( $this->pdo->error() ){

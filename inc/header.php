@@ -109,7 +109,7 @@
               </div>
               <div class="profile_info">
                 <span>Hoşgeldin,</span>
-                <h2>Halim</h2>
+                <h2><?php echo User::get_data("user_name") ?></h2>
               </div>
             </div>
             <!-- /menu profile quick info -->
@@ -175,7 +175,7 @@
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="" alt="">Halim Kanbur
+                    <img src="" alt=""><?php echo User::get_data("user_name")   ?>
                     <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -186,7 +186,7 @@
                       </a>
                     </li>
                     
-                    <li><a href="#"><i class="fa fa-sign-out pull-right"></i> Çıkış</a></li>
+                    <li><a href="<?php echo URL_LOGOUT ?>"><i class="fa fa-sign-out pull-right"></i> Çıkış</a></li>
                   </ul>
                 </li>
 

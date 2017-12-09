@@ -1,12 +1,9 @@
 <?php
   	
 	require 'inc/defs.php';
-	require CLASS_DIR . "Common.php";
 	require CLASS_DIR . "Input.php";
 	require CLASS_DIR . "InputErrorHandler.php";
 	require CLASS_DIR . "Validation.php";
-	require CLASS_DIR . "DB.php";
-	require CLASS_DIR . "DataCommon.php";
 	require CLASS_DIR . "RKod.php";
 	require CLASS_DIR . "UrunGrubu.php";
 	

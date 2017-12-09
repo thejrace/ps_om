@@ -2,15 +2,15 @@
 	
 	require 'inc/defs.php';
 
-	//session_start();
-	require CLASS_DIR . 'Common.php';
-	require CLASS_DIR . 'DB.php';
+	if( !User::izin_kontrol( User::$IZ_FATURALAR_GORUNTULEME ) ){
+		header("Location: " . MAIN_URL );
+	}
+
 	require CLASS_DIR . 'Input.php';
 
 	if( $_GET ){
 
 		require CLASS_DIR . 'SSP.php';
-		require CLASS_DIR . 'DataCommon.php';
 		require CLASS_DIR . 'CariYetkili.php';
 		require CLASS_DIR . 'Cari.php';
 		require CLASS_DIR . 'Fatura.php';

@@ -10,6 +10,11 @@
 		
 		public function ekle( $input ){
 
+			if( !User::izin_kontrol( User::$IZ_CARI_EKLE ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
+
 			$unvan_kontrol = $this->pdo->query("SELECT * FROM " . $this->dt_table . " WHERE unvan = ?", array( $input["cari_unvan"] ) )->results();
 			if( count($unvan_kontrol) > 0 ){
 				$this->return_text = "Bu ünvana sahip cari kayıt zaten var.";
@@ -53,6 +58,12 @@
 		}
 
 		public function duzenle( $input ){
+
+			if( !User::izin_kontrol( User::$IZ_CARI_DUZENLE ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
+
 			$unvan_kontrol = $this->pdo->query("SELECT * FROM " . $this->dt_table . " WHERE unvan = ? && id != ?", array( $input["cari_unvan"], $this->details["id"] ) )->results();
 			if( count($unvan_kontrol) > 0 ){
 				$this->return_text = "Bu ünvana sahip cari kayıt zaten var.";

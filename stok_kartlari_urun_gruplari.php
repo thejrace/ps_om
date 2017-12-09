@@ -2,9 +2,13 @@
   
 	require 'inc/defs.php';
   
+	if( !User::izin_kontrol( User::$IZ_URUN_GRUPLARI_GORUNTULEME ) ){
+		header("Location: " . MAIN_URL );
+	}
+
+  
 	if( $_GET ){
 
-		require CLASS_DIR . 'DB.php';
 		require CLASS_DIR . 'SSP.php';
 
 		$DATA_TABLES_ROWS = array(

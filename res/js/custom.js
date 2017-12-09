@@ -5565,6 +5565,9 @@ if (typeof NProgress != 'undefined') {
 		return sifir_ekle(gun) + "-" + sifir_ekle(ay) + "-" + yil;
 	}
 
-  var DATETIMEPICKER_DEF_OPTIONS = {useCurrent: true, defaultDate: moment(), sideBySide: true, format: 'DD-MM-YYYY HH:mm:ss', locale:"tr"};
-  var DATEPICKER_DEF_OPTIONS = {useCurrent: true, defaultDate: moment(), format: 'DD-MM-YYYY', locale:"tr"};
-  var DATEPICKER_DEF_OPTIONS_NO_PLACEHOLDER = {useCurrent: true, format: 'DD-MM-YYYY', locale:"tr"};
+  if( typeof moment !== 'undefined' ){
+  	  var DATETIMEPICKER_DEF_OPTIONS = {useCurrent: true, defaultDate: moment(), sideBySide: true, format: 'DD-MM-YYYY HH:mm:ss', locale:"tr"};
+	  var DATEPICKER_DEF_OPTIONS = {useCurrent: true, defaultDate: moment(), format: 'DD-MM-YYYY', locale:"tr"};
+	  var DATEPICKER_DEF_OPTIONS_NO_PLACEHOLDER = {useCurrent: true, format: 'DD-MM-YYYY', locale:"tr"};
+  }
+  
