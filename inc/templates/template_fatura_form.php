@@ -419,6 +419,17 @@
 
               var DUZENLEME = false;
               var YCOUNT = 0;
+
+              function stok_kart_fiyat_download(item, elem){
+                  REQ.ACTION("", { req:"stok_karti_data_download", stok_karti: item, cari: UI.CARI_INPUT.val(), fis_turu:UI.TUR_INPUT.val()  }, function(res){
+                      //console.log(res);
+                      var parent = $("#yetkili_"+elem.attr("parent"));
+                      parent.find(".birim").get(0).value = res.data.birim;
+                      parent.find(".fiyat").get(0).value = res.data.fiyat;
+                      $(parent.find(".fiyat").get(0)).trigger("keyup");
+                  });
+              }
+
               function yetkili_row_ekle( kart, fiyat, kdv, miktar, toplam, yer, birim, id ){
                   UI.YETKILILER_TBODY.append(replaceAll(TEMPLATE.YETKILI_SATIR
                       .replace("%%KART_VAL%%", kart)
@@ -435,13 +446,7 @@
                   var yer_select = aktif_row.find(".yer");
                   if( yer != "" ) yer_select[0].value = yer;
                   REQ.AC( $(".kart_"+YCOUNT), PSGLOBAL.AC_COMMON, { tip:"stok_karti" }, function( item, elem ){
-                      REQ.ACTION("", { req:"stok_karti_data_download", stok_karti: item, cari: UI.CARI_INPUT.val(), fis_turu:UI.TUR_INPUT.val()  }, function(res){
-                          //console.log(res);
-                          var parent = $("#yetkili_"+elem.attr("parent"));
-                          parent.find(".birim").get(0).value = res.data.birim;
-                          parent.find(".fiyat").get(0).value = res.data.fiyat;
-                          $(parent.find(".fiyat").get(0)).trigger("keyup");
-                      });
+                      stok_kart_fiyat_download(item, elem);
 
                   });
                   YCOUNT++;

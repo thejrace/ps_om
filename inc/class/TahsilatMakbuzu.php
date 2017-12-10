@@ -102,4 +102,8 @@
 			return true;
 		}
 
+		public function get_cari_kayit(){
+			return $this->pdo->query("SELECT * FROM " . DBT_ITEM_CARI_KAYITLARI . " WHERE item_tip = ? && item_id = ?", array( self::$ITEM_TIP, $this->details["id"] ))->results();
+		}
+
 	}

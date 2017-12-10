@@ -71,8 +71,8 @@
 		/*define("DB_NAME", "pamira_stone");
 		define("DB_USER", "root");
 		define("DB_PASS", "Dogansaringulu9");
-		define("DB_IP", "localhost:3306");
-*/
+		define("DB_IP", "localhost:3306");*/
+
 		// hosting
 		define("DB_NAME", "pamira_stone");
 		define("DB_USER", "pamira_stone");
@@ -92,6 +92,7 @@
 		define("DBT_ITEM_CARI_KAYITLARI", "item_cari_kayitlar");
 		define("DBT_USERS", "kullanicilar");
 		define("DBT_COOKIE_TOKENS", "cookie_tokens");
+		define("DBT_PAMIRA_STONE", "pamira_stone");
 
 		session_start();
 
@@ -109,6 +110,9 @@
 		} else {
 			// diger sayfalarda giris yapilmamissa login sayfasına yönlendir
 			if( !User::remember() ) header("Location: ".URL_LOGIN);
+
+			require CLASS_DIR . "Pamira.php";
+			Pamira::istatistikleri_al();
 			
 			User::$IZINLER_TEMPLATE = array(
 				User::$SEVIYE_MUHASEBE => array(
@@ -133,7 +137,7 @@
 					User::$IZ_FIS_FATURALANDIRMA
 				),
 				User::$SEVIYE_NORMAL => array(
-					//User::$IZ_CARILER_GORUNTULEME,
+					User::$IZ_CARILER_GORUNTULEME,
 					User::$IZ_CARI_INCELEME,
 					User::$IZ_FATURALAR_GORUNTULEME,
 					User::$IZ_FATURA_INCELEME,

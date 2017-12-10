@@ -158,14 +158,26 @@
 			if( class_exists("Fatura") ){
 				if( $fis_turu == Fatura::$ALIS || $fis_turu == Fatura::$GR_ALIS ){
 					$bakiye_carpan = -1;
+					// birşey alınmışsa vereceklerimiz artiyor, ekliyoruz
+					Pamira::verecekler_toplami_guncelle( $miktar );	
 				} else if( $fis_turu == Fatura::$SATIS || $fis_turu == Fatura::$GR_SATIS ){
 					$bakiye_carpan = 1;
+					// bir sey satmissak alacaklarimiz artiyor, ekliyoruz
+					Pamira::alacaklar_toplami_guncelle( $miktar  );	
 				}
 			} else {
 				if( $fis_turu == TahsilatMakbuzu::$TAHSILAT ){
 					$bakiye_carpan = -1;
+					// tahsilat yapmissak alacaklarımız azalmış
+					Pamira::alacaklar_toplami_guncelle( $miktar * -1  );
+					// kasadaki para artmış oluyor
+					Pamira::kasayi_guncelle( $miktar );
 				} else if( $fis_turu == TahsilatMakbuzu::$ODEME ){
 					$bakiye_carpan = 1;
+					// odeme yapmissak vereceklerimiz azalmış
+					Pamira::verecekler_toplami_guncelle( $miktar * -1 );
+					// kasadaki para azalmış oluyor
+					Pamira::kasayi_guncelle( $miktar * - 1 );
 				}
 			}
 			$this->details["yeni_bakiye"] = ($this->details["bakiye"] + ($miktar * $bakiye_carpan) );

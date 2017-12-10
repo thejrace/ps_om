@@ -2677,6 +2677,13 @@ ul.timeline li {
     border-bottom: 14px solid transparent;
     border-left: 11px solid #1ABB9C
 }
+.tag.alis, .tag.alis-fisi, .tag.odeme{
+    background:#f35f5f !important;
+}
+.tag.alis:after, .tag.alis-fisi:after, .tag.odeme:after{
+    border-left: 11px solid #f35f5f !important;
+}
+
 .timeline h2.title {
     position: relative;
     font-size: 16px;

@@ -168,7 +168,21 @@
 <script type="text/javascript">
    var tip = "<?php echo $TIP ?>",
        bakiye = <?php echo $Cari->get_details("bakiye") ?>,
-       pre_tutar = <?php echo $TUTAR ?>;
+       get_tutar = "<?php echo $TUTAR ?>";
+
+    var pre_tutar = "", char;
+    for( var k = 0; k < get_tutar.length; k++ ){
+        if( k < get_tutar.length - 3 ){
+            if( get_tutar[k] == "." ){
+                char = "";
+            } else {
+                char = get_tutar[k];
+            }
+        } else {
+           char = get_tutar[k];
+        }
+        pre_tutar += char;
+    }
    
    var UI = {
        FORM: "tahsilat_makbuzu_form",
@@ -192,9 +206,9 @@
       
        if( pre_tutar != 0 ){
              document.getElementById("pesin_tutar").value = pre_tutar;
-             document.getElementById("havale_tutar").value = pre_tutar;
+             /*document.getElementById("havale_tutar").value = pre_tutar;
              document.getElementById("kredi_karti_tutar").value = pre_tutar;
-             document.getElementById("cek_tutar").value = pre_tutar;
+             document.getElementById("cek_tutar").value = pre_tutar;*/
        }
 
        $("[dtpicker]").datetimepicker(DATEPICKER_DEF_OPTIONS);

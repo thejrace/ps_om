@@ -20,7 +20,7 @@
                         
                         <!-- /.col -->
                         <div class="col-sm-4 invoice-col">
-                          Cari
+                          
                           <address>
                                           <strong><?php echo $cari_kayit[0]["unvan"] ?></strong>
                                           <br><strong>Adres: </strong><?php echo $cari_kayit[0]["adres"] ?>
@@ -174,9 +174,16 @@
                       $(document).ready(function(){
 
                           $(".fcevir").click(function(){
-
+                              $(".fcevir").attr("disabled", true)
                               REQ.ACTION("", { req:"fcevir", item_id: <?php echo Input::get("item_id") ?>, convert:this.getAttribute("data") }, function(res){
                                   console.log(res);
+                                  if( res.ok ){
+                                      PamiraNotify("success", "İşlem Tamamlandı. Lütfen bekleyin.", res.text );
+                                  } else {
+                                      PamiraNotify("error", "Hata", res.text );
+                                  }
+                                  setTimeout(function(){ location.reload(); }, 1000);
+                                  
                               });
 
                           });

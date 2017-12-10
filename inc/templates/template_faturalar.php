@@ -272,9 +272,9 @@
                      $(document).on("click", ".tahsil_et", function(){
                         var tds = $(this).parent().parent().find("td");
                         //console.log(tds);
-                        if( tds[3].innerText == "Alış" ){
+                        if( tds[3].innerText == "Alış" || tds[3].innerText == "Alış Fişi" ){
                             window.open("<?php echo URL_TAHSILAT_MAKBUZU_ODEME ?>&cari="+tds[1].innerText+"&tutar="+tds[5].innerText.substring(0, tds[5].innerText.length - 2).replace(",", "."), "_blank");
-                        } else if( tds[3].innerText == "Satış" ){
+                        } else if( tds[3].innerText == "Satış" || tds[3].innerText == "Satış Fişi" ){
                             window.open("<?php echo URL_TAHSILAT_MAKBUZU_TAHSILAT ?>&cari="+tds[1].innerText+"&tutar="+tds[5].innerText.substring(0, tds[5].innerText.length - 2).replace(",", "."), "_blank");
                         } else {
                             PamiraNotify("error", "Hata", "Fişi önce faturalandırmalısınz.");
