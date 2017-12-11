@@ -18,6 +18,7 @@
 
 		$INPUT_LIST = array(
 			"stok_adi" 			=> array( array( "req" => true ),  null ),
+			"stok_kodu" 		=> array( array(),  null ),
 			'urun_grubu'		=> array( array( "req" => true ), "" ),
 			'alis_fiyati'  		=> array( array( "req" => true, "pozNumerik" => true ), null ),
 			'satis_fiyati' 		=> array( array( "req" => true, "pozNumerik" => true ), null ),

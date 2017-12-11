@@ -9,7 +9,7 @@
                       <div class="row">
                         <div class="col-xs-12 invoice-header">
                           <h1>
-                                          <i class="fa fa-globe"></i>
+                                          <i class="fa fa-globe"></i> <?php echo Fatura::$TUR_STR[$Fatura->get_details("fis_turu")] ?>
                                           <small class="pull-right">Düz. Tarihi: <?php echo Common::datetime_reverse($Fatura->get_details("duzenlenme_tarihi")) ?></small>
                                       </h1>
                         </div>
@@ -26,7 +26,7 @@
                                           <br><strong>Adres: </strong><?php echo $cari_kayit[0]["adres"] ?>
                                           <br><?php echo $cari_kayit[0]["ilce"] ?> / <?php echo $cari_kayit[0]["il"] ?>
                                           <br><strong>Telefon 1: </strong><?php echo $cari_kayit[0]["telefon_1"] ?>
-                                          <br><strong>Telefon 2: </strong><?php echo $cari_kayit[0]["unvan"] ?>
+                                          <br><strong>Telefon 2: </strong><?php echo $cari_kayit[0]["telefon_2"] ?>
                                           <br><strong>Faks No: </strong><?php echo $cari_kayit[0]["faks_no"] ?>
                                           <br><strong>Eposta: </strong><?php echo $cari_kayit[0]["eposta"] ?>
                                       </address>
@@ -65,10 +65,16 @@
 
                                     foreach( $stok_detaylari as $stok_detay ){
 
+                                          if( $stok_detay["kdv_dahil"] == 1 ){
+                                              $kdv = $stok_detay["kdv_orani"];
+                                          } else if( $stok_detay["kdv_dahil"] == 0 ){
+                                              $kdv = 0;
+                                          }
+
                                          echo '<tr><td>'.$stok_detay["stok_kodu"].'</td>
                                               <td>'.$stok_detay["stok_adi"].'</td>
                                               <td format-cur="true">'.$stok_detay["birim_fiyat"].'</td>
-                                              <td >'.$stok_detay["kdv_orani"].'</td>
+                                              <td >'.$kdv.'</td>
                                               <td>'.$stok_detay["miktar"].'</td>
                                               <td format-cur="true">'.$stok_detay["toplam"].'</td></tr>';
 

@@ -19,13 +19,145 @@
 			if( isset($id) ) $this->check( array("id"), $id);
 		}
 
-		public function ekle( $input ){
+		public function magaza_fisi_kes( $input ){
 
 			if( !User::izin_kontrol( User::$IZ_FATURA_EKLE ) ){
 				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
 				return false;
 			}
-			
+
+			$Cari = new Cari("Mağaza");
+			if( trim($input["fatura_no"]) != "" ){
+				if( !$this->fatura_no_kontrol( $input["fatura_no"] ) ){
+					$this->return_text = "Bu numaralı faturanın kaydı zaten yapılmış.";
+					return false;
+				}
+			}
+
+			// faturayi ekle
+			$this->pdo->insert( $this->dt_table, array(
+				"aciklama" 				=> $input["aciklama"],
+				"fatura_no"				=> trim($input["fatura_no"]),
+				"cari_id" 				=> $Cari->get_details("id"),
+				"cari_kayit_id"			=> 0,
+				"duzenlenme_tarihi" 	=> Common::date_reverse($input["duzenlenme_tarihi"]) . " 00:00:00",
+				"tahsilat_tarihi" 		=> "0000-00-00 00:00:00",
+				"user" 					=> User::get_data("user_id"),
+				"eklenme_tarihi" 		=> Common::get_current_datetime(),
+				"fis_turu" 				=> $input["tur"],
+				"durum" 				=> 1,
+				"ara_toplam" 			=> 0,
+				"genel_toplam" 			=> 0,
+				"kdv_miktar" 			=> 0,
+				"genel_toplam_yaziyla" 	=> "",
+				"versiyon" 				=> 1
+			));
+			if( $this->pdo->error() ){
+				$this->return_text = "Bir hata oluştu.[1][".$this->pdo->get_error_message()."]";
+				return false;
+			}
+			$this->details["id"] = $this->pdo->lastInsertedId();
+
+			$bakiye_toplam 		= 0;
+			$ara_toplam 		= 0;
+			$genel_toplam 		= 0;
+			$kdv_miktar 		= 0;
+			// düşme - ekleme için bakiye çarpani
+			$bakiye_carpan 		= 1;
+			// stok detaylarini ekle
+			foreach( explode( "||", $input["stok_str"] ) as $stok_data ){
+				$data_array = explode( "##", $stok_data );
+
+				// isim bos geldiyse ipleme
+				if( trim($data_array[0]) == "" ) continue;
+
+				// 0: stok_karti isim
+				// 1: fiyat
+				// 2: kdv
+				// 3: miktar
+				// 4: toplam
+				// 5: faturali
+				// 6: id ( duzenlemede gelecek )
+
+				$StokKarti = new StokKarti( $data_array[0] );
+				if( !$StokKarti->is_ok() ){
+					// yeni stok karti
+					$StokKarti = new StokKarti();
+					$kart_data = array(
+						"stok_adi" 		=> $data_array[0],
+						"urun_grubu" 	=> "Tanımsız", // def
+						"satis_fiyati" 	=> $data_array[1],
+						"alis_fiyati" 	=> $data_array[1],
+						"kdv_orani" 	=> $data_array[2],
+						"kdv_dahil" 	=> Common::kdv_dahil_hesaplama( $data_array[2], $data_array[1] ),
+						"birim"			=> $data_array[7]
+					);
+					if( !$StokKarti->ekle( $kart_data ) ){
+						$this->return_text = $StokKarti->get_return_text();
+						return false;
+					}
+					// guncellenmis karti init et
+					$StokKarti = new StokKarti( $data_array[0] );
+				}
+
+				
+				// kartı faturaya ekleme
+				if( !$StokKarti->faturaya_ekle( $this->details["id"], $input["tur"], $data_array[1], $data_array[2], $data_array[3], $data_array[4], "Mağaza", $data_array[5] )){
+					$this->return_text = $StokKarti->get_return_text();
+					return false;
+				}
+				
+				// kdvsiz
+				$ara_toplam += $data_array[1] * $data_array[3];
+				// kdvli
+				$genel_toplam += $data_array[4];
+			}
+
+			// statik mağaza satışları için
+			$cari_detay_id = 1;
+
+			$bakiye_toplam = $genel_toplam;
+			$kdv_miktar = $genel_toplam - $ara_toplam;
+
+
+			if( !$Cari->bakiye_guncelle( $input["tur"], $bakiye_toplam ) ){
+				$this->return_text = $Cari->get_return_text();
+				return false;	
+			}
+
+			// tum islemlerden sonra tekrar guncelliyoruz kaydi
+			$this->pdo->query("UPDATE " . $this->dt_table . " SET 
+				ara_toplam = ?,
+				genel_toplam = ?,
+				kdv_miktar = ?,
+				genel_toplam_yaziyla = ?,
+				cari_kayit_id = ? WHERE id = ?", array(
+					$ara_toplam,
+					$genel_toplam,
+					$kdv_miktar,
+					Common::fiyat_yaziyla($genel_toplam),
+					$cari_detay_id,
+					$this->details["id"]
+			));
+			if( $this->pdo->error() ){ 
+				$this->return_text = "Bir hata oluştu.[1][".$this->pdo->get_error_message()."]";
+				return false;
+			}
+
+			// tahsilat makbuzu için
+			$this->details["genel_toplam"] = $genel_toplam;
+
+			$this->return_text = "Fatura / Fiş oluşturuldu.";
+			return true;
+
+
+		}
+
+		public function ekle( $input ){
+			if( !User::izin_kontrol( User::$IZ_FATURA_EKLE ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
 			// yeni cari kontrol
 			$Cari = new Cari( $input["cari"] );
 			if( !$Cari->is_ok() ){
@@ -99,6 +231,17 @@
 			$kdv_miktar = 0;
 			// düşme - ekleme için bakiye çarpani
 			$bakiye_carpan = 1;
+
+
+			// resmiyet kontrolu
+			if( $input["tur"] == Fatura::$GR_ALIS || $input["tur"] == Fatura::$GR_SATIS  ){
+				// gayri resmi
+				$resmi = false;
+			} else if( $input["tur"] == Fatura::$SATIS || $input["tur"] == Fatura::$ALIS || $input["tur"] == Fatura::$SIPARIS_FISI){
+				// resmi
+				$resmi = true;
+			}
+
 			// stok detaylarini ekle
 			foreach( explode( "||", $input["stok_str"] ) as $stok_data ){
 				$data_array = explode( "##", $stok_data );
@@ -137,7 +280,7 @@
 
 				
 				// kartı faturaya ekleme
-				if( !$StokKarti->faturaya_ekle( $this->details["id"], $input["tur"], $data_array[1], $data_array[2], $data_array[3], $data_array[4], $data_array[5] )){
+				if( !$StokKarti->faturaya_ekle( $this->details["id"], $input["tur"], $data_array[1], $data_array[2], $data_array[3], $data_array[4], $data_array[5], (int)$resmi  )){
 					$this->return_text = $StokKarti->get_return_text();
 					return false;
 				}
@@ -149,12 +292,12 @@
 			}
 
 			// resmiyet kontrolu
-			if( $input["tur"] == Fatura::$GR_ALIS || $input["tur"] == Fatura::$GR_SATIS  ){
+			if( !$resmi  ){
 				// gayri resmi
 				$bakiye_toplam = $ara_toplam;
 				$genel_toplam = $ara_toplam;
 				$kdv_miktar = 0;
-			} else if( $input["tur"] == Fatura::$SATIS || $input["tur"] == Fatura::$ALIS || $input["tur"] == Fatura::$SIPARIS_FISI){
+			} else {
 				// resmi
 				$bakiye_toplam = $genel_toplam;
 				$kdv_miktar = $genel_toplam - $ara_toplam;
@@ -200,7 +343,13 @@
 		}
 
 		public function get_cari_kayit(){
-			return $this->pdo->query("SELECT * FROM " . DBT_ITEM_CARI_KAYITLARI . " WHERE item_tip = ? && item_id = ?", array( self::$ITEM_TIP, $this->details["id"] ))->results();
+			// magaza
+			if( $this->details["cari_kayit_id"] == 1 ){
+				return $this->pdo->query("SELECT * FROM " . DBT_ITEM_CARI_KAYITLARI . " WHERE id = ?", array( 1 ))->results();
+			} else {
+				return $this->pdo->query("SELECT * FROM " . DBT_ITEM_CARI_KAYITLARI . " WHERE item_tip = ? && item_id = ?", array( self::$ITEM_TIP, $this->details["id"] ))->results();
+			}
+			
 		}
 
 		public function stok_detaylari_arama( $kw_array ){

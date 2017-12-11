@@ -11,6 +11,13 @@
 
                     
 
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Stok Kodu</label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                          <input type="text" class="form-control" placeholder="Stok Kodu" name="stok_kodu" id="stok_kodu"  />
+                          <span class="label label-danger">Boş bırakıldığı takdirde sistem otomatik kod atayacaktır.</span>
+                        </div>
+                      </div>
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Stok Adı</label>

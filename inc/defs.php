@@ -11,7 +11,7 @@
 
 
 		//define("MAIN_URL", "http://localhost/pamira_stone/");
-		define("MAIN_URL", "http://ahsaphobby.net/pamira_stone/");
+		define("MAIN_URL", "http://filmograf.com.tr/pamira_stone/");
 
 
 		define("URL_CARILER", MAIN_URL . "cariler.php");
@@ -25,6 +25,8 @@
 		define("URL_FATURA_FORM_SATIS", URL_FATURA_FORM . "?tur=2");
 		define("URL_SATIS_FISI_FORM", URL_FATURA_FORM . "?tur=3");
 		define("URL_FATURA_INCELE", MAIN_URL . "fatura_incele.php?item_id=");
+
+		define("URL_MAGAZA_SATIS_FORM", MAIN_URL . "magaza_satis_form.php");
 
 		define("URL_TAHSILAT_MAKBUZU", MAIN_URL . "tahsilat_makbuzu_form.php");
 		define("URL_TAHSILAT_MAKBUZU_TAHSILAT", URL_TAHSILAT_MAKBUZU . "?tip=1");
@@ -74,10 +76,17 @@
 		define("DB_IP", "localhost:3306");*/
 
 		// hosting
-		define("DB_NAME", "pamira_stone");
+		/*define("DB_NAME", "pamira_stone");
 		define("DB_USER", "pamira_stone");
 		define("DB_PASS", "WAzzabii308");
-		define("DB_IP", "94.73.147.252");
+		define("DB_IP", "94.73.147.252");*/
+
+		// radore hosting
+		define("DB_NAME", "db037816");
+		define("DB_USER", "user037816");
+		define("DB_PASS", "WAzzabii308*");
+		define("DB_IP", "mysql.local.radorehosting.com");
+
 
 		define("DBT_CARILER", "cariler");
 		define("DBT_CARI_YETKILILER", "cari_yetkililer");
@@ -98,6 +107,7 @@
 
 		require CLASS_DIR . 'Common.php';
 		require CLASS_DIR . 'DB.php';
+
 		require CLASS_DIR . "DataCommon.php";
 		require CLASS_DIR . "User.php";
 

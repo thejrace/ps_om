@@ -447,7 +447,6 @@
                   if( yer != "" ) yer_select[0].value = yer;
                   REQ.AC( $(".kart_"+YCOUNT), PSGLOBAL.AC_COMMON, { tip:"stok_karti" }, function( item, elem ){
                       stok_kart_fiyat_download(item, elem);
-
                   });
                   YCOUNT++;
               }
@@ -486,10 +485,27 @@
 
               $(document).ready(function(){
 
+                  var resmi = true;
+
                   if( cari_get != "" ){
                       cari_detay_download( cari_get );
                       UI.CARI_INPUT.val(cari_get);
                   }
+
+                  UI.TUR_INPUT.change(function(){
+                      // trigger kayışları
+                      var kdvs = $(document).find(".kdv"),
+                          fiyats = $(document).find(".fiyat");
+                      if( this.value == "4" || this.value == "5" ){
+                          resmi = false;
+                          for( var k = 0; k < kdvs.length; k++ ) kdvs[0].disabled = true;
+                      } else {
+                          resmi = true;
+                          for( var k = 0; k < kdvs.length; k++ ) kdvs[0].disabled = false;
+                      }
+                      for( var k = 0; k < fiyats.length; k++ ) $(fiyats[0]).trigger("keyup");
+                      
+                  });
 
                   var item_id = trim(UI.ITEM_ID.val());
                   if( item_id != "" ){
@@ -499,7 +515,8 @@
                     });
                   } else {
                       UI.TUR_INPUT.val(fis_turu);
-                  }
+                      UI.TUR_INPUT.trigger("change");
+                  }                  
 
                   UI.SUBMIT_BTN.click(function(){
                       //UI.SUBMIT_BTN.get(0).disabled = true;
@@ -590,6 +607,7 @@
 
                   UI.SATIR_EKLE.click(function(){
                       yetkili_row_ekle("",0,"",1,0,"","Adet", "");
+                      UI.TUR_INPUT.trigger("change");
                   });
 
                   $(document).on("click", ".satir_sil", function(){
@@ -611,31 +629,56 @@
 
                   $(document).on("keyup", ".fiyat", function(){
                       var _this = $(this),
-                          parent = $("#yetkili_"+_this.attr("parent")),
-                          kdv_dahil_birim_fiyat = kdv_dahil_hesapla( _this.val(), parent.find(".kdv").get(0).value );
-                      parent.find(".toplam").get(0).value = (kdv_dahil_birim_fiyat * parseFloat( parent.find(".miktar").get(0).value )).toFixed(2);
+                          parent = $("#yetkili_"+_this.attr("parent")), kdv;
+
+                      if( !resmi ){
+                          // gayriresmi 
+                          kdv = 0;
+                      } else {  
+                          kdv = parent.find(".kdv").get(0).value;
+                          // resmi
+                      }
+                      var kdv_dahil_birim_fiyat = kdv_dahil_hesapla( _this.val(), kdv );
+                        parent.find(".toplam").get(0).value = (kdv_dahil_birim_fiyat * parseFloat( parent.find(".miktar").get(0).value )).toFixed(2);
                       if( _this.hasClass("redborder") ) _this.removeClass("redborder");
                   });
                   $(document).on("change", ".kdv", function(){
                       var _this = $(this),
-                          parent = $("#yetkili_"+_this.attr("parent")),
-                          kdv_dahil_birim_fiyat = kdv_dahil_hesapla( parent.find(".fiyat").get(0).value ,_this.val() );
-                      parent.find(".toplam").get(0).value = (kdv_dahil_birim_fiyat * parseFloat( parent.find(".miktar").get(0).value )).toFixed(2);
+                          parent = $("#yetkili_"+_this.attr("parent"));
+
+                      // resmi degilse hareket yapmiyoruz kdv degisiminde
+                      if( resmi ){
+                          var kdv_dahil_birim_fiyat = kdv_dahil_hesapla( parent.find(".fiyat").get(0).value ,_this.val() );
+                          parent.find(".toplam").get(0).value = (kdv_dahil_birim_fiyat * parseFloat( parent.find(".miktar").get(0).value )).toFixed(2);
+                      } 
                       if( _this.hasClass("redborder") ) _this.removeClass("redborder");
+
                   });
                   $(document).on("keyup", ".toplam", function(){
                       var _this = $(this),
-                          parent = $("#yetkili_"+_this.attr("parent")),
-                          kdv_dahil_birim_fiyat = parseFloat(_this.val()) / parseFloat( parent.find(".miktar").get(0).value),
-                          kdv_haric_birim_fiyat = kdv_haric_hesapla( kdv_dahil_birim_fiyat, parent.find(".kdv").get(0).value );
+                          parent = $("#yetkili_"+_this.attr("parent")), kdv;
+                      if( !resmi ){
+                          kdv = 0;
+                      } else {
+                          kdv = parent.find(".kdv").get(0).value;
+                      }
+                       var  kdv_dahil_birim_fiyat = parseFloat(_this.val()) / parseFloat( parent.find(".miktar").get(0).value),
+                            kdv_haric_birim_fiyat = kdv_haric_hesapla( kdv_dahil_birim_fiyat, kdv );
                       parent.find(".fiyat").get(0).value = parseFloat( kdv_haric_birim_fiyat).toFixed(2);
                       if( _this.hasClass("redborder") ) _this.removeClass("redborder");
                   });
                   $(document).on("keyup", ".miktar", function(){
                       var _this = $(this),
-                          parent = $("#yetkili_"+_this.attr("parent")),
-                          kdv_dahil_birim_fiyat = kdv_dahil_hesapla( parent.find(".fiyat").get(0).value, parent.find(".kdv").get(0).value );
+                          parent = $("#yetkili_"+_this.attr("parent")), kdv;
+                      if( !resmi ){
+                          kdv = 0;
+                      } else {
+                          kdv = parent.find(".kdv").get(0).value;
+                      }
+                      var kdv_dahil_birim_fiyat = kdv_dahil_hesapla( parent.find(".fiyat").get(0).value, kdv );
                       parent.find(".toplam").get(0).value = (kdv_dahil_birim_fiyat * parseFloat( _this.val() )).toFixed(2);
+
+                          
                       if( _this.hasClass("redborder") ) _this.removeClass("redborder");
                   });
 

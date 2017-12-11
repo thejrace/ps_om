@@ -131,21 +131,21 @@
                       <!-- <li><a href="#">Gelir - Gider Raporları</a></li> -->
                     </ul>
                   </li>
-                  <li><a><i class="fa fa-upload"></i> Giderler <span class="fa fa-chevron-down"></span></a>
+                  <!--<li><a><i class="fa fa-upload"></i> Giderler <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <!-- <li><a href="#">Gider Listesi</a></li> -->
-                      <!-- <li><a href="#">Ödemeler Raporu</a></li> -->
-                      <!-- <li><a href="#">KDV Raporu</a></li> -->
+                       <li><a href="#">Gider Listesi</a></li> 
+                       <li><a href="#">Ödemeler Raporu</a></li> 
+                       <li><a href="#">KDV Raporu</a></li> 
                     </ul>
-                  </li>
-                  <li><a><i class="fa fa-money"></i> Nakit <span class="fa fa-chevron-down"></span></a>
+                  </li>-->
+                   <!--<li><a><i class="fa fa-money"></i> Nakit <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <!-- <li><a href="#">Kasa ve Bankalar</a></li> -->
-                      <!-- <li><a href="#">Çekler</a></li> -->
-                      <!-- <li><a href="#">Kasa - Banka Raporları</a></li> -->
-                      <!-- <li><a href="#">Nakit Akış Raporu</a></li> -->
+                       <li><a href="#">Kasa ve Bankalar</a></li> 
+                       <li><a href="#">Çekler</a></li> 
+                       <li><a href="#">Kasa - Banka Raporları</a></li> 
+                       <li><a href="#">Nakit Akış Raporu</a></li> 
                     </ul>
-                  </li>
+                  </li>-->
                   <li><a><i class="fa fa-cubes"></i> Stok <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="<?php echo URL_STOK_KARTLARI ?>">Stok Kartları</a></li>
@@ -154,6 +154,7 @@
                       <li><a href="<?php echo URL_STOK_KARTLARI_URUN_GRUPLARI ?>">Ürün Grupları</a></li>
                     </ul>
                   </li>
+                  <li><a href="<?php echo URL_MAGAZA_SATIS_FORM ?>" ><i class="fa fa-tags"></i> Mağazadan Satış</a></li>
                    <?php if( User::izin_kontrol( User::$IZ_REGISTER ) ){ ?>
 
                    <li><a href="<?php echo URL_REGISTER ?>" ><i class="fa fa-users"></i> Hesap Oluştur</a></li>

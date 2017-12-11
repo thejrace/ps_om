@@ -14,6 +14,22 @@
 				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
 				return false;
 			}
+
+			if( $this->mukerrer_kontrol($input["stok_adi"] ) ) return false;
+			$this->details["stok_kodu"] = RKod::olustur( RKod::$PF_STOK_KARTI );
+
+			if( trim($input["stok_kodu"]) != "" ){
+				// elle girmiş, kontrol edicez
+				if( count($this->pdo->query("SELECT * FROM " . $this->dt_table . " WHERE stok_kodu = ?", array( $input["stok_kodu"] ) )->results()) > 0 ) {
+					$this->return_text = "Bu stok kodu başka bir ürün tanımlı!";
+					return false;
+				}
+				$this->details["stok_kodu"] = trim($input["stok_kodu"]);
+			} else {
+				// otomatik
+				$this->details["stok_kodu"] = RKod::olustur( RKod::$PF_STOK_KARTI );
+			}
+
 			// ürün grubu yoksa oluştur
 			$UrunGrubu = new UrunGrubu( $input["urun_grubu"] );
 			if( !$UrunGrubu->is_ok() ){
@@ -23,8 +39,8 @@
 			} else {
 				$urun_grubu_id = $UrunGrubu->get_details("id");
 			}
-			if( $this->mukerrer_kontrol($input["stok_adi"] ) ) return false;
-			$this->details["stok_kodu"] = RKod::olustur( RKod::$PF_STOK_KARTI );
+						
+
 			$this->pdo->insert($this->dt_table, array(
 				"stok_kodu" 		=> $this->details["stok_kodu"],
 				"stok_adi"  		=> $input["stok_adi"],
@@ -144,8 +160,11 @@
 			
 		}
 
+
+
 		// fatura / fişe eklemede stok islemleri
-		public function faturaya_ekle( $fatura_id, $fis_turu, $birim_fiyat, $kdv, $miktar, $toplam, $yer  ){
+		// kdv dahil sadece mağaza satışlarında anlamlı
+		public function faturaya_ekle( $fatura_id, $fis_turu, $birim_fiyat, $kdv, $miktar, $toplam, $yer, $kdv_dahil  ){
 			$fis = false;
 			if( $fis_turu == Fatura::$ALIS || $fis_turu == Fatura::$GR_ALIS ){
 				// stoğa ekliyoruz
@@ -166,7 +185,8 @@
 				"miktar" 		=> $miktar,
 				"kdv_orani" 	=> $kdv,
 				"toplam" 		=> $toplam,
-				"yer" 			=> $yer
+				"yer" 			=> $yer,
+				"kdv_dahil"     => $kdv_dahil
 			));
 			if( $this->pdo->error() ){
 				$this->return_text = "Bir hata oluştu.[FaturayaEkleme][1][".$this->pdo->get_error_message()."]";

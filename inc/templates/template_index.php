@@ -111,7 +111,7 @@
 
 			                  			$Makbuz = new TahsilatMakbuzu( $makbuz_data["id"] );
 			                  			$CariData = $Makbuz->get_cari_kayit();
-			                  		
+			                  			$Kullanici = new User( $makbuz_data["user"] );
 
 			                  			echo  '<li>
 							                      <div class="block">

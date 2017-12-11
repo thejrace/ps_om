@@ -82,17 +82,21 @@
 			}
 
 			foreach( $this->makbuz_ids as $makbuz_id ){
-				if( !$Cari->item_kayit_ekle( self::$ITEM_TIP, $makbuz_id ) ){
-					$this->return_text = $Cari->get_return_text();
-					return false;
+				if( isset($input["cari_kayit_id"] ) ){
+					// statik magaza tahsilatları için
+					$cari_kayit_id = $input["cari_kayit_id"];
+				} else {
+					if( !$Cari->item_kayit_ekle( self::$ITEM_TIP, $makbuz_id ) ){
+						$this->return_text = $Cari->get_return_text();
+						return false;
+					}
+					$cari_kayit_id = $Cari->get_details("item_detay_id");
 				}
-				$cari_kayit_id = $Cari->get_details("item_detay_id");
 				$this->pdo->query("UPDATE " . $this->dt_table . " SET cari_kayit_id = ? WHERE id = ?", array( $cari_kayit_id, $makbuz_id));
 				if( $this->pdo->error() ){
 					$this->return_text = "Bir hata oluştu.[2]";
 					return false;
 				}	
-
 			}
 			if( !$Cari->bakiye_guncelle( $input["tip"], $toplam_tutar ) ){
 				$this->return_text = $Cari->get_return_text();
@@ -103,7 +107,12 @@
 		}
 
 		public function get_cari_kayit(){
-			return $this->pdo->query("SELECT * FROM " . DBT_ITEM_CARI_KAYITLARI . " WHERE item_tip = ? && item_id = ?", array( self::$ITEM_TIP, $this->details["id"] ))->results();
+			if( $this->details["cari_kayit_id"] == 2 ){
+				return $this->pdo->query("SELECT * FROM " . DBT_ITEM_CARI_KAYITLARI . " WHERE id = ?", array( 2 ))->results();
+			} else {
+				return $this->pdo->query("SELECT * FROM " . DBT_ITEM_CARI_KAYITLARI . " WHERE item_tip = ? && item_id = ?", array( self::$ITEM_TIP, $this->details["id"] ))->results();
+			}
+			
 		}
 
 	}

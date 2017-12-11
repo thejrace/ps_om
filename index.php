@@ -19,7 +19,6 @@
 	Pamira::son_fis_hareketlerini_al();
 	Pamira::son_makbuz_hareketlerini_al();
 
-
 	require 'inc/header.php';
 
 
