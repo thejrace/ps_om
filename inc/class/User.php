@@ -25,7 +25,13 @@
 						$IZ_TAHSILAT_MAKBUZU_DUZENLE 		= 17,
 						$IZ_TAHSILAT_MAKBUZU_INCELEME 		= 18,
 						$IZ_FIS_FATURALANDIRMA 				= 19,
-						$IZ_REGISTER						= 20;
+						$IZ_REGISTER						= 20,
+						$IZ_ODEME_KARTLARI_GORUNTULEME      = 21,
+						$IZ_ODEME_KARTI_EKLE 				= 22,
+						$IZ_ODEME_YAP 						= 23,
+						$IZ_ODEMELER_GORUNTULEME			= 24,
+						$IZ_STOK_HAREKETLERI_GORUNTULEME    = 25,
+						$IZ_STOK_HAREKET_GIRIS_CIKIS		= 26;
 
 		public static $IZINLER_TEMPLATE = array();
 		public static $IZINLER = array();

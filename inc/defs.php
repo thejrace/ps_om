@@ -10,8 +10,8 @@
 		define("RES_VENDORS_DIR", MAIN_DIR . "res/vendors/");
 
 
-		//define("MAIN_URL", "http://localhost/pamira_stone/");
-		define("MAIN_URL", "http://filmograf.com.tr/pamira_stone/");
+		define("MAIN_URL", "http://localhost/pamira_stone/");
+		//define("MAIN_URL", "http://filmograf.com.tr/pamira_stone/");
 
 
 		define("URL_CARILER", MAIN_URL . "cariler.php");
@@ -36,14 +36,20 @@
 		define("URL_LOGOUT", MAIN_URL . "logout.php");
 		define("URL_REGISTER", MAIN_URL . "register.php");
 
+		define("URL_ODEME_KARTLARI", MAIN_URL . "odeme_kartlari.php");
+		
+		define("URL_ODEME_KARTI_FORM", MAIN_URL . "odeme_karti_form.php");
+		define("URL_ODEMELER", MAIN_URL . "odemeler.php");
+		define("URL_ODEME_FORM", MAIN_URL . "odeme_form.php");
+
 
 		// verisinden otomatik çözecegiz türünü
 		define("URL_FATURA_FORM_DUZENLE", URL_FATURA_FORM . "?item_id=");
 
 		define("URL_STOK_HAREKETLERI", MAIN_URL . "stok_hareketleri.php");
 		define("URL_STOK_HAREKET_FORM", MAIN_URL . "stok_hareket_form.php");
-		define("URL_STOK_GIRIS_FORM", URL_STOK_HAREKET_FORM . "?tip=giris");
-		define("URL_STOK_CIKIS_FORM", URL_STOK_HAREKET_FORM . "?tip=cikis");
+		define("URL_STOK_GIRIS_FORM", URL_STOK_HAREKET_FORM . "?tip=Giriş");
+		define("URL_STOK_CIKIS_FORM", URL_STOK_HAREKET_FORM . "?tip=Çıkış");
 
 		define("URL_AC_COMMON", MAIN_URL . "inc/ac_common.php");
 
@@ -70,10 +76,10 @@
 
 
 		// PC local
-		/*define("DB_NAME", "pamira_stone");
+		define("DB_NAME", "pamira_stone");
 		define("DB_USER", "root");
 		define("DB_PASS", "Dogansaringulu9");
-		define("DB_IP", "localhost:3306");*/
+		define("DB_IP", "localhost:3306");
 
 		// hosting
 		/*define("DB_NAME", "pamira_stone");
@@ -82,10 +88,10 @@
 		define("DB_IP", "94.73.147.252");*/
 
 		// radore hosting
-		define("DB_NAME", "db037816");
+		/*define("DB_NAME", "db037816");
 		define("DB_USER", "user037816");
 		define("DB_PASS", "WAzzabii308*");
-		define("DB_IP", "mysql.local.radorehosting.com");
+		define("DB_IP", "mysql.local.radorehosting.com");*/
 
 
 		define("DBT_CARILER", "cariler");
@@ -102,6 +108,15 @@
 		define("DBT_USERS", "kullanicilar");
 		define("DBT_COOKIE_TOKENS", "cookie_tokens");
 		define("DBT_PAMIRA_STONE", "pamira_stone");
+
+		define("DBT_STOK_HAREKETLERI", "stok_hareketleri");
+		define("DBT_STOK_HAREKETLERI_URUNLER", "stok_hareketleri_urunler");
+
+		define("DBT_MAGAZA_FISLERI", "magaza_fisleri");
+		define("DBT_MAGAZA_FISLERI_URUNLER", "magaza_fisleri_urunler");
+
+		define("DBT_ODEMELER", "odemeler");
+		define("DBT_ODEME_KARTLARI", "odeme_kartlari");
 
 		session_start();
 
@@ -144,7 +159,13 @@
 					User::$IZ_TAHSILAT_MAKBUZU_EKLE,
 					//self::$IZ_TAHSILAT_MAKBUZU_DUZENLE,
 					User::$IZ_TAHSILAT_MAKBUZU_INCELEME,
-					User::$IZ_FIS_FATURALANDIRMA
+					User::$IZ_FIS_FATURALANDIRMA,
+					User::$IZ_ODEME_KARTLARI_GORUNTULEME,
+					User::$IZ_ODEME_KARTI_EKLE,
+					User::$IZ_ODEME_YAP,
+					User::$IZ_ODEMELER_GORUNTULEME,
+					User::$IZ_STOK_HAREKETLERI_GORUNTULEME,
+					User::$IZ_STOK_HAREKET_GIRIS_CIKIS
 				),
 				User::$SEVIYE_NORMAL => array(
 					User::$IZ_CARILER_GORUNTULEME,
@@ -176,7 +197,13 @@
 					User::$IZ_TAHSILAT_MAKBUZU_DUZENLE,
 					User::$IZ_TAHSILAT_MAKBUZU_INCELEME,
 					User::$IZ_FIS_FATURALANDIRMA,
-					User::$IZ_REGISTER
+					User::$IZ_REGISTER,
+					User::$IZ_ODEME_KARTLARI_GORUNTULEME,
+					User::$IZ_ODEME_KARTI_EKLE,
+					User::$IZ_ODEME_YAP,
+					User::$IZ_ODEMELER_GORUNTULEME,
+					User::$IZ_STOK_HAREKETLERI_GORUNTULEME,
+					User::$IZ_STOK_HAREKET_GIRIS_CIKIS
 				)
 
 			);

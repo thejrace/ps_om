@@ -24,6 +24,11 @@
 				require CLASS_DIR . "UrunGrubu.php";
 				$q = UrunGrubu::ac_arama(Input::get("term"));
 			break;
+
+			case 'odeme_karti':
+				require CLASS_DIR . "OdemeKarti.php";
+				$q = OdemeKarti::ac_arama(Input::get("term"));
+			break;
 		}
 
 		die( json_encode($q));

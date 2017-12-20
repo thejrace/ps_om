@@ -195,7 +195,8 @@
 			if( !$fis ){
 				// fis harici islemlerde stok hareketleri
 				// kartın stoğunu guncelle
-				$this->stok_guncelle( $yer, $miktar * $miktar_carpan );
+				// manuel elle stok girişi yapiyoruz artik, otomatik stok güncelleme iptal
+				//$this->stok_guncelle( $yer, $miktar * $miktar_carpan );
 			}
 			return true;
 		}
@@ -210,7 +211,7 @@
 		}
 
 		// yer bazlı
-		private function stok_guncelle( $yer, $islem_miktari ){
+		public function stok_guncelle( $yer, $islem_miktari ){
 			$eski_miktar = $this->pdo->query("SELECT * FROM " . DBT_STOK_KARTLARI_STOKLAR . " WHERE yer = ? && stok_karti = ?", array($yer, $this->details["stok_kodu"]))->results();
 			$this->pdo->query("UPDATE " . DBT_STOK_KARTLARI_STOKLAR . " SET miktar = ? WHERE id = ?", array( ($eski_miktar[0]["miktar"] + $islem_miktari), $eski_miktar[0]["id"] ) );
 			if( $this->pdo->error() ){
@@ -233,6 +234,22 @@
 				return false;
 			}
 			$this->return_text = "Stok güncellendi.";
+			return true;
+		}
+
+		public function stok_hareket_detay_ekle( $hareket_id, $miktar, $yer ){
+			$this->pdo->insert(DBT_STOK_HAREKETLERI_URUNLER, array(
+				"hareket_id" 	=> $hareket_id,
+				"stok_kodu" 	=> $this->details["stok_kodu"],
+				"stok_adi" 		=> $this->details["stok_adi"],
+				"miktar" 		=> $miktar,
+				"yer"			=> $yer
+			));
+			if( $this->pdo->error() ){
+				$this->return_text = "Bir hata oluştu.[StokHareketDetayEkleme][".$this->pdo->get_error_message()."]";
+				return false;
+			}
+			$this->return_text = "Stok hareketine eklendi.";
 			return true;
 		}
 

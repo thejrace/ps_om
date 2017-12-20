@@ -1,14 +1,13 @@
 <?php
   	
 	require 'inc/defs.php';
-
 	require CLASS_DIR . "Input.php";
+	require CLASS_DIR . "InputErrorHandler.php";
+	require CLASS_DIR . "Validation.php";
+	require CLASS_DIR . "OdemeKarti.php";
+	
 
 	if( $_POST ){
-
-		require CLASS_DIR . "InputErrorHandler.php";
-		require CLASS_DIR . "Validation.php";
-		require CLASS_DIR . "MagazaFisi.php";
 
 		$OK = 1;
         $TEXT = "";
@@ -16,14 +15,14 @@
         $INPUT_RET = array();
 
 		$INPUT_LIST = array(
-			"aciklama"				=> array( array( "req" => true ), null ),
-			"duzenlenme_tarihi" 	=> array( array( "req" => true ), null ),
-			"stok_str"				=> array( array( "req" => true ), null )
- 		);
+			"kart" 				=> array( array( "req" => true ),  null ),
+			"odeme_tipi" 		=> array( array( "req" => true ),  null ),
+			"tutar" 			=> array( array( "req" => true, "pozNumerik" => true ),  null )
+		);
 
 		switch( Input::get("req") ){
 
-			case 'fatura_ekle':
+			case 'odeme_yap':
 
 				$Validation = new Validation( new InputErrorHandler );
 				$Validation->check_v2( Input::escape($_POST), $INPUT_LIST );
@@ -32,16 +31,19 @@
 					$INPUT_RET = $Validation->errors()->js_format_ref();
 				} else {	
 					
-					$MagazaFisi = new MagazaFisi();
-					if( !$MagazaFisi->ekle(Input::escape($_POST))){
+					$OdemeKarti = new OdemeKarti(Input::get("kart"));
+					if( $OdemeKarti->is_ok() ){
+						if( !$OdemeKarti->odeme_yap( Input::get("tutar"), Input::get("odeme_tipi") ) ){
+							$OK = 0;
+						}
+					} else {
 						$OK = 0;
 					}
-					$TEXT = $MagazaFisi->get_return_text();
-
+					$TEXT = $OdemeKarti->get_return_text();
 				}
 
 			break;
-
+		
 		}
 
 		$output = json_encode(array(
@@ -57,16 +59,17 @@
 	}
 
 	$PAGE = array(
-		"title" 		=> "Mağaza Satışı",
-		"top_title" 	=> "Mağaza Satışı",
-		"template" 		=> "template_magaza_satis_form.php",
-		"html_libs" 	=> array( "datatables", "jquery-ui", "datetimepicker" )
+		"title" 		=> "Ödeme Yap",
+		"top_title" 	=> "Ödeme Yap",
+		"template" 		=> "template_odeme_form.php",
+		"html_libs" 	=> array("jquery-ui")
 	);
 
-	$FORM_REQ = "fatura_ekle";
 
+	$FORM_REQ = "odeme_yap";
 
 	require 'inc/header.php';
+
 
 
   	require TEMPLATES_DIR . $PAGE["template"];

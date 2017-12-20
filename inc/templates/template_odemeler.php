@@ -1,43 +1,49 @@
             <div class="row">
-                
+              
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <a href="<?php echo URL_STOK_CIKIS_FORM ?>"><button type="button" class="btn btn-md btn-info">+ Stok Çıkışı Olştur</button></a>
-                    <a href="<?php echo URL_STOK_GIRIS_FORM ?>"><button type="button" class="btn btn-md btn-danger">+ Stok Girişi Oluştur</button></a>
+                    <a href="<?php echo URL_ODEME_FORM ?>"><button type="button" class="btn btn-md btn-info">+ Ödeme Ekle</button></a>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                    <table id="stok_hareket_table" class="table table-striped table-bordered bulk_action">
+                    <table id="datatable" class="table table-striped table-bordered bulk_action dtable-obarey">
                       <thead>
                         <tr>
                           <th class="tr_cb">#</th>
-                          <th>Tip</th>
-                          <th>Fiş No</th>
+                          <th>Kart</th>
+                          <th>Ödeme Tipi</th>
+                          <th>Tutar</th>
                           <th>Tarih</th>
-                          <th class="tr_cb"></th>
                         </tr>
                       </thead>
+                      <tbody>
 
+                      </tbody>
                     </table>
                   </div>
                 </div>
               </div>
 
-
-
             </div> <!--  ROW1 -->
 
+
+ 
             <script type="text/javascript">
 
 
                 $(document).ready(function(){
 
-                     $("#stok_hareket_table").DataTable({
+                    $("#datatable").DataTable({
                       "columns": [
                         null,
                         null,
                         null,
+                        {
+                          render: function ( data, type, row ) {
+                            return format_currency( data );
+                          }
+                        },
                         null
                       ],
                       "processing": true,
@@ -48,6 +54,8 @@
                       })
 
                     });
+
+                    
 
                 });
 

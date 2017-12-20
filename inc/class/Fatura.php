@@ -19,7 +19,7 @@
 			if( isset($id) ) $this->check( array("id"), $id);
 		}
 
-		public function magaza_fisi_kes( $input ){
+		public function magaza_fisi_kes_eski( $input ){
 
 			if( !User::izin_kontrol( User::$IZ_FATURA_EKLE ) ){
 				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
@@ -149,8 +149,6 @@
 
 			$this->return_text = "Fatura / Fiş oluşturuldu.";
 			return true;
-
-
 		}
 
 		public function ekle( $input ){
