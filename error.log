@@ -1,2 +1,0 @@
-[20-Dec-2017 21:37:34 Europe/Berlin] PHP Fatal error:  Call to undefined method StokKarti::stok_hareketine_ekle() in C:\xampp\htdocs\pamira_stone\inc\class\StokHareket.php on line 77
-[20-Dec-2017 21:41:47 Europe/Berlin] PHP Fatal error:  Class 'RKod' not found in C:\xampp\htdocs\pamira_stone\inc\class\StokKarti.php on line 19

@@ -74,5 +74,4 @@
 			return $dt_data;
 		}
 
-
 	}

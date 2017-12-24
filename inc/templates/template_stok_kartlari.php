@@ -114,7 +114,7 @@
                         {
                           "data": null,
                           "orderable": false,
-                          "defaultContent": '<button type="button" class="btn btn-xs btn-info stok_detaylari" data-toggle="modal" data-target=".stok_detay_modal">Stok Detayları</button>'
+                          "defaultContent": '<button type="button" class="btn btn-xs btn-info stok_detaylari_btn" data-toggle="modal" data-target=".stok_detay_modal">Stok Detayları</button>'
                         },
                         {
                           "data": null,
@@ -132,7 +132,7 @@
                     });
 
 
-                    $(document).on("click", ".stok_detaylari", function(){
+                    $(document).on("click", ".stok_detaylari_btn", function(){
                         var tds = $(this).parent().parent().find("td");
                         REQ.ACTION("", { stok_karti: tds.get(0).innerText, req: "stok_karti_stok_detay_download" }, function(res){
                             console.log(res);

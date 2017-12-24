@@ -4,7 +4,7 @@
 	require CLASS_DIR . "Input.php";
 	require CLASS_DIR . "InputErrorHandler.php";
 	require CLASS_DIR . "Validation.php";
-	require CLASS_DIR . "OdemeKarti.php";
+	require CLASS_DIR . "Odeme.php";
 	
 
 	if( $_POST ){
@@ -17,6 +17,9 @@
 		$INPUT_LIST = array(
 			"kart" 				=> array( array( "req" => true ),  null ),
 			"odeme_tipi" 		=> array( array( "req" => true ),  null ),
+			"banka_ekstra"		=> array( array(), null ),
+			"aciklama"			=> array( array(), null ),
+			"tarih"				=> array( array(), null ),
 			"tutar" 			=> array( array( "req" => true, "pozNumerik" => true ),  null )
 		);
 
@@ -31,16 +34,48 @@
 					$INPUT_RET = $Validation->errors()->js_format_ref();
 				} else {	
 					
-					$OdemeKarti = new OdemeKarti(Input::get("kart"));
-					if( $OdemeKarti->is_ok() ){
-						if( !$OdemeKarti->odeme_yap( Input::get("tutar"), Input::get("odeme_tipi") ) ){
+					$Odeme = new Odeme();
+					if( !$Odeme->ekle( Input::escape($_POST) ) ){
+						$OK = 0;
+					}
+					$TEXT = $Odeme->get_return_text();
+				}
+
+			break;
+
+
+			case 'odeme_duzenle':
+
+				$Validation = new Validation( new InputErrorHandler );
+				$Validation->check_v2( Input::escape($_POST), $INPUT_LIST );
+				if( $Validation->failed() ){
+					$OK = 0;
+					$INPUT_RET = $Validation->errors()->js_format_ref();
+				} else {	
+					$Odeme = new Odeme( Input::get("item_id"));
+					if( $Odeme->is_ok() ){
+						if( !$Odeme->duzenle( Input::escape($_POST) ) ){
 							$OK = 0;
 						}
 					} else {
 						$OK = 0;
 					}
-					$TEXT = $OdemeKarti->get_return_text();
+					$TEXT = $Odeme->get_return_text();
 				}
+
+			break;
+
+			case 'data_download':
+
+				$Odeme = new Odeme(Input::get("item_id"));
+				if( $Odeme->is_ok() ){
+					$DATA = $Odeme->get_details();
+					$DATA["tarih"] = Common::date_reverse($DATA["tarih"]);
+				} else {
+					$OK = 0;
+				}
+				$TEXT = $Odeme->get_return_text();
+
 
 			break;
 		
@@ -62,11 +97,17 @@
 		"title" 		=> "Ödeme Yap",
 		"top_title" 	=> "Ödeme Yap",
 		"template" 		=> "template_odeme_form.php",
-		"html_libs" 	=> array("jquery-ui")
+		"html_libs" 	=> array("jquery-ui", "datetimepicker")
 	);
 
-
-	$FORM_REQ = "odeme_yap";
+	if( Input::exists(Input::$GET, "item_id") ){
+		$FORM_REQ = "odeme_duzenle";
+		$ITEM_ID = Input::get("item_id");
+	} else {
+		$FORM_REQ = "odeme_yap";
+		$ITEM_ID = "";
+	}
+	
 
 	require 'inc/header.php';
 

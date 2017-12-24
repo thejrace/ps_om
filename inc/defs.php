@@ -41,6 +41,7 @@
 		define("URL_ODEME_KARTI_FORM", MAIN_URL . "odeme_karti_form.php");
 		define("URL_ODEMELER", MAIN_URL . "odemeler.php");
 		define("URL_ODEME_FORM", MAIN_URL . "odeme_form.php");
+		define("URL_ODEME_FORM_DUZENLE", MAIN_URL . "odeme_form.php?item_id=");
 
 
 		// verisinden otomatik çözecegiz türünü

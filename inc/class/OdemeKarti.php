@@ -24,6 +24,9 @@
 				$toplam = 0;
 			} else {
 				$toplam = $input["toplam"];
+
+				Pamira::odemeleri_guncelle( (double)$toplam );
+
 			}
 			$this->pdo->insert( $this->dt_table, array(
 				"isim" 		=> $input["isim"],

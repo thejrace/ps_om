@@ -14,6 +14,7 @@
 			self::$data = $q[0];
 		}
 
+		// carileri bulmak icin alttaki iki metod
 		public static function alacaklari_hesapla(){
 			self::$data["alacakli_cari_sayisi"] = DB::getInstance()->query("SELECT * FROM " . DBT_CARILER . " WHERE bakiye > 0")->count();
 		}
@@ -22,8 +23,9 @@
 			self::$data["verecekli_cari_sayisi"] = DB::getInstance()->query("SELECT * FROM " . DBT_CARILER . " WHERE bakiye < 0")->count();
 		}
 
-		public static function odemeleri_hesapla(){
-
+		
+		public static function odemeleri_guncelle( $tutar ){
+			return self::toplam_guncelle( "odemeler", $tutar, "Ödemeler güncellendi.");
 		}
 
 		public static function son_fis_hareketlerini_al(){
@@ -32,6 +34,14 @@
 
 		public static function son_makbuz_hareketlerini_al(){
 			self::$data["son_makbuz_hareketleri"] = DB::getInstance()->query("SELECT * FROM " . DBT_TAHSILAT_MAKBUZLARI . " ORDER BY eklenme_tarihi DESC LIMIT 10")->results();
+		}
+
+		public static function son_magaza_hareketlerini_al(){
+			self::$data["son_magaza_hareketleri"] = DB::getInstance()->query("SELECT * FROM " . DBT_MAGAZA_FISLERI .  " ORDER BY eklenme_tarihi DESC LIMIT 10" )->results();
+		}
+
+		public static function son_odeme_hareketlerini_al(){
+			self::$data["son_odeme_hareketleri"] = DB::getInstance()->query("SELECT * FROM " . DBT_ODEMELER ." ORDER BY eklenme_tarihi DESC LIMIT 10")->results();
 		}
 
 		public static function alacaklar_toplami_guncelle( $tutar ){

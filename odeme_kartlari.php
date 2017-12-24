@@ -1,5 +1,7 @@
 <?php
-  
+  	
+	// @DEPRECATED
+
 	require 'inc/defs.php';
   
 	if( !User::izin_kontrol( User::$IZ_ODEME_KARTLARI_GORUNTULEME ) ){

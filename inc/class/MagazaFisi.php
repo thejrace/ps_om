@@ -20,7 +20,8 @@
 				"aciklama" 			=> $input["aciklama"],
 				"tarih" 			=> Common::date_reverse($input["tarih"]),
 				"user" 				=> User::get_data("user_id"),
-				"eklenme_tarihi" 	=> Common::get_current_datetime()
+				"eklenme_tarihi" 	=> Common::get_current_datetime(),
+				"toplam" 			=> 0
 			));
 			if( $this->pdo->error()){
 				$this->return_text = "Bir hata oluştu.[".$this->pdo->get_error_message()."]";
@@ -55,6 +56,9 @@
 					return false;
 				}
 			}
+
+			// toplami ekle
+			$this->pdo->query("UPDATE ". $this->dt_table . " SET toplam = ? WHERE id = ?", array( $miktar, $this->details["id"]));
 
 			// tahsil et, kasayı guncelle
 			Pamira::kasayi_guncelle( $miktar );

@@ -1,5 +1,8 @@
 <?php
   	
+
+	// @DEPRECATED
+
 	require 'inc/defs.php';
 	require CLASS_DIR . "Input.php";
 	require CLASS_DIR . "InputErrorHandler.php";
