@@ -80,4 +80,172 @@
 			return true;
 		}
 
+		public function duzenle( $input ){
+
+			if( !User::izin_kontrol( User::$IZ_STOK_HAREKET_GIRIS_CIKIS ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
+
+			if( $input["tip"] == "Giriş" ){
+				$miktar_carpan = 1;
+				$this->pdo->query("UPDATE " . $this->dt_table . " SET tarih = ? WHERE id = ?", array( Common::date_reverse($input["tarih"]), $this->details["id"]));
+			} else {
+				$miktar_carpan = -1;
+				$this->pdo->query("UPDATE " . $this->dt_table . " SET tarih = ?, fis_no = ? WHERE id = ?", array( Common::date_reverse($input["tarih"]), $input["fis_no"], $this->details["id"]));
+			}
+
+			$kayitli_urunler = $this->get_urunler();
+			$gelenler_id = array();
+
+			foreach( explode( "||", $input["stok_str"] ) as $stok_data ){
+				$data_array = explode( "##", $stok_data );
+
+				// 0 -> stok isim
+				// 1 -> miktar
+				// 2 -> yer
+				// 3 -> id
+
+				if( $data_array[3] != "" ){
+					// id gelmiş
+
+					if( (double)$data_array[1] == 0 ) continue;
+					$StokKarti = new StokKarti($data_array[0]);
+					if( !$StokKarti->is_ok() ) continue;
+					
+					$this->pdo->query("UPDATE " . DBT_STOK_HAREKETLERI_URUNLER . " SET 
+						stok_kodu = ?,
+						stok_adi = ?,
+						miktar = ?,
+						yer = ? WHERE id = ?", array(
+							$StokKarti->get_details("stok_kodu"),
+							$data_array[0],
+							$data_array[1],
+							$data_array[2],
+							$data_array[3]
+					));
+					// bir onceki kayitla miktar farkını bulucaz ona göre stoğu guncelle
+					$fark = 0;
+					foreach( $kayitli_urunler as $kayitli_urun ){
+						if( $kayitli_urun["id"] == $data_array[3] ){
+							$fark = (int)$kayitli_urun["miktar"] - (int)$data_array[1];
+							if( $fark < 0 ){
+								// yeni miktar daha fazla
+								// giriş yapılıyorsa stoğa farkı ekle
+								// cikis yapiliyorsa fark stoktan çıkar
+								if( $miktar_carpan == -1 ){	
+									$StokKarti->stok_guncelle( $data_array[2], $fark );
+								} else {
+									$StokKarti->stok_guncelle( $data_array[2], $fark * -1);
+								}							
+							} else {
+								// yeni miktar oncekinden az
+								// giriş yapılıyorsa stoktan farkı çıkar
+								// cikis yapiliyorsa farkı stoğa ekle
+								if( $miktar_carpan == -1 ){	
+									$StokKarti->stok_guncelle( $data_array[2], $fark );
+								} else {
+									$StokKarti->stok_guncelle( $data_array[2], $fark * -1 );
+								}
+							}	
+							break;
+						}
+					}
+					$gelenler_id[] = $data_array[3];
+				} else {
+					// yeni ekleniyor
+
+					// isim bos geldiyse ipleme
+					if( trim($data_array[0]) == "" ) continue;
+					// miktar 0 sa ipleme
+					if( (double)$data_array[1] == 0 ) continue;
+
+					$StokKarti = new StokKarti( $data_array[0] );
+					if( !$StokKarti->is_ok() ){
+						// yeni stok karti
+						$StokKarti = new StokKarti();
+						$kart_data = array(
+							"stok_adi" 		=> $data_array[0],
+							"urun_grubu" 	=> "Tanımsız", // def
+							"satis_fiyati" 	=> 0,
+							"alis_fiyati" 	=> 0,
+							"kdv_orani" 	=> 18,
+							"kdv_dahil" 	=> 0,
+							"birim"			=> "Adet"
+						);
+						if( !$StokKarti->ekle( $kart_data ) ){
+							$this->return_text = $StokKarti->get_return_text();
+							return false;
+						}
+						// guncellenmis karti init et
+						$StokKarti = new StokKarti( $data_array[0] );
+					}
+
+					$StokKarti->stok_guncelle( $data_array[2], (double)$data_array[1] * $miktar_carpan );
+					$StokKarti->stok_hareket_detay_ekle( $this->details["id"], (double)$data_array[1], $data_array[2] );
+				}				
+			}
+
+			// silinen ürünleri, db den kaldir
+			foreach( $kayitli_urunler as $varolanlar ){
+				if( !in_array( $varolanlar["id"], $gelenler_id ) ){
+					$this->pdo->query("DELETE FROM " . DBT_STOK_HAREKETLERI_URUNLER . " WHERE id = ?", array( $varolanlar["id"]));
+				}
+			}
+
+			$this->return_text = "Stok hareketi güncellendi.";
+			return true;
+		}
+
+		public function get_urunler(){
+			return $this->pdo->query("SELECT * FROM " . DBT_STOK_HAREKETLERI_URUNLER . " WHERE hareket_id = ?", array($this->details["id"]))->results();
+		}
+
+		public static function dt_arama( $input ){
+			$prefix = "SELECT id, tip, tarih, fis_no FROM " . DBT_STOK_HAREKETLERI;
+
+			$wheres = array();
+			$where_vals = array();
+
+			$wheres[] = " durum = ? ";
+			$where_vals[] = 1;
+
+
+			if( trim($input["tip"]) != "0" ){
+				$wheres[] = " tip = ? ";
+				$where_vals[] = $input["tip"];
+			}
+
+			if( trim($input["fis_no"]) != "" ){
+				$wheres[] = " fis_no = ? ";
+				$where_vals[] = $input["fis_no"];
+			}
+
+			if( trim($input["tarih_alt"]) != "" ){
+				$wheres[] = " tarih >= ? ";
+				$where_vals[] = Common::date_reverse($input["tarih_alt"]);
+			}
+
+			if( trim($input["tarih_ust"]) != "" ){
+				$wheres[] = " tarih <= ? ";
+				$where_vals[] = Common::date_reverse($input["tarih_ust"]);
+			}
+
+			$dt_data = array();
+
+			$sql = $prefix . " WHERE " . implode(" && ", $wheres );
+			$query = DB::getInstance()->query($sql, $where_vals)->results();
+			foreach( $query as $q ){
+				$dt_data[] = array(
+					$q["id"],
+					$q["tip"],
+					$q["fis_no"],
+					Common::date_reverse($q["tarih"])
+				);
+			}
+			
+			return $dt_data;
+		}
+		
+
 	}

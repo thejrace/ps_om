@@ -31,7 +31,8 @@
 						$IZ_ODEME_YAP 						= 23,
 						$IZ_ODEMELER_GORUNTULEME			= 24,
 						$IZ_STOK_HAREKETLERI_GORUNTULEME    = 25,
-						$IZ_STOK_HAREKET_GIRIS_CIKIS		= 26;
+						$IZ_STOK_HAREKET_GIRIS_CIKIS		= 26,
+						$IZ_MAGAZA_SATISLARI_GORUNTULEME    = 27;
 
 		public static $IZINLER_TEMPLATE = array();
 		public static $IZINLER = array();

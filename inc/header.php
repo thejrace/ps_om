@@ -134,7 +134,7 @@
                   <li><a><i class="fa fa-upload"></i> Giderler <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                        <li><a href="<?php  echo URL_ODEMELER ?>">Ödemeler</a></li> 
-                       <li><a href="<?php  echo URL_ODEME_KARTLARI ?>">Ödeme Listesi</a></li> 
+                       <!-- <li><a href="<?php  echo URL_ODEME_KARTLARI ?>">Ödeme Listesi</a></li>  -->
                        
                     </ul>
                   </li>
@@ -154,7 +154,16 @@
                       <li><a href="<?php echo URL_STOK_KARTLARI_URUN_GRUPLARI ?>">Ürün Grupları</a></li>
                     </ul>
                   </li>
-                  <li><a href="<?php echo URL_MAGAZA_SATIS_FORM ?>" ><i class="fa fa-tags"></i> Mağazadan Satış</a></li>
+
+                  <li><a><i class="fa fa-tags"></i> Mağaza <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                       <li><a href="<?php  echo URL_MAGAZA_SATISLARI ?>">Satışlar</a></li> 
+                       <li><a href="<?php  echo URL_MAGAZA_SATIS_FORM ?>">Satış Formu</a></li> 
+                       
+                    </ul>
+                  </li>
+
+                  
                    <?php if( User::izin_kontrol( User::$IZ_REGISTER ) ){ ?>
 
                    <li><a href="<?php echo URL_REGISTER ?>" ><i class="fa fa-users"></i> Hesap Oluştur</a></li>

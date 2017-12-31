@@ -1,4 +1,4 @@
-             <div class="row">
+          <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                    <div class="x_title">
@@ -18,23 +18,22 @@
 
                           <div class="col-md-6 col-sm-12 col-xs-12">
                               
+
                                 <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tip</label>
+                                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Tutar Alt</label>
                                   <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <select class="form-control" name="tip" id="tip" />
-                                      <option value="0">Seçiniz..</option>
-                                      <option value="Giriş">Giriş</option>
-                                      <option value="Çıkış">Çıkış</option>
-                                    </select>
+                                    <input type="text" class="form-control posnum" placeholder="Tutar Alt" name="tutar_alt" id="tutar_alt" />
                                   </div>
                                 </div>
 
-                                <div class="form-group">
-                                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Fiş No</label>
+                                 <div class="form-group">
+                                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Tutar Üst</label>
                                   <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control posnum" placeholder="Fiş No" name="fis_no" id="fis_no" />
+                                    <input type="text" class="form-control posnum" placeholder="Tutar Üst" name="tutar_ust" id="tutar_ust" />
                                   </div>
                                 </div>
+
+                              
 
                           </div>
 
@@ -71,41 +70,46 @@
                   </div>
                 </div>
               </div>
-            </div>       
+            </div>          
+
 
             <div class="row">
-                
+              
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <a href="<?php echo URL_STOK_CIKIS_FORM ?>"><button type="button" class="btn btn-md btn-info">+ Stok Çıkışı Olştur</button></a>
-                    <a href="<?php echo URL_STOK_GIRIS_FORM ?>"><button type="button" class="btn btn-md btn-danger">+ Stok Girişi Oluştur</button></a>
+                    <a href="<?php echo URL_MAGAZA_SATIS_FORM ?>"><button type="button" class="btn btn-md btn-info">+ Yeni Ekle</button></a>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                    <table id="stok_hareket_table" class="table table-striped table-bordered bulk_action">
+                    <table id="datatable" class="table table-striped table-bordered bulk_action dtable-obarey">
                       <thead>
                         <tr>
                           <th class="tr_cb">#</th>
-                          <th>Tip</th>
-                          <th>Fiş No</th>
+                          <th>Tutar</th>
                           <th>Tarih</th>
                           <th class="tr_cb"></th>
                         </tr>
                       </thead>
+                      <tbody>
 
+                      </tbody>
                     </table>
                   </div>
                 </div>
               </div>
 
-
-
             </div> <!--  ROW1 -->
 
+           
+
+
+ 
             <script type="text/javascript">
 
                 function init_server_side_table( TABLE ){
+
+
                    TABLE.DataTable(
                       $.extend( { 
                         "processing": true,
@@ -116,36 +120,49 @@
                         })
                       }, DT_SETTINGS )
                     );
+
                 }
 
                 var DT_SETTINGS = {
-                   "lengthMenu": [ 50, 75, 100 ],
-                   "searching":false,
-                   "columns": [
-                      null,
-                      null,
-                      null,
-                      null,
-                      {
-                        "data": null,
-                        "orderable": false,
-                        "defaultContent": '<button type="button" class="btn btn-xs btn-success duzenle">Düzenle</button>'
-                      }
-                    ]
+                    "pageLength": 50,
+                      "lengthMenu": [ 50, 75, 100 ],
+                      "searching":false,
+                      "columns": [
+                        null,
+                        {
+                          render: function ( data, type, row ) {
+                            return format_currency( data );
+                          }
+                        },
+                        null,
+                        {
+                          "data": null,
+                          "orderable": false,
+                          "defaultContent": '<button type="button" class="btn btn-xs btn-success duzenle">Düzenle</button>'
+                        }
+                      ]
                 };
+
+
+
 
                 $(document).ready(function(){
 
-                    var TABLE = $("#stok_hareket_table"),
+                    var TABLE = $("#datatable"),
                         TABLE_ARAMA_MOD = false;
 
                     init_server_side_table( TABLE );
 
                     $("[dtpicker]").datetimepicker(DATEPICKER_DEF_OPTIONS_NO_PLACEHOLDER);
+                    
+                    $(document).on("click", ".duzenle", function(){
+                        window.open("<?php echo URL_MAGAZA_SATIS_FORM_DUZENLE ?>"+$(this).parent().parent().find("td").get(0).innerText, "_blank");
+                    });
 
-                     var ARAMA_FORM = $("#search_form");
+
+                      var ARAMA_FORM = $("#search_form");
                       $("#btn_form_arama").click(function(){
-                        //console.log(ARAMA_FORM.serialize());
+                        console.log(ARAMA_FORM.serialize());
                         if( !FormValidation.check(ARAMA_FORM.get(0)) ){
                             PamiraNotify("error", "Hata", "Arama formunda eksiklikler var.");
                             return;
@@ -181,13 +198,6 @@
                         }
                     });
 
-                      
-
-                     $(document).on("click", ".duzenle", function(){
-                        var tds = $(this).parent().parent().find("td");
-                        
-                        window.open("<?php echo URL_STOK_HAREKET_FORM ?>?item_id="+tds.get(0).innerText+"&tip="+tds.get(1).innerText, "_blank");
-                    });
 
                 });
 

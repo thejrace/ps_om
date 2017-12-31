@@ -73,6 +73,11 @@
 		public function sil(){
 			$this->pdo->query("UPDATE " . $this->dt_table . " SET durum = ? WHERE id = ?", array( 0, $this->details["id"]));
 			$this->return_text = "Ödeme kaydı silindi.";
+
+			// iptal durumunda kasaya parayi geri ekle
+			Pamira::kasayi_guncelle( (double)$this->details["tutar"] );
+
+
 			return true;
 		}
 

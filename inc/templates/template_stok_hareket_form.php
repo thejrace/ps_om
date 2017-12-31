@@ -10,6 +10,7 @@
                   <div class="x_content">
                     <br />
                       
+                      <?php  if( $TIP_REQ == "Çıkış"){ ?>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Fiş No</label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
@@ -17,8 +18,11 @@
                         </div>
                       </div>
 
-                      <input type="hidden" name="req" value="stok_hareketi_ekle" />
-                      <input type="hidden" name="tip" value="<?php echo $FORM_REQ ?>" />
+                      <?php } ?>
+
+                      <input type="hidden" name="req" value="<?php echo $FORM_REQ ?>" />
+                      <input type="hidden" name="tip" value="<?php echo $TIP_REQ ?>" />
+                      <input type="hidden" name="item_id" value="<?php echo $ITEM_ID ?>" />
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Tarih</label>
@@ -28,6 +32,24 @@
                         </div>
 
                       </div>
+
+
+                  </div>
+                </div>
+              </div>  <!--  COL -->
+
+
+               <div class="col-md-6  col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h4>İşlemler<small></small></h4>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <br />
+                    
+
+                     <button type="button" class="btn btn-sm btn-danger" id="sil_btn" ><i class="fa fa-remove"></i> Sil</button>
 
 
                   </div>
@@ -124,6 +146,8 @@
 
               var DUZENLEME = false;
               var YCOUNT = 0;
+              var ITEM_ID = "<?php echo $ITEM_ID ?>";
+
 
 
               function yetkili_row_ekle( kart, miktar, yer, id ){
@@ -152,7 +176,19 @@
 
               $(document).ready(function(){
 
+                  if( ITEM_ID != "" ){
+                    data_download( ITEM_ID, [ "id", "tip", "user", "eklenme_tarihi", "durum" ], "#", function(res){
+                        var item;
+                        for( var k = 0; k < res.data.urunler.length; k++ ){
+                          item = res.data.urunler[k];
+                          yetkili_row_ekle( item.stok_adi, item.miktar, item.yer, item.id );
+                        }
+                        DUZENLEME = true;
 
+                    });
+                  } else {
+                      $("#sil_btn").remove();
+                  }
 
                   UI.SUBMIT_BTN.click(function(){
                       //UI.SUBMIT_BTN.get(0).disabled = true;
@@ -202,16 +238,21 @@
 
                       //return;
                       form_submit(UI.FORM, UI.SUBMIT_BTN, $(UI.FORM).serialize()+"&stok_str="+yetkililer_data.join("||"), function(res){
-                          YCOUNT = 0;
-                          UI.YETKILILER_TBODY.html("");
-                          UI.FORM.reset();
+                           if( !DUZENLEME ){
+                                YCOUNT = 0;
+                                UI.YETKILILER_TBODY.html("");
+                                UI.FORM.reset();
+                          } else {
+                              //setTimeout(function(){ location.reload(); });
+                          }
+                         
                       });
                   });
 
 
 
                   UI.SATIR_EKLE.click(function(){
-                      yetkili_row_ekle("", 0, "Depo", 0);
+                      yetkili_row_ekle("", 0, "Depo", "");
                   });
 
                   $(document).on("click", ".satir_sil", function(){

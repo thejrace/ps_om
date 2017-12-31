@@ -20,10 +20,10 @@
 			"stok_adi" 			=> array( array( "req" => true ),  null ),
 			"stok_kodu" 		=> array( array(),  null ),
 			'urun_grubu'		=> array( array( "req" => true ), "" ),
-			'alis_fiyati'  		=> array( array( "req" => true, "pozNumerik" => true ), null ),
-			'satis_fiyati' 		=> array( array( "req" => true, "pozNumerik" => true ), null ),
-			'kdv_orani' 		=> array( array( "req" => true, "pozNumerik" => true ), null ),
-			'kdv_dahil' 		=> array( array( "req" => true, "pozNumerik" => true ), null ),
+			'alis_fiyati'  		=> array( array( "pozNumerik" => true ), null ),
+			'satis_fiyati' 		=> array( array( "pozNumerik" => true ), null ),
+			'kdv_orani' 		=> array( array( "pozNumerik" => true ), null ),
+			'kdv_dahil' 		=> array( array( "pozNumerik" => true ), null ),
 			'birim' 			=> array( array( "select_not_zero" => true  ), null )
 		);
 

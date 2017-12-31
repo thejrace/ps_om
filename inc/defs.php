@@ -27,6 +27,8 @@
 		define("URL_FATURA_INCELE", MAIN_URL . "fatura_incele.php?item_id=");
 
 		define("URL_MAGAZA_SATIS_FORM", MAIN_URL . "magaza_satis_form.php");
+		define("URL_MAGAZA_SATIS_FORM_DUZENLE", MAIN_URL . "magaza_satis_form.php?item_id=");
+		define("URL_MAGAZA_SATISLARI", MAIN_URL . "magaza_satislari.php");
 
 		define("URL_TAHSILAT_MAKBUZU", MAIN_URL . "tahsilat_makbuzu_form.php");
 		define("URL_TAHSILAT_MAKBUZU_TAHSILAT", URL_TAHSILAT_MAKBUZU . "?tip=1");
@@ -166,7 +168,8 @@
 					User::$IZ_ODEME_YAP,
 					User::$IZ_ODEMELER_GORUNTULEME,
 					User::$IZ_STOK_HAREKETLERI_GORUNTULEME,
-					User::$IZ_STOK_HAREKET_GIRIS_CIKIS
+					User::$IZ_STOK_HAREKET_GIRIS_CIKIS,
+					User::$IZ_MAGAZA_SATISLARI_GORUNTULEME
 				),
 				User::$SEVIYE_NORMAL => array(
 					User::$IZ_CARILER_GORUNTULEME,
@@ -176,7 +179,8 @@
 					User::$IZ_STOK_KARTLARI_GORUNTULEME,
 					User::$IZ_STOK_KARTI_INCELEME,
 					User::$IZ_URUN_GRUPLARI_GORUNTULEME,
-					User::$IZ_TAHSILAT_MAKBUZU_INCELEME
+					User::$IZ_TAHSILAT_MAKBUZU_INCELEME,
+					User::$IZ_MAGAZA_SATISLARI_GORUNTULEME
 				),
 				User::$SEVIYE_ADMIN => array(
 					User::$IZ_CARI_EKLE,
@@ -204,7 +208,8 @@
 					User::$IZ_ODEME_YAP,
 					User::$IZ_ODEMELER_GORUNTULEME,
 					User::$IZ_STOK_HAREKETLERI_GORUNTULEME,
-					User::$IZ_STOK_HAREKET_GIRIS_CIKIS
+					User::$IZ_STOK_HAREKET_GIRIS_CIKIS,
+					User::$IZ_MAGAZA_SATISLARI_GORUNTULEME
 				)
 
 			);

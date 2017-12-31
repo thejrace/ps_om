@@ -744,7 +744,7 @@ a:focus {
     cursor: pointer
 }
 .nav.side-menu>li>a {
-        color: #E7E7E7;
+    color: #999593;
     font-weight: 600 !important;
     font-size: 11px;
 }
@@ -1087,7 +1087,7 @@ h2 {
     margin-bottom: 10px;
     padding: 10px 17px;
     display: inline-block;
-    background: #fff;
+    background: #FDFDFD;
     border: 1px solid #E6E9ED;
     -webkit-column-break-inside: avoid;
     -moz-column-break-inside: avoid;

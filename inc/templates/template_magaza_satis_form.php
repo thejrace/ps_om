@@ -9,15 +9,10 @@
                   </div>
                   <div class="x_content">
                     <br />
-                      
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Açıklama</label>
-                        <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control req" placeholder="Açıklama" name="aciklama" id="aciklama" value="Mağaza satışı " />
-                        </div>
-                      </div>
+                    
 
                       <input type="hidden" name="req" value="<?php echo $FORM_REQ ?>" />
+                      <input type="hidden" name="item_id" value="<?php echo $ITEM_ID ?>" />
 
 
                       <div class="form-group">
@@ -28,6 +23,24 @@
                         </div>
 
                       </div>
+
+
+                  </div>
+                </div>
+              </div>  <!--  COL -->
+
+
+              <div class="col-md-6  col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h4>İşlemler<small></small></h4>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <br />
+                    
+
+                     <button type="button" class="btn btn-sm btn-danger" id="sil_btn" ><i class="fa fa-remove"></i> Sil</button>
 
 
                   </div>
@@ -116,9 +129,10 @@
 
                   <td>
                      <div >
-                        <select class="form-control odeme_tipi" parent="%%YID%%">
+                        <select class="form-control odeme_tipi" parent="%%YID%%" value="%%ODEME_TIPI%%">
                             <option value="Nakit">Nakit</option>
                             <option value="Kredi Kartı">Kredi Kartı</option>
+                            <option value="Banka">Banka</option>
                         </select>
                       </div>
                   </td>
@@ -134,19 +148,9 @@
 
               var DUZENLEME = false;
               var YCOUNT = 0;
+              var ITEM_ID = "<?php echo $ITEM_ID ?>";
 
-              function stok_kart_fiyat_download(item, elem){
-                  console.log({ req:"stok_karti_data_download", stok_karti: item, cari: UI.CARI_INPUT.val(), fis_turu:UI.TUR_INPUT.val()  });
-                  REQ.ACTION("", { req:"stok_karti_data_download", stok_karti: item, cari: UI.CARI_INPUT.val(), fis_turu:UI.TUR_INPUT.val()  }, function(res){
-                      console.log(res);
-                      var parent = $("#yetkili_"+elem.attr("parent"));
-                      parent.find(".fiyat").get(0).value = res.data.fiyat;
-                      parent.find(".kdv").get(0).value = res.data.kdv;
-                      $(parent.find(".fiyat").get(0)).trigger("keyup");
-                  });
-              }
-
-              function yetkili_row_ekle( kart, fiyat, miktar, toplam, id ){
+              function yetkili_row_ekle( kart, fiyat, miktar, toplam, odeme_tipi, id ){
                   UI.YETKILILER_TBODY.append(replaceAll(TEMPLATE.YETKILI_SATIR
                       .replace("%%KART_VAL%%", kart)
                       .replace("%%FIYAT_VAL%%", fiyat)
@@ -154,35 +158,38 @@
                       .replace("%%TOPLAM_VAL%%", toplam)
                       .replace("%%ID_VAL%%", id), "%%YID%%", YCOUNT));
                   var aktif_row = $("#yetkili_"+YCOUNT);
-
-                  REQ.AC( $(".kart_"+YCOUNT), PSGLOBAL.AC_COMMON, { tip:"stok_karti" }, function( item, elem ){
-                      stok_kart_fiyat_download(item, elem);
-
-                  });
+                  aktif_row.find(".odeme_tipi").get(0).value = odeme_tipi;
+                  
                   YCOUNT++;
               }
 
               var UI = {
                   FORM                : document.getElementById("fatura_form"),
-                  CARI_FORM           : document.getElementById("yeni_cari_form"),
                   YETKILILER_TBODY    : $("#yetkililer_tbody"),
                   SATIR_EKLE          : $("#satir_ekle"),
                   SATIR_SIL           : $(".satir_sil"),
-                  SUBMIT_BTN          : $("#btn_form_submit"),
-                  CARI_ADRES_LABEL    : $("#cari_adres_label"),
-                  CARI_BAKIYE_LABEL   : $("#cari_bakiye_label"),
-                  CARI_INPUT          : $("#cari"),
-                  TUR_INPUT           : $("#tur"),
-                  FIYAT_GECMISI_TABLE : $("#fiyat_gecmisi_table"),
-                  FIYAT_GECMISI_TBODY : $("#fiyat_gecmisi_tbody")
+                  SUBMIT_BTN          : $("#btn_form_submit")
               };
               var TEMPLATE = {
                   YETKILI_SATIR       : $("#yetkili_row").html()
               };  
 
-
-
               $(document).ready(function(){
+
+                  if( ITEM_ID != "" ){
+                    data_download( ITEM_ID, [ "id", "toplam", "user", "eklenme_tarihi" ], "#", function(res){
+                        var item;
+                        for( var k = 0; k < res.data.urunler.length; k++ ){
+                          item = res.data.urunler[k];
+                          yetkili_row_ekle( item.urun, item.fiyat, item.miktar, item.toplam, item.odeme_tipi, item.id );
+                        }
+                        DUZENLEME = true;
+
+                    });
+                  } else {
+                      $("#sil_btn").remove();
+                  }
+                  
 
                   UI.SUBMIT_BTN.click(function(){
                       //UI.SUBMIT_BTN.get(0).disabled = true;
@@ -245,15 +252,37 @@
 
                       //return;
                       form_submit(UI.FORM, UI.SUBMIT_BTN, $(UI.FORM).serialize()+"&stok_str="+yetkililer_data.join("||"), function(res){
-                          YCOUNT = 0;
-                          UI.YETKILILER_TBODY.html("");
+                          
+                          if( !DUZENLEME ){
+                              YCOUNT = 0;
+                              UI.YETKILILER_TBODY.html("");
+                          } else {
+                              setTimeout(function(){ location.reload(); });
+                          }
+                          
                       });
                   });
 
+                  $("#sil_btn").click(function(){
+
+                      var c = confirm("Fişi silmek istediğinze emin misiniz?");
+                      if( c ){
+                          this.disabled = true;
+                          REQ.ACTION("", { req:"fatura_sil" }, function(res){
+                              if( res.ok ){
+                                  PamiraNotify("success", "İşlem Başarılı", res.text );
+                                  setTimeout(function(){ location.reload(); }, 1000);
+                              } else {
+                                  PamiraNotify("error", "Hata", res.text );
+                              }
+                          });
+
+                      }
+                  });
 
 
                   UI.SATIR_EKLE.click(function(){
-                      yetkili_row_ekle("", 0, 1, 0, "");
+                      yetkili_row_ekle("", 0, 1, 0, "Nakit", "" );
                   });
 
                   $(document).on("click", ".satir_sil", function(){
