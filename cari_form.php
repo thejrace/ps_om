@@ -22,11 +22,11 @@
 			//'cari_telefon_1' 		=> array( array(), null ),
 			//'cari_telefon_2'		=> array( array(), null ),
 			//'cari_faks_no'  		=> array( array(), null ),
-			'cari_adres'  			=> array( array( "req" => true ), null ),
-			'cari_il' 				=> array( array( "req" => true ), null ),
-			'cari_ilce' 			=> array( array( "req" => true ), null ),
-			'cari_mali_tur' 		=> array( array( "req" => true ), null ),
-			'cari_iban' 			=> array( array(), null ),
+			// 'cari_adres'  			=> array( array( "req" => true ), null ),
+			// 'cari_il' 				=> array( array( "req" => true ), null ),
+			// 'cari_ilce' 			=> array( array( "req" => true ), null ),
+			// 'cari_mali_tur' 		=> array( array( "req" => true ), null ),
+			// 'cari_iban' 			=> array( array(), null ),
 			'vkn_tckn'  			=> array( array( "pozNumerik" => true ), null )
 			//'cari_vergi_dairesi'	=> array( array(), null )
 		);
@@ -75,7 +75,7 @@
 			case 'data_download':
 
 				$Cari = new Cari( Input::get("item_id") );
-				if( $Cari->is_ok() ){
+				if( $Cari->is_ok() && $Cari->get_details("durum") ==  1 ){
 					$DATA = $Cari->get_details();
 					$DATA["yetkililer"] = $Cari->get_yetkililer();
 				} else {

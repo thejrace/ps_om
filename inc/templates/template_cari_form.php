@@ -66,21 +66,21 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Açık Adres</span>
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <textarea class="form-control req" rows="3" placeholder="Açık Adres" name="cari_adres" id="cari_adres" /></textarea>
+                          <textarea class="form-control" rows="3" placeholder="Açık Adres" name="cari_adres" id="cari_adres" /></textarea>
                         </div>
                       </div>
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">İl</label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control req" placeholder="İl" name="cari_il" id="cari_il" />
+                          <input type="text" class="form-control" placeholder="İl" name="cari_il" id="cari_il" />
                         </div>
                       </div>
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">İlçe</label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control req" placeholder="İlçe" name="cari_ilce" id="cari_ilce" />
+                          <input type="text" class="form-control" placeholder="İlçe" name="cari_ilce" id="cari_ilce" />
                         </div>
                       </div>
 

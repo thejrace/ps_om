@@ -13,7 +13,7 @@
 	require CLASS_DIR . "Fatura.php";
 
     $Fatura = new Fatura( Input::get("item_id") );
-    if( !$Fatura->is_ok() ) header("Location: index.php");
+    if( !$Fatura->is_ok() || $Fatura->get_details("durum") == 0 ) header("Location: index.php");
 
 	if( $_POST ){
 

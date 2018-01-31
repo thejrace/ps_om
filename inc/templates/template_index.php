@@ -18,7 +18,7 @@
                           <div class="count fc"><?php echo Pamira::get_data("alacak") ?></div>
 
                           <h3>Alacaklar</h3>
-                          <p><?php echo Pamira::get_data("alacakli_cari_sayisi") ?> farklı cari hesaptan</p>
+                          <p><?php echo Pamira::get_data("verecekli_cari_sayisi") ?> farklı cari hesaptan</p>
                         </div>
                       </div>
                       <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -28,20 +28,11 @@
                           <div class="count fc"><?php echo Pamira::get_data("verecek") ?></div>
 
                           <h3>Verecekler</h3>
-                          <p><?php echo Pamira::get_data("verecekli_cari_sayisi") ?> farklı cari hesaba</p>
+                          <p><?php echo Pamira::get_data("alacakli_cari_sayisi") ?> farklı cari hesaba</p>
                         </div>
                       </div>
                       
-                      <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                        <div class="tile-stats">
-                          <div class="icon"><i class="fa fa-credit-card"></i>
-                          </div>
-                          <div class="count fc"><?php echo Pamira::get_data("odemeler") ?></div>
-
-                          <h3>Kalan Ödemeler</h3>
-                          <p>...</p>
-                        </div>
-                      </div>
+                     
                     </div>
 
 
@@ -206,21 +197,21 @@
 			                  		<?php foreach( Pamira::get_data("son_odeme_hareketleri") as $odeme_hareket ){  
 
 
-			                  			$OdemeKarti = new OdemeKarti($odeme_hareket["kart"]);
+			                  			$Odeme = new Odeme( $odeme_hareket["id"] );
 			                  			$Kullanici = new User( $odeme_hareket["user"] );
 
 			                  			echo  '<li>
 							                      <div class="block">
 							                        <div class="tags">
-							                          <a href="#" class="tag alis">
-							                            <span> '.$OdemeKarti->get_details("isim") .' ödeme</span>
+							                          <a href="#" class="tag alis" title="'.$Odeme->get_details("kart") .'">
+							                            <span> '.$Odeme->get_details("kart") .' ödeme</span>
 							                          </a>
 							                        </div>
 							                        <div class="block_content">
 							                          <h2 class="title">
-				                                          <a><i class="fa fa-download"></i><b> '.$odeme_hareket["odeme_tipi"].'</b>, Tutar: <span class="fc">'.$odeme_hareket["tutar"].'</span></a></h2>
+				                                          <a><i class="fa fa-download"></i><b> '.$odeme_hareket["odeme_tipi"].'</b>, Tutar: <span class="fc">'.$Odeme->get_details("tutar").'</span></a></h2>
 							                          <div class="byline">
-							                            <span>'.Common::datetime_reverse($odeme_hareket["eklenme_tarihi"]).'</span> <a>'.$Kullanici->get_details("isim").' tarafından</a>
+							                            <span>'.Common::datetime_reverse($Odeme->get_details("eklenme_tarihi")).'</span> <a>'.$Kullanici->get_details("isim").' tarafından</a>
 							                          </div>
 							                        </div>
 							                      </div>

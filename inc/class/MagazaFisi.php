@@ -43,9 +43,9 @@
 
 				$this->pdo->insert( DBT_MAGAZA_FISLERI_URUNLER, array(
 					"urun" 			=> $data_array[0],
-					"fiyat" 		=> $data_array[1],
-					"miktar" 		=> $data_array[2],
-					"toplam" 		=> $data_array[3],
+					"fiyat" 		=> Common::convert_try_reverse($data_array[1]),
+					"miktar" 		=> Common::convert_try_reverse($data_array[2]),
+					"toplam" 		=> Common::convert_try_reverse($data_array[3]),
 					"fis" 			=> $this->details["id"],
 					"odeme_tipi" 	=> $data_array[4]
 				));
@@ -60,7 +60,7 @@
 			$this->pdo->query("UPDATE ". $this->dt_table . " SET toplam = ? WHERE id = ?", array( $miktar, $this->details["id"]));
 
 			// tahsil et, kasayı guncelle
-			Pamira::kasayi_guncelle( $miktar );
+			//Pamira::kasayi_guncelle( $miktar );
 
 			$this->return_text = "Mağaza fişi kesildi.";
 			return true;
@@ -98,9 +98,9 @@
 						odeme_tipi = ? WHERE id = ?
 						", array(
 							$data_array[0],
-							$data_array[1],
-							$data_array[2],
-							$data_array[3],
+							Common::convert_try_reverse($data_array[1]),
+							Common::convert_try_reverse($data_array[2]),
+							Common::convert_try_reverse($data_array[3]),
 							$data_array[4],
 							$data_array[5]
 					));
@@ -114,9 +114,9 @@
 
 					$this->pdo->insert( DBT_MAGAZA_FISLERI_URUNLER, array(
 						"urun" 			=> $data_array[0],
-						"fiyat" 		=> $data_array[1],
-						"miktar" 		=> $data_array[2],
-						"toplam" 		=> $data_array[3],
+						Common::convert_try_reverse($data_array[1]),
+						Common::convert_try_reverse($data_array[2]),
+						Common::convert_try_reverse($data_array[3]),
 						"fis" 			=> $this->details["id"],
 						"odeme_tipi" 	=> $data_array[4]
 					));
@@ -138,8 +138,8 @@
 				}
 			}
 
-			$fark = (double)$this->details["toplam"] - $miktar;
-			Pamira::kasayi_guncelle( $fark * -1 );
+			//$fark = (double)$this->details["toplam"] - $miktar;
+			//Pamira::kasayi_guncelle( $fark * -1 );
 
 			$this->pdo->query("UPDATE " . $this->dt_table . " SET toplam = ?, tarih = ? WHERE id = ?", array( $miktar, Common::date_reverse($input["tarih"]), $this->details["id"] ));
 			if( $this->pdo->error()){
@@ -160,7 +160,7 @@
 
 			$this->pdo->query("UPDATE " . $this->dt_table . " SET durum = ? WHERE id = ?", array( 0, $this->details["id"] ) );
 			$this->pdo->query("UPDATE " . DBT_MAGAZA_FISLERI_URUNLER . " SET durum = ? WHERE fis = ?", array(0, $this->details["id"]) );
-			Pamira::kasayi_guncelle( (double)$this->details["toplam"] * -1 );
+			//Pamira::kasayi_guncelle( (double)$this->details["toplam"] * -1 );
 
 			$this->return_text = "Mağaza Fişi silindi.";
 			return true;
@@ -182,12 +182,12 @@
 
 			if( trim($input["tutar_alt"]) != "" ){
 				$wheres[] = " toplam >= ? ";
-				$where_vals[] = $input["tutar_alt"];
+				$where_vals[] = Common::convert_try_reverse($input["tutar_alt"]);
 			}
 
 			if( trim($input["tutar_ust"]) != "" ){
 				$wheres[] = " toplam <= ? ";
-				$where_vals[] = $input["tutar_ust"];
+				$where_vals[] = Common::convert_try_reverse($input["tutar_ust"]);
 			}
 
 			if( trim($input["tarih_alt"]) != "" ){

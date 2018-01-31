@@ -9,7 +9,6 @@
   
 	if( $_GET ){
 
-
 		require CLASS_DIR . "Input.php";
 		if( Input::exists( Input::$GET, "obarey_search") ){
 			require CLASS_DIR . "StokHareket.php";
@@ -29,7 +28,7 @@
 			    )
 			);
 			die(json_encode(
-			    SSP::simple( $_GET, $DATA_TABLES_ROWS["table"], $DATA_TABLES_ROWS["primary_key"], $DATA_TABLES_ROWS["cols"] )
+			    SSP::complex( $_GET, $DATA_TABLES_ROWS["table"], $DATA_TABLES_ROWS["primary_key"], $DATA_TABLES_ROWS["cols"], null, " durum = 1" )
 			));
 		}
 	}

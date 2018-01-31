@@ -15,7 +15,7 @@
         $INPUT_RET = array();
 
 		$INPUT_LIST = array(
-			"kart" 				=> array( array( "req" => true ),  null ),
+			// "kart" 				=> array( array( "req" => true ),  null ),
 			"odeme_tipi" 		=> array( array( "req" => true ),  null ),
 			"banka_ekstra"		=> array( array(), null ),
 			"aciklama"			=> array( array(), null ),
@@ -68,7 +68,7 @@
 			case 'data_download':
 
 				$Odeme = new Odeme(Input::get("item_id"));
-				if( $Odeme->is_ok() ){
+				if( $Odeme->is_ok() && $Odeme->get_details("durum") == 1 ){
 					$DATA = $Odeme->get_details();
 					$DATA["tarih"] = Common::date_reverse($DATA["tarih"]);
 				} else {

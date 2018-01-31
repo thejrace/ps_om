@@ -96,7 +96,7 @@
                       <thead>
                         <tr>
                           <th class="tr_cb">#</th>
-                          <th>Kart</th>
+                          <th>Açıklama</th>
                           <th>Ödeme Tipi</th>
                           <th>Tutar</th>
                           <th>Tarih</th>

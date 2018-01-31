@@ -12,11 +12,46 @@
 
 	if( Input::exists(Input::$GET, "item_id") ){
 		$Cari = new Cari(Input::get("item_id"));
-		if( !$Cari->is_ok() ) header("Location: index.php");
+		if( !$Cari->is_ok() || $Cari->get_details("durum") == 0 ) header("Location: index.php");
 	} else {
 		header("Location: index.php");
 	}
-	
+
+	if( $_POST ){
+
+
+		$OK = 1;
+        $TEXT = "";
+        $DATA = array();
+        $INPUT_RET = array();
+
+        switch( Input::get("req") ){
+
+        	case 'cari_sil':
+        		$Cari = new Cari(Input::get("item_id"));
+        		if( $Cari->is_ok() && $Cari->get_details("durum") == 1 ){
+        			if( !$Cari->sil() ){
+        				$OK = 0;
+        			}
+        		} else {
+        			$OK = 0;
+        		}
+        		$TEXT = $Cari->get_return_text();
+        	break;
+        }
+
+        $output = json_encode(array(
+            "ok"           => $OK,           
+            "text"         => $TEXT,         
+            "data"         => $DATA,
+            "inputret"	   => $INPUT_RET,
+            "oh"           => Input::escape($_POST)
+        ));
+
+        echo $output;
+        die;
+
+	}
 
 	if( $_GET ){
 

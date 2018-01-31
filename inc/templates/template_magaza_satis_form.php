@@ -113,17 +113,17 @@
                   </td>
                   <td>
                        <div >
-                        <input type="text" class="form-control fiyat" placeholder="Fiyat" parent="%%YID%%" value="%%FIYAT_VAL%%" />
+                        <input type="text" class="form-control fiyat convert-try" placeholder="Fiyat" parent="%%YID%%" value="%%FIYAT_VAL%%" />
                       </div>
                   </td>
                   <td>
                      <div >
-                        <input type="text" class="form-control miktar" placeholder="Miktar" parent="%%YID%%" value="%%MIKTAR_VAL%%" />
+                        <input type="text" class="form-control miktar convert-try" placeholder="Miktar" parent="%%YID%%" value="%%MIKTAR_VAL%%" />
                       </div>
                   </td>
                   <td>
                      <div >
-                        <input type="text" class="form-control toplam" placeholder="Toplam" parent="%%YID%%"  value="%%TOPLAM_VAL%%" />
+                        <input type="text" class="form-control toplam convert-try" placeholder="Toplam" parent="%%YID%%"  value="%%TOPLAM_VAL%%" />
                       </div>
                   </td>
 
@@ -161,6 +161,7 @@
                   aktif_row.find(".odeme_tipi").get(0).value = odeme_tipi;
                   
                   YCOUNT++;
+                  convert_try_trigger();
               }
 
               var UI = {
@@ -293,25 +294,26 @@
                   $(document).on("keyup", ".fiyat", function(){
                       var _this = $(this),
                           parent = $("#yetkili_"+_this.attr("parent"));
-                      parent.find(".toplam").get(0).value = ( _this.val() * parseFloat( parent.find(".miktar").get(0).value )).toFixed(2);
+                      parent.find(".toplam").get(0).value = ( input_convert_try(_this.val()) * parseFloat( input_convert_try(parent.find(".miktar").get(0).value) )).toFixed(2);
                       if( _this.hasClass("redborder") ) _this.removeClass("redborder");
+                      convert_try_trigger();
                   });
                   
                   $(document).on("keyup", ".toplam", function(){
                       var _this = $(this),
                           parent = $("#yetkili_"+_this.attr("parent"));
-                      parent.find(".fiyat").get(0).value = parseFloat(_this.val()) / parseFloat( parent.find(".miktar").get(0).value).toFixed(2);
+                      parent.find(".fiyat").get(0).value = parseFloat( input_convert_try(_this.val())) / parseFloat( input_convert_try(parent.find(".miktar").get(0).value)).toFixed(2);
 
                       if( _this.hasClass("redborder") ) _this.removeClass("redborder");
+                      convert_try_trigger();
                   });
                   $(document).on("keyup", ".miktar", function(){
                       var _this = $(this),
                           parent = $("#yetkili_"+_this.attr("parent"));
 
-                      parent.find(".toplam").get(0).value = ( parseFloat(parent.find(".fiyat").get(0).value) * parseFloat( _this.val() )).toFixed(2);
-
-                          
+                      parent.find(".toplam").get(0).value = ( parseFloat(input_convert_try(parent.find(".fiyat").get(0).value)) * parseFloat( input_convert_try(_this.val()) )).toFixed(2);
                       if( _this.hasClass("redborder") ) _this.removeClass("redborder");
+                      convert_try_trigger();
                   });
 
                   $("#tarih").datetimepicker(DATEPICKER_DEF_OPTIONS);

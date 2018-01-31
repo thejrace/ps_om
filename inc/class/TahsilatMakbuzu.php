@@ -50,35 +50,35 @@
 		
 
 			if( trim($input["pesin_tutar"]) != "" ){
-				$db_exec_array["tutar"] = $input["pesin_tutar"];
+				$db_exec_array["tutar"] = Common::convert_try_reverse($input["pesin_tutar"]);
 				$db_exec_array["tahsilat_tipi"] = "Peşin";
 				if( !$this->makbuz_kes( $db_exec_array ) ) return false;
-				$toplam_tutar += (double)$input["pesin_tutar"];
+				$toplam_tutar += (double)Common::convert_try_reverse($input["pesin_tutar"]);
 			}
 
 			if( trim($input["havale_tutar"]) != "" ){
-				$db_exec_array["tutar"] = $input["havale_tutar"];
+				$db_exec_array["tutar"] = Common::convert_try_reverse($input["havale_tutar"]);
 				$db_exec_array["tahsilat_tipi"] = "Havale";
 				$db_exec_array["banka"] = $input["havale_banka"];
 				if( !$this->makbuz_kes( $db_exec_array ) ) return false;
-				$toplam_tutar += (double)$input["havale_tutar"];
+				$toplam_tutar += (double)Common::convert_try_reverse($input["havale_tutar"]);
 			}
 
 			if( trim($input["kredi_karti_tutar"]) != "" ){
-				$db_exec_array["tutar"] = $input["kredi_karti_tutar"];
+				$db_exec_array["tutar"] = Common::convert_try_reverse($input["kredi_karti_tutar"]);
 				$db_exec_array["tahsilat_tipi"] = "Kredi Kartı";
 				$db_exec_array["banka"] = $input["havale_banka"];
 				if( !$this->makbuz_kes( $db_exec_array ) ) return false;
-				$toplam_tutar += (double)$input["kredi_karti_tutar"];
+				$toplam_tutar += (double)Common::convert_try_reverse($input["kredi_karti_tutar"]);
 			}
 
 			if( trim($input["cek_tutar"]) != "" ){
-				$db_exec_array["tutar"] = $input["cek_tutar"];
+				$db_exec_array["tutar"] = Common::convert_try_reverse($input["cek_tutar"]);
 				$db_exec_array["tahsilat_tipi"] = "Çek";
 				$db_exec_array["cek_no"] = $input["cek_no"];
 				$db_exec_array["cek_vade"] = Common::date_reverse($input["cek_vade"]);
 				if( !$this->makbuz_kes( $db_exec_array ) ) return false;
-				$toplam_tutar += (double)$input["cek_tutar"];
+				$toplam_tutar += (double)Common::convert_try_reverse($input["cek_tutar"]);
 			}
 
 			foreach( $this->makbuz_ids as $makbuz_id ){
@@ -98,10 +98,11 @@
 					return false;
 				}	
 			}
-			if( !$Cari->bakiye_guncelle( $input["tip"], $toplam_tutar ) ){
+			/*if( !$Cari->bakiye_guncelle( $input["tip"], $toplam_tutar ) ){
 				$this->return_text = $Cari->get_return_text();
 				return false;
-			}	
+			}*/
+				
 			$this->return_text = "Makbuz(lar) kesildi.";
 			return true;
 		}

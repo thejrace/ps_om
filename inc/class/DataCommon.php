@@ -8,7 +8,7 @@
 			$val_array = array();
 			foreach( $db_keys as $key ) $val_array[] = $val;
 			$query = $this->pdo->query("SELECT * FROM " . $this->dt_table . " WHERE " . implode( $db_keys, " = ? || ") . " = ?", $val_array )->results();
-			if( count($query) == 1 ){
+			if( count($query) > 0 ){
 				$this->details = $query[0];
 				$this->ok = true;
 			} else {

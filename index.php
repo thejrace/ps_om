@@ -7,7 +7,9 @@
 	require CLASS_DIR . "TahsilatMakbuzu.php";
 	require CLASS_DIR . "MagazaFisi.php";
 	require CLASS_DIR . "OdemeKarti.php";
+	require CLASS_DIR . "Odeme.php";
 	require CLASS_DIR . "StokHareket.php";
+	require CLASS_DIR . "Pamira.php";
 
 
 	$PAGE = array(
@@ -17,8 +19,11 @@
 		"html_libs" 	=> array()
 	);
 
-	Pamira::alacaklari_hesapla();
-	Pamira::verecekleri_hesapla();
+
+	Pamira::bakiyeleri_ozetle();
+	Pamira::alacak_verecek_hesapla();
+	Pamira::kasa_ozetle();
+
 	Pamira::son_fis_hareketlerini_al();
 	Pamira::son_makbuz_hareketlerini_al();
 	Pamira::son_magaza_hareketlerini_al();

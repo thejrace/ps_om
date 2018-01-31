@@ -9,6 +9,9 @@
 	if( $_GET ){
 
 		require CLASS_DIR . 'SSP.php';
+		require CLASS_DIR . 'TahsilatMakbuzu.php';
+		require CLASS_DIR . 'Fatura.php';
+		require CLASS_DIR . 'Cari.php';
 
 		$DATA_TABLES_ROWS = array(
 			"primary_key" 	=> "id",
@@ -19,11 +22,14 @@
 			    array( 'db' => 'tur',   'dt' => 2 ),
 			    array( 'db' => 'il',    'dt' => 3 ),
 			    array( 'db' => 'ilce',  'dt' => 4 ),
-			    array( 'db' => 'bakiye',  'dt' => 5 )
+			    array( 'db' => 'bakiye',  'dt' => 5, 'formatter' => function( $d, $row ){
+			    	$Cari = new Cari( $d );
+			    	return $Cari->bakiye_hesapla();
+			    })
 		    )
 		);
 		die(json_encode(
-		    SSP::simple( $_GET, $DATA_TABLES_ROWS["table"], $DATA_TABLES_ROWS["primary_key"], $DATA_TABLES_ROWS["cols"] )
+		    SSP::complex( $_GET, $DATA_TABLES_ROWS["table"], $DATA_TABLES_ROWS["primary_key"], $DATA_TABLES_ROWS["cols"], null, " durum = 1" )
 		));
 	}
 	

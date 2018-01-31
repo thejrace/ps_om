@@ -62,10 +62,25 @@
 
 			break;
 
+			case 'urun_grubu_sil':
+
+				$UrunGrubu = new UrunGrubu( Input::get("item_id") );
+				if( $UrunGrubu->is_ok() ){
+					if( !$UrunGrubu->sil()) {
+						$OK = 0;
+					}
+				} else {
+					$OK = 0;
+				}
+				
+				$TEXT = $UrunGrubu->get_return_text();
+
+			break;
+
 			case 'data_download':
 
 				$UrunGrubu = new UrunGrubu( Input::get("item_id") );
-				if( !$UrunGrubu->is_ok() ){
+				if( !$UrunGrubu->is_ok() || $UrunGrubu->get_details("durum") == 0 ){
 					$OK = 0;
 				}
 				$DATA = $UrunGrubu->get_details();
@@ -100,6 +115,8 @@
 		$PAGE["title"] = "Ürün Grubu Düzenleme";
 		$PAGE["top_title"] = "Ürün Grubu Düzenleme";
 		$ITEM_ID = Input::get("item_id");
+		$UrunGrubu = new UrunGrubu( $ITEM_ID );
+		if( !$UrunGrubu->is_ok() || $UrunGrubu->get_details("durum") == 0 ) header("Location: " . URL_STOK_KARTLARI_URUN_GRUPLARI );
 	} else {
 		// yeni cari ekleme 
 		$FORM_REQ = "urun_grubu_ekle";

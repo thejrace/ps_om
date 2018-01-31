@@ -1,3 +1,5 @@
+            
+            
             <div class="row">
 
             <form class="form-horizontal form-label-left" id="fatura_form" >
@@ -20,7 +22,7 @@
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Türü</label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <select class="form-control not_zero" name="tur" id="tur" />
+                          <select class="form-control not_zero" name="fis_turu" id="fis_turu" />
                             <option value="0">Seçiniz..</option>
                             <option value="1">Alış</option>
                             <option value="2">Satış</option>
@@ -91,13 +93,6 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Düzenlenme Tarihi</label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
                           <input type="text" class="form-control req" data-inputmask="'mask' : '99-99-9999 99:99:99'" placeholder="Düzenlenme Tarihi" name="duzenlenme_tarihi" id="duzenlenme_tarihi" />
-                        </div>
-                      </div>
-
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Tahsilat Tarihi</label>
-                        <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control req" data-inputmask="'mask' : '99-99-9999 99:99:99'" placeholder="Tahsilat Tarihi" name="tahsilat_tarihi" id="tahsilat_tarihi" />
                         </div>
                       </div>
 
@@ -180,21 +175,21 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Açık Adres</span>
                                         </label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <textarea class="form-control req" rows="3" placeholder="Açık Adres" name="cari_adres" id="cari_adres" /></textarea>
+                                          <textarea class="form-control" rows="3" placeholder="Açık Adres" name="cari_adres" id="cari_adres" /></textarea>
                                         </div>
                                       </div>
 
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">İl</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <input type="text" class="form-control req" placeholder="İl" name="cari_il" id="cari_il" />
+                                          <input type="text" class="form-control" placeholder="İl" name="cari_il" id="cari_il" />
                                         </div>
                                       </div>
 
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">İlçe</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <input type="text" class="form-control req" placeholder="İlçe" name="cari_ilce" id="cari_ilce" />
+                                          <input type="text" class="form-control" placeholder="İlçe" name="cari_ilce" id="cari_ilce" />
                                         </div>
                                       </div>
 
@@ -275,7 +270,7 @@
                     <table class="table table-hover">
                       <thead>
                         <tr>
-                          <th class="col-md-2 col-sm-9 col-xs-12">Kart</th>
+                          <th class="col-md-2 col-sm-9 col-xs-12">Cinsi</th>
                           <th class="col-md-1 col-sm-9 col-xs-12">Fiyat</th>
                           <th class="col-md-1 col-sm-9 col-xs-12">KDV</th>
                           <th class="col-md-1 col-sm-9 col-xs-12">Miktar</th>
@@ -348,6 +343,26 @@
                 </div>
             </div>
            
+           <div class="row">
+
+              <div class="col-md-6  col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h4>İşlemler<small></small></h4>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <br />
+                    
+
+                     <button type="button" class="btn btn-sm btn-danger" id="sil_btn" ><i class="fa fa-remove"></i> Sil</button>
+
+
+                  </div>
+                </div>
+              </div>  <!--  COL -->
+
+           </div>
 
           <script type="text/template" id="yetkili_row">
                 <tr id="yetkili_%%YID%%" class="yetkili_row" >
@@ -358,12 +373,12 @@
                   </td>
                   <td>
                        <div >
-                        <input type="text" class="form-control fiyat" placeholder="Fiyat" parent="%%YID%%" value="%%FIYAT_VAL%%" />
+                        <input type="text" class="form-control fiyat convert-try" placeholder="Fiyat" parent="%%YID%%" value="%%FIYAT_VAL%%" />
                       </div>
                   </td>
                   <td>
                      <div>
-                        <select class="form-control kdv" value="%%KDV_VAL%%" parent="%%YID%%">
+                        <select class="form-control kdv" lastval="%%KDV_LASTVAL%%" value="%%KDV_VAL%%" parent="%%YID%%">
                             <option value="18">%18</option>
                             <option value="8">%8</option>
                             <option value="1">%1</option>
@@ -374,7 +389,7 @@
                   </td>
                   <td>
                      <div >
-                        <input type="text" class="form-control miktar" placeholder="Miktar" parent="%%YID%%" value="%%MIKTAR_VAL%%" />
+                        <input type="text" class="form-control posnum miktar convert-try" placeholder="Miktar" parent="%%YID%%" value="%%MIKTAR_VAL%%" />
                       </div>
                   </td>
                   <td>
@@ -390,7 +405,7 @@
                   </td>
                   <td>
                      <div >
-                        <input type="text" class="form-control toplam" placeholder="Toplam" parent="%%YID%%"  value="%%TOPLAM_VAL%%" />
+                        <input type="text" class="form-control toplam convert-try" placeholder="Toplam" parent="%%YID%%"  value="%%TOPLAM_VAL%%" />
                       </div>
                   </td>
                   <td>
@@ -426,7 +441,13 @@
                       var parent = $("#yetkili_"+elem.attr("parent"));
                       parent.find(".birim").get(0).value = res.data.birim;
                       parent.find(".fiyat").get(0).value = res.data.fiyat;
+                      if( UI.TUR_INPUT.val() == "4" || UI.TUR_INPUT.val() == "5" ){
+                          parent.find(".kdv").get(0).setAttribute("lastval",res.data.kdv);
+                      } else {
+                          parent.find(".kdv").get(0).value = res.data.kdv;
+                      }
                       $(parent.find(".fiyat").get(0)).trigger("keyup");
+                      convert_try_trigger();
                   });
               }
 
@@ -435,6 +456,7 @@
                       .replace("%%KART_VAL%%", kart)
                       .replace("%%FIYAT_VAL%%", fiyat)
                       .replace("%%KDV_VAL%%", kdv)
+                      .replace("%%KDV_LASTVAL%%", kdv)
                       .replace("%%MIKTAR_VAL%%", miktar)
                       .replace("%%TOPLAM_VAL%%", toplam)
                       .replace("%%YER_VAL%%", yer)
@@ -444,11 +466,19 @@
 
                   var aktif_row = $("#yetkili_"+YCOUNT);
                   var yer_select = aktif_row.find(".yer");
+                  var kdv_select = aktif_row.find(".kdv");
                   if( yer != "" ) yer_select[0].value = yer;
+                  kdv_select[0].value = kdv;
                   REQ.AC( $(".kart_"+YCOUNT), PSGLOBAL.AC_COMMON, { tip:"stok_karti" }, function( item, elem ){
                       stok_kart_fiyat_download(item, elem);
                   });
                   YCOUNT++;
+                  // gayri resmi ise, yeni eklenen satırında kdv inputunu disable edip, 0 yapiyoruz
+                  if( UI.TUR_INPUT.val() == "4" || UI.TUR_INPUT.val() == "5" ){
+                      kdv_select[0].disabled = true;
+                      kdv_select[0].value = 0;
+                  }
+                  convert_try_trigger();
               }
 
               var UI = {
@@ -462,7 +492,7 @@
                   CARI_ADRES_LABEL    : $("#cari_adres_label"),
                   CARI_BAKIYE_LABEL   : $("#cari_bakiye_label"),
                   CARI_INPUT          : $("#cari"),
-                  TUR_INPUT           : $("#tur"),
+                  TUR_INPUT           : $("#fis_turu"),
                   FIYAT_GECMISI_TABLE : $("#fiyat_gecmisi_table"),
                   FIYAT_GECMISI_TBODY : $("#fiyat_gecmisi_tbody")
               };
@@ -476,7 +506,7 @@
 
               function cari_detay_download( item ){
                   REQ.ACTION("", { req:"cari_ozet_download", cari_unvan: item }, function(res){
-                      //console.log(res);
+                      console.log(res);
                       UI.CARI_BAKIYE_LABEL.html("Carinin <br/> " + bakiye_dt_format(res.data.bakiye) + " <br/> bakiyesi bulunmaktadır.");
                       UI.CARI_ADRES_LABEL.html(res.data.adres + "<br/>" + res.data.telefon_1 + "<br/>" + res.data.eposta );
                       YENI_CARI = false;
@@ -485,38 +515,53 @@
 
               $(document).ready(function(){
 
-                  var resmi = true;
+                  var item_id = trim(UI.ITEM_ID.val());
+                  if( item_id != "" ){
+                    data_download( item_id,  [ "id", "cari_id", "cari_kayit_id", "user", "durum", "ara_toplam", "genel_toplam", "kdv_miktar", "genel_toplam_yaziyla", "versiyon" ], "#", function(res){
+                        for( var k = 0; k < res.data.urunler.length; k++ ) yetkili_row_ekle( res.data.urunler[k].stok_adi, res.data.urunler[k].birim_fiyat, res.data.urunler[k].kdv_orani, res.data.urunler[k].miktar, res.data.urunler[k].toplam, res.data.urunler[k].yer, res.data.urunler[k].birim, res.data.urunler[k].id );
+                          DUZENLEME = true;
+                          UI.CARI_INPUT.val(res.data.cari_unvan);
+                          UI.CARI_BAKIYE_LABEL.html("Carinin <br/> " + bakiye_dt_format(res.data.cari_bakiye) + " <br/> bakiyesi bulunmaktadır.");
+                          UI.CARI_ADRES_LABEL.html(res.data.cari_adres + "<br/>" + res.data.cari_telefon_1 + "<br/>" + res.data.cari_eposta );
+                          YENI_CARI = false;
+                          convert_try_trigger();
+                    });
+                  } else {
+                      UI.TUR_INPUT.val(fis_turu);
+                      UI.TUR_INPUT.trigger("change");
+                      $("#sil_btn").remove();
+                  }                  
 
                   if( cari_get != "" ){
                       cari_detay_download( cari_get );
                       UI.CARI_INPUT.val(cari_get);
                   }
 
+                  var resmi = true;
                   UI.TUR_INPUT.change(function(){
                       // trigger kayışları
                       var kdvs = $(document).find(".kdv"),
                           fiyats = $(document).find(".fiyat");
                       if( this.value == "4" || this.value == "5" ){
                           resmi = false;
-                          for( var k = 0; k < kdvs.length; k++ ) kdvs[0].disabled = true;
+                          for( var k = 0; k < kdvs.length; k++ ){
+                            kdvs[k].disabled = true;
+                            kdvs[k].setAttribute("lastval", kdvs[k].value);
+                            kdvs[k].value = "0";
+                          }
                       } else {
                           resmi = true;
-                          for( var k = 0; k < kdvs.length; k++ ) kdvs[0].disabled = false;
+                          for( var k = 0; k < kdvs.length; k++ ){
+                            kdvs[k].disabled = false;
+                            if( kdvs[k].getAttribute("lastval") != "" ){
+                              kdvs[k].value = kdvs[k].getAttribute("lastval");
+                            }
+                            
+                          }
                       }
-                      for( var k = 0; k < fiyats.length; k++ ) $(fiyats[0]).trigger("keyup");
+                      for( var k = 0; k < fiyats.length; k++ ) $(fiyats[k]).trigger("keyup");
                       
                   });
-
-                  var item_id = trim(UI.ITEM_ID.val());
-                  if( item_id != "" ){
-                    data_download( item_id, [ "id", "mali_tur", "eklenme_tarihi", "son_duzenlenme_tarihi" ], "#cari_", function(res){
-                        for( var k = 0; k < res.data.yetkililer.length; k++ ) yetkili_row_ekle(res.data.yetkililer[k].isim, res.data.yetkililer[k].eposta, res.data.yetkililer[k].telefon, res.data.yetkililer[k].notlar, res.data.yetkililer[k].id );
-                          DUZENLEME = true;
-                    });
-                  } else {
-                      UI.TUR_INPUT.val(fis_turu);
-                      UI.TUR_INPUT.trigger("change");
-                  }                  
 
                   UI.SUBMIT_BTN.click(function(){
                       //UI.SUBMIT_BTN.get(0).disabled = true;
@@ -598,7 +643,7 @@
                               
                           } else {
                               // duzenleme sonrasi refresh yap yetkililer id si alabilmel için
-                              setTimeout(function(){ location.reload() }, 1000);
+                              //setTimeout(function(){ location.reload() }, 1000);
                           }
                       });
                   });
@@ -606,7 +651,7 @@
 
 
                   UI.SATIR_EKLE.click(function(){
-                      yetkili_row_ekle("",0,"",1,0,"","Adet", "");
+                      yetkili_row_ekle("",0,0,1,0,"","Adet", "");
                       UI.TUR_INPUT.trigger("change");
                   });
 
@@ -638,9 +683,10 @@
                           kdv = parent.find(".kdv").get(0).value;
                           // resmi
                       }
-                      var kdv_dahil_birim_fiyat = kdv_dahil_hesapla( _this.val(), kdv );
-                        parent.find(".toplam").get(0).value = (kdv_dahil_birim_fiyat * parseFloat( parent.find(".miktar").get(0).value )).toFixed(2);
+                      var kdv_dahil_birim_fiyat = kdv_dahil_hesapla( input_convert_try(_this.val()), input_convert_try(kdv) );
+                        parent.find(".toplam").get(0).value = (kdv_dahil_birim_fiyat * parseFloat( input_convert_try(parent.find(".miktar").get(0).value) )).toFixed(2);
                       if( _this.hasClass("redborder") ) _this.removeClass("redborder");
+                      convert_try_trigger();
                   });
                   $(document).on("change", ".kdv", function(){
                       var _this = $(this),
@@ -648,10 +694,11 @@
 
                       // resmi degilse hareket yapmiyoruz kdv degisiminde
                       if( resmi ){
-                          var kdv_dahil_birim_fiyat = kdv_dahil_hesapla( parent.find(".fiyat").get(0).value ,_this.val() );
-                          parent.find(".toplam").get(0).value = (kdv_dahil_birim_fiyat * parseFloat( parent.find(".miktar").get(0).value )).toFixed(2);
+                          var kdv_dahil_birim_fiyat = kdv_dahil_hesapla( input_convert_try(parent.find(".fiyat").get(0).value) , input_convert_try(_this.val()) );
+                          parent.find(".toplam").get(0).value = (kdv_dahil_birim_fiyat * parseFloat( input_convert_try(parent.find(".miktar").get(0).value) )).toFixed(2);
                       } 
                       if( _this.hasClass("redborder") ) _this.removeClass("redborder");
+                      convert_try_trigger();
 
                   });
                   $(document).on("keyup", ".toplam", function(){
@@ -662,10 +709,11 @@
                       } else {
                           kdv = parent.find(".kdv").get(0).value;
                       }
-                       var  kdv_dahil_birim_fiyat = parseFloat(_this.val()) / parseFloat( parent.find(".miktar").get(0).value),
+                       var  kdv_dahil_birim_fiyat = parseFloat( input_convert_try(_this.val()) ) / parseFloat( input_convert_try(parent.find(".miktar").get(0).value)),
                             kdv_haric_birim_fiyat = kdv_haric_hesapla( kdv_dahil_birim_fiyat, kdv );
                       parent.find(".fiyat").get(0).value = parseFloat( kdv_haric_birim_fiyat).toFixed(2);
                       if( _this.hasClass("redborder") ) _this.removeClass("redborder");
+                      convert_try_trigger();
                   });
                   $(document).on("keyup", ".miktar", function(){
                       var _this = $(this),
@@ -675,12 +723,30 @@
                       } else {
                           kdv = parent.find(".kdv").get(0).value;
                       }
-                      var kdv_dahil_birim_fiyat = kdv_dahil_hesapla( parent.find(".fiyat").get(0).value, kdv );
-                      parent.find(".toplam").get(0).value = (kdv_dahil_birim_fiyat * parseFloat( _this.val() )).toFixed(2);
-
-                          
+                      var kdv_dahil_birim_fiyat = kdv_dahil_hesapla( input_convert_try(parent.find(".fiyat").get(0).value), kdv );
+                      parent.find(".toplam").get(0).value = (kdv_dahil_birim_fiyat * parseFloat( input_convert_try(_this.val()) )).toFixed(2);
                       if( _this.hasClass("redborder") ) _this.removeClass("redborder");
+                      convert_try_trigger();
                   });
+
+
+                  $("#sil_btn").click(function(){
+
+                      var c = confirm("Fişi silmek istediğinze emin misiniz?");
+                      if( c ){
+                          this.disabled = true;
+                          REQ.ACTION("", { req:"fatura_sil" }, function(res){
+                              if( res.ok ){
+                                  PamiraNotify("success", "İşlem Başarılı", res.text );
+                                  setTimeout(function(){ location.reload(); }, 1000);
+                              } else {
+                                  PamiraNotify("error", "Hata", res.text );
+                              }
+                          });
+
+                      }
+                  });
+
 
                   $("#duzenlenme_tarihi").datetimepicker(DATETIMEPICKER_DEF_OPTIONS);
                   $("#tahsilat_tarihi").datetimepicker(DATETIMEPICKER_DEF_OPTIONS);

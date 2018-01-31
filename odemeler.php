@@ -46,7 +46,7 @@
 				"table"			=> DBT_ODEMELER,
 				"cols" 			=> array(
 					array( 'db' => 'id', 						'dt' => 0 ),
-					array( 'db' => 'kart',  					'dt' => 1 ),
+					array( 'db' => 'aciklama',  					'dt' => 1 ),
 					array( 'db' => 'odeme_tipi', 	 			'dt' => 2 ),
 					array( 'db' => 'tutar',  					'dt' => 3 ),
 					array( 'db' => 'tarih',  					'dt' => 4, 'formatter' => function($d, $row){ return Common::date_reverse( $d ); } )

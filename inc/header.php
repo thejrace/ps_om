@@ -51,7 +51,6 @@
     <script src="<?php echo URL_VENDORS; ?>bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
     <!-- iCheck -->
     <script src="<?php echo URL_VENDORS; ?>iCheck/icheck.min.js"></script>
-
     <!-- Select2 -->
     <script src="<?php echo URL_VENDORS; ?>select2/dist/js/select2.full.min.js"></script>
     <!-- PNotify -->

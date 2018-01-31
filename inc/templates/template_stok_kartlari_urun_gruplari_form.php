@@ -28,6 +28,25 @@
 
                 </div>
               </div>  <!--  COL -->
+
+              <div class="col-md-6  col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h4>İşlemler<small></small></h4>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <br />
+                    
+
+                     <button type="button" class="btn btn-sm btn-danger" id="sil_btn" ><i class="fa fa-remove"></i> Sil</button>
+
+
+                  </div>
+                </div>
+              </div>  <!--  COL -->
+
+
             </div> <!--  ROW1 -->
 
 
@@ -43,6 +62,8 @@
                     if( UI.ITEM_ID.val() != "" ){
                         DUZENLE_FORM = true;
                         data_download( UI.ITEM_ID.val(), ["id", "kod"], "#urun_grubu_", null );
+                    } else {
+                        $("#sil").remove();
                     }
 
                     $(".kaydet").click(function(){
@@ -50,6 +71,24 @@
                           if( !DUZENLE_FORM ) UI.FORM.reset();
                         });
                     });
+
+
+                    $("#sil_btn").click(function(){
+
+                      var c = confirm("Ürün grubunu silmek istediğinze emin misiniz?");
+                      if( c ){
+                          this.disabled = true;
+                          REQ.ACTION("", { req:"urun_grubu_sil" }, function(res){
+                              if( res.ok ){
+                                  PamiraNotify("success", "İşlem Başarılı", res.text );
+                                  setTimeout(function(){ location.reload(); }, 1000);
+                              } else {
+                                  PamiraNotify("error", "Hata", res.text );
+                              }
+                          });
+
+                      }
+                  });
 
                 });
 

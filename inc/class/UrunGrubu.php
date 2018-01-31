@@ -46,8 +46,15 @@
 			return true;
 		}
 
-		public function sil( $input ){
-		
+		public function sil(){
+			if( !User::izin_kontrol( User::$IZ_URUN_GRUBU_DUZENLE ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
+			
+			$this->pdo->query("UPDATE " . $this->dt_table ." SET durum = ? WHERE id = ?", array(0, $this->details["id"]));
+			$this->return_text = "Ürün grubu silindi.";
+			return true;
 		}
 
 		private function isim_kontrol( $isim ){
@@ -58,7 +65,7 @@
 
 		public static function ac_arama( $term ){
 			$q = array();
-			foreach( DB::getInstance()->query("SELECT isim FROM " . DBT_STOK_KARTLARI_URUN_GRUPLARI . " WHERE isim LIKE ? || isim LIKE ? || isim LIKE ?", array("%".$term, $term."%", "%".$term."%"))->results() as $res ) $q[] = $res["isim"];
+			foreach( DB::getInstance()->query("SELECT isim FROM " . DBT_STOK_KARTLARI_URUN_GRUPLARI . " WHERE (isim LIKE ? || isim LIKE ? || isim LIKE ?) && durum = ?", array("%".$term, $term."%", "%".$term."%", 1))->results() as $res ) $q[] = $res["isim"];
 			return $q;
 		}
 

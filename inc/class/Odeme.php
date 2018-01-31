@@ -5,15 +5,15 @@
 		public function __construct( $id = null ){
 			$this->pdo = DB::getInstance();
 			$this->dt_table = DBT_ODEMELER;
-			if( isset($id) ) $this->check( array("id", "kart"), $id);
+			if( isset($id) ) $this->check( array("id", "aciklama"), $id);
 		}
 
 		public function ekle( $input ){
 
 			$this->pdo->insert(DBT_ODEMELER, array(
-				"kart" 				=> $input["kart"],
+				"kart" 				=> $input["aciklama"],
 				"odeme_tipi" 		=> $input["odeme_tipi"],
-				"tutar" 			=> $input["tutar"],
+				"tutar" 			=> Common::convert_try_reverse($input["tutar"]),
 				"user" 				=> User::get_data("user_id"),
 				"banka_ekstra" 		=> $input["banka_ekstra"],
 				"tarih" 			=> Common::date_reverse($input["tarih"]),
@@ -26,7 +26,7 @@
 				return false;
 			}
 
-			Pamira::kasayi_guncelle( (double)$input["tutar"] * -1 );
+			//Pamira::kasayi_guncelle( (double)$input["tutar"] * -1 );
 
 			$this->return_text = "Ödeme yapıldı.";
 			return true;
@@ -35,7 +35,7 @@
 
 		public function duzenle( $input ){
 
-			if( (double)$this->details["tutar"] != (double)$input["tutar"] ){
+			/*if( (double)$this->details["tutar"] != (double)$input["tutar"] ){
 				// iki tutar arasindaki farki bul
 				$fark = (double)$input["tutar"] - (double)$this->details["tutar"];
 				// eger yeni tutar eskisinden fazlaysa kasayı azaltıcaz
@@ -43,7 +43,7 @@
 				Pamira::kasayi_guncelle( (double)$fark * -1 );
 				// iki durumda da -1 ile çarpıyoruz
 					
-			}
+			}*/
 
 			$this->pdo->query("UPDATE " . $this->dt_table . " SET 
 				kart = ?,
@@ -55,7 +55,7 @@
 				duzenlenme_tarihi = ? WHERE id = ?",array(
 					$input["kart"],
 					$input["odeme_tipi"],
-					$input["tutar"],
+					Common::convert_try_reverse($input["tutar"]),
 					$input["banka_ekstra"],
 					Common::date_reverse($input["tarih"]),
 					$input["aciklama"],
@@ -75,7 +75,7 @@
 			$this->return_text = "Ödeme kaydı silindi.";
 
 			// iptal durumunda kasaya parayi geri ekle
-			Pamira::kasayi_guncelle( (double)$this->details["tutar"] );
+			//Pamira::kasayi_guncelle( (double)$this->details["tutar"] );
 
 
 			return true;
@@ -103,12 +103,12 @@
 
 			if( trim($input["tutar_alt"]) != "" ){
 				$wheres[] = " tutar >= ? ";
-				$where_vals[] = $input["tutar_alt"];
+				$where_vals[] = Common::convert_try_reverse($input["tutar_alt"]);
 			}
 
 			if( trim($input["tutar_ust"]) != "" ){
 				$wheres[] = " tutar <= ? ";
-				$where_vals[] = $input["tutar_ust"];
+				$where_vals[] = Common::convert_try_reverse($input["tutar_ust"]);
 			}
 
 			if( trim($input["tarih_alt"]) != "" ){

@@ -151,6 +151,7 @@ class Validation {
 	}
 
 	protected function not_zero( $input, $value, $rule_value  ){
+		$value = str_replace(",", ".", $value);
 		if( trim($value) == "" ) return true;
 		return !( $value <= 0 );
 	}
@@ -183,11 +184,13 @@ class Validation {
 	}
 
 	protected function numerik($input, $value, $rule_value){
+		$value = str_replace(",", ".", $value);
 		if( trim($value) == "" ) return true;
 		return is_numeric($value) ? true : false;
 	}
 
 	protected function pozNumerik($input, $value, $rule_value){
+		$value = str_replace(",", ".", $value);
 		if( trim($value) == "" ) return true;
 		return is_numeric($value) && $value >= 0;
 	}

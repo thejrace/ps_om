@@ -73,6 +73,16 @@
 
 			case 'stok_hareketi_sil':
 
+				$StokHareket = new StokHareket( Input::get("item_id"));
+				if($StokHareket->is_ok() ){
+					if(!$StokHareket->sil()){
+						$OK = 0;
+					}
+				} else {
+					$OK = 0;
+				}
+				$TEXT = $StokHareket->get_return_text();
+
 			break;
 
 			case 'data_download':

@@ -38,7 +38,7 @@
                           <br>
                           <b>Fatura ID </b> #<?php echo $Fatura->get_details("id") ?>
                           <br>
-                          <b>Tahsilat Tarihi:</b> <?php echo Common::datetime_reverse($Fatura->get_details("tahsilat_tarihi")) ?>
+                         
                         </div>
                         <!-- /.col -->
                       </div>

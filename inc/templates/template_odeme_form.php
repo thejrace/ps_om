@@ -8,12 +8,6 @@
                   <div class="x_content">
                     <br />
                     <form class="form-horizontal form-label-left" id="odeme_form">
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Ödeme Kartı</label>
-                        <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control req" placeholder="Kart" id="kart" name="kart">
-                        </div>
-                      </div>
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Açıklama</label>
@@ -51,7 +45,7 @@
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Tutar</label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control req numeric" placeholder="Tutar" id="tutar" name="tutar" />
+                          <input type="text" class="form-control req numeric convert-try" placeholder="Tutar" id="tutar" name="tutar" />
                           <span class="label label-info">Fiyat girişlerinde kuruş kısmını nokta ile ayırınız.</span>
                         </div>
                       </div>
@@ -88,6 +82,7 @@
 
                         data_download( "<?php echo $ITEM_ID ?>", [ "id", "eklenme_tarihi", "user" ], "#", function(res){
                             //console.log(res);
+                            convert_try_trigger();
                         });
 
                     }

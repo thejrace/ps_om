@@ -16,8 +16,7 @@
 
     <!-- Custom Theme Scripts -->
     <script src="<?php echo URL_JS; ?>custom.js"></script>
-
-	
+	 
   </body>
 </html>
 

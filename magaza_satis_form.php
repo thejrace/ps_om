@@ -53,7 +53,7 @@
 				} else {	
 					
 					$MagazaFisi = new MagazaFisi( Input::get("item_id"));
-					if( $MagazaFisi->is_ok() ){
+					if( $MagazaFisi->is_ok() && $MagazaFisi->get_details("durum") == 1 ){
 						if( !$MagazaFisi->duzenle(Input::escape($_POST))){
 							$OK = 0;
 						}
@@ -81,7 +81,7 @@
 			case 'data_download':
 
 				$MagazaFisi = new MagazaFisi( Input::get("item_id") );
-				if( $MagazaFisi->is_ok() ){
+				if( $MagazaFisi->is_ok() && $MagazaFisi->get_details("durum") == 1 ){
 					$DATA = $MagazaFisi->get_details();
 					$DATA["tarih"] = Common::date_reverse($DATA["tarih"]);
 					$DATA["urunler"] = $MagazaFisi->get_urunler();

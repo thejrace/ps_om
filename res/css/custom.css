@@ -4335,6 +4335,11 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
     border-color:#ff0000;
 }
 
+cur{
+    font-family:'monospace';
+    display:inline;
+    font-weight:600;
+}
 .bakiye_text {
     font-size: 15px;
     font-weight: 600;

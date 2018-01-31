@@ -65,14 +65,14 @@
                                 <div class="form-group">
                                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Fiyat Alt</label>
                                   <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control posnum" placeholder="Fiyat Alt" name="fiyat_alt" id="fiyat_alt" />
+                                    <input type="text" class="form-control posnum convert-try" placeholder="Fiyat Alt" name="fiyat_alt" id="fiyat_alt" />
                                   </div>
                                 </div>
 
                                  <div class="form-group">
                                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Fiyat Üst</label>
                                   <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control posnum" placeholder="Fiyat Üst" name="fiyat_ust" id="fiyat_ust" />
+                                    <input type="text" class="form-control posnum convert-try" placeholder="Fiyat Üst" name="fiyat_ust" id="fiyat_ust" />
                                   </div>
                                 </div>
 
@@ -131,6 +131,7 @@
                           <th>Düzenlenme Tarihi</th>
                           <th class="tr_cb">#</th>
                           <th class="tr_cb">#</th>
+                          <th class="tr_cb">#</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -171,6 +172,11 @@
                           "data": null,
                           "orderable": false,
                           "defaultContent": '<button type="button" class="btn btn-xs btn-danger tahsil_et" >Tahsil Et</button>'
+                        },
+                        {
+                          "data": null,
+                          "orderable": false,
+                          "defaultContent": '<button type="button" class="btn btn-xs btn-warning duzenle" >Düzenle</button>'
                         },
                         {
                           "data": null,
@@ -247,6 +253,11 @@
                                     {
                                       "data": null,
                                       "orderable": false,
+                                      "defaultContent": '<button type="button" class="btn btn-xs btn-warning duzenle" >Düzenle</button>'
+                                    },
+                                    {
+                                      "data": null,
+                                      "orderable": false,
                                       "defaultContent": '<button type="button" class="btn btn-xs btn-info detaylar" >İncele</button>'
                                     }
                                     
@@ -267,6 +278,10 @@
               
                     $(document).on("click", ".detaylar", function(){
                         window.open("<?php echo URL_FATURA_INCELE ?>"+$(this).parent().parent().find("td").get(0).innerText, "_blank");
+                    });
+
+                    $(document).on("click", ".duzenle", function(){
+                        window.open("<?php echo URL_FATURA_DUZENLE ?>"+$(this).parent().parent().find("td").get(0).innerText, "_blank");
                     });
 
                      $(document).on("click", ".tahsil_et", function(){

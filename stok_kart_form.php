@@ -67,7 +67,7 @@
 			case 'data_download':
 
 				$StokKarti = new StokKarti( Input::get("item_id"));
-				if( $StokKarti->is_ok() ){
+				if( $StokKarti->is_ok() && $StokKarti->get_details("durum") == 1 ){
 					$UrunGrubu = new UrunGrubu( $StokKarti->get_details("urun_grubu"));
 					$DATA = $StokKarti->get_details();
 					$DATA["urun_grubu"] = $UrunGrubu->get_details("isim");

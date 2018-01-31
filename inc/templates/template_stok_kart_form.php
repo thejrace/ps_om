@@ -41,15 +41,15 @@
                       <div class="form-group">
                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Alış Fiyatı</label>
                             <div class="col-md-4 col-sm-9 col-xs-12"> 
-                              <input type="text" class="form-control numeric posnum" value="0" name="alis_fiyati" id="alis_fiyati" /> 
+                              <input type="text" class="form-control numeric posnum convert-try" value="0" name="alis_fiyati" id="alis_fiyati" /> 
                             </div>
-                            <span class="label label-info">Fiyat girişlerinde kuruş kısmını nokta ile ayırınız.</span>
+                            <span class="label label-info">Fiyat girişlerinde kuruş kısmını virgül ile ayırınız.</span>
                       </div>
 
                       <div class="form-group">
                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Satış Fiyatı</label>
                             <div class="col-md-4 col-sm-9 col-xs-12">
-                              <input type="text" class="form-control numeric posnum" value="0" name="satis_fiyati" id="satis_fiyati" />
+                              <input type="text" class="form-control numeric posnum convert-try" value="0" name="satis_fiyati" id="satis_fiyati" />
                             </div>
                       </div>
 
@@ -68,7 +68,7 @@
                       <div class="form-group">
                            <label class="control-label col-md-3 col-sm-3 col-xs-12">KDV Dahil</label>
                             <div class="col-md-4 col-sm-9 col-xs-12">
-                              <input type="text" class="form-control numeric posnum" value="0" name="kdv_dahil" id="kdv_dahil" />
+                              <input type="text" class="form-control numeric posnum convert-try" value="0" name="kdv_dahil" id="kdv_dahil" />
                             </div>
                       </div>
 
@@ -118,7 +118,8 @@
 
                     if( UI.ITEM_ID.val() != "" ){
                         DUZENLE_FORM = true;
-                        data_download( UI.ITEM_ID.val(), ["id", "stok_kodu"], "#", null );
+                        data_download( UI.ITEM_ID.val(), ["id"], "#", null );
+                        $("#stok_kodu").get(0).disabled = true;
                     }
 
                     $(".kaydet").click(function(){
@@ -128,29 +129,32 @@
                     });
 
                     UI.KDV_DAHIL_INPUT.keyup(function(){
-                      var val = this.value;
+                      var val = input_convert_try(this.value);
                       if( trim(val) == "" ) return;
                         if( FormValidation.numeric(val) && FormValidation.posnum(val) ){
-                            UI.SATIS_FIYATI_INPUT.val(kdv_haric_hesapla( UI.KDV_DAHIL_INPUT.val(), UI.KDV_ORAN_INPUT.val() ));
+                            UI.SATIS_FIYATI_INPUT.val(kdv_haric_hesapla( val, input_convert_try(UI.KDV_ORAN_INPUT.val()) ));
                         } else {
                             PNotify.removeAll();
                             PamiraNotify("error", "Hata", "Lütfen geçerli bir fiyat değeri giriniz.");
                         }
+                        convert_try_trigger();
                     }.debounce(200, false));
 
                     UI.SATIS_FIYATI_INPUT.keyup(function(){
-                        var val = this.value;
+                        var val = input_convert_try(this.value);
+                        //console.log(val);
                         if( trim(val) == "" ) return;
                         if( FormValidation.numeric(val) && FormValidation.posnum(val) ){
-                            UI.KDV_DAHIL_INPUT.val(kdv_dahil_hesapla( UI.SATIS_FIYATI_INPUT.val(), UI.KDV_ORAN_INPUT.val()) );
+                            UI.KDV_DAHIL_INPUT.val(kdv_dahil_hesapla( val, input_convert_try(UI.KDV_ORAN_INPUT.val()) ));
                         } else {
                             PNotify.removeAll();
                             PamiraNotify("error", "Hata", "Lütfen geçerli bir fiyat değeri giriniz.");
                         }
+                        convert_try_trigger();
                     }.debounce(200, false));
 
                     UI.KDV_ORAN_INPUT.change(function(){
-                        UI.KDV_DAHIL_INPUT.val(kdv_dahil_hesapla( UI.SATIS_FIYATI_INPUT.val(), UI.KDV_ORAN_INPUT.val()) );
+                        UI.KDV_DAHIL_INPUT.val(kdv_dahil_hesapla( input_convert_try(UI.SATIS_FIYATI_INPUT.val()), UI.KDV_ORAN_INPUT.val()) );
                     });
 
                     REQ.AC( $("#urun_grubu"), PSGLOBAL.AC_COMMON, { tip:"urun_grubu" }, null );

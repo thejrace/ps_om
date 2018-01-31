@@ -259,6 +259,23 @@
                        remove_elem( document.getElementById( this.getAttribute("parent") ) );
                   });
 
+                  $("#sil_btn").click(function(){
+
+                      var c = confirm("Hareketi silmek istediğinze emin misiniz?");
+                      if( c ){
+                          this.disabled = true;
+                          REQ.ACTION("", { req:"stok_hareketi_sil" }, function(res){
+                              if( res.ok ){
+                                  PamiraNotify("success", "İşlem Başarılı", res.text );
+                                  setTimeout(function(){ location.reload(); }, 1000);
+                              } else {
+                                  PamiraNotify("error", "Hata", res.text );
+                              }
+                          });
+
+                      }
+                  });
+
 
                   $("#tarih").datetimepicker(DATEPICKER_DEF_OPTIONS);
 

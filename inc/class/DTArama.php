@@ -28,12 +28,12 @@
 			if( $input["fiyat_tipi"] != "0" ){
 				if( trim($input["fiyat_alt"]) != "" ){
 					$wheres[] = " " . $input["fiyat_tipi"] . " >= ? ";
-					$where_vals[] = $input["fiyat_alt"]; 
+					$where_vals[] = Common::convert_try_reverse($input["fiyat_alt"]); 
 					if( !$where_flag ) $where_flag = true;
 				}
 				if( trim($input["fiyat_ust"]) != "" ){
 					$wheres[] = " " . $input["fiyat_tipi"] . " <= ? ";
-					$where_vals[] = $input["fiyat_ust"]; 
+					$where_vals[] = Common::convert_try_reverse($input["fiyat_ust"]); 
 					if( !$where_flag ) $where_flag = true;
 				}
 			}

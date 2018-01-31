@@ -71,7 +71,7 @@
                     <div class="form-group">
                        <label class="control-label col-md-2 col-sm-3 col-xs-12">Peşin</label>
                        <div class="col-md-3 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control posnum" placeholder="Peşin Tutar" name="pesin_tutar" id="pesin_tutar" />
+                          <input type="text" class="form-control posnum convert-try" placeholder="Peşin Tutar" name="pesin_tutar" id="pesin_tutar" />
                           <span class="label label-info">Fiyat girişlerinde kuruş kısmını nokta ile ayırınız.</span>
                        </div>
                     </div>
@@ -84,7 +84,7 @@
                             <div class="form-group">
                                <label class="control-label col-md-4 col-sm-3 col-xs-12" style="margin-left:36px">Havale</label>
                                <div class="col-md-6 col-sm-9 col-xs-12">
-                                  <input type="text" class="form-control posnum" placeholder="Havale Tutar" name="havale_tutar" id="havale_tutar" />
+                                  <input type="text" class="form-control posnum convert-try" placeholder="Havale Tutar" name="havale_tutar" id="havale_tutar" />
                                </div>
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                             <div class="form-group">
                                <label class="control-label col-md-2 col-sm-3 col-xs-12">Banka</label>
                                <div class="col-md-6 col-sm-9 col-xs-12">
-                                  <select class="form-control" name="havale_banka" id="havale_banka" />
+                                  <select class="form-control" name="havale_banka convert-try" id="havale_banka" />
                                      <option value="0">Seçiniz..</option>
                                      <option value="1">Yapı Kredi</option>
                                   </select>
@@ -109,7 +109,7 @@
                              <div class="form-group">
                                  <label class="control-label col-md-4 col-sm-3 col-xs-12" style="margin-left:36px">Kredi Kartı</label>
                                  <div class="col-md-6 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control posnum" placeholder="Kredi Kartı Tutar" name="kredi_karti_tutar" id="kredi_karti_tutar" />
+                                    <input type="text" class="form-control posnum convert-try" placeholder="Kredi Kartı Tutar" name="kredi_karti_tutar" id="kredi_karti_tutar" />
                                  </div>
                               </div>
                         </div>
@@ -136,7 +136,7 @@
                      <div class="form-group">
                        <label class="control-label col-md-2 col-sm-3 col-xs-12">Çek</label>
                        <div class="col-md-3 col-sm-9 col-xs-12">
-                          <input type="text" class="form-control posnum" placeholder="Çek Tutar" name="cek_tutar" id="cek_tutar" />
+                          <input type="text" class="form-control posnum convert-try" placeholder="Çek Tutar" name="cek_tutar" id="cek_tutar" />
                        </div>
                     </div>
                     <div class="form-group">
@@ -166,46 +166,48 @@
 
 
 <script type="text/javascript">
-   var tip = "<?php echo $TIP ?>",
-       bakiye = <?php echo $Cari->get_details("bakiye") ?>,
-       get_tutar = "<?php echo $TUTAR ?>";
-
-    var pre_tutar = "", char;
-    for( var k = 0; k < get_tutar.length; k++ ){
-        if( k < get_tutar.length - 3 ){
-            if( get_tutar[k] == "." ){
-                char = "";
-            } else {
-                char = get_tutar[k];
-            }
-        } else {
-           char = get_tutar[k];
-        }
-        pre_tutar += char;
-    }
-   
-   var UI = {
-       FORM: "tahsilat_makbuzu_form",
-       TIP_BTN: $(".tip_btn"),
-       KES_BTNS: $(".kes_btn"),
-       BAKIYE: $(".bakiye-tm"),
-       TIP_INPUT: $("#makbuz_tip")
-   };
-   
-   function bakiye_guncelle(){
-       if( bakiye > 0 ){
-           UI.BAKIYE.removeClass("negatif").removeClass("sifir").addClass("pozitif").html( format_currency( bakiye) );
-       } else if( bakiye < 0 ){
-           UI.BAKIYE.removeClass("pozitif").removeClass("sifir").addClass("negatif").html( format_currency( bakiye) );
-       } else {
-           UI.BAKIYE.removeClass("sifir").removeClass("pozitif").addClass("negatif").html( format_currency( bakiye) );
-       }
-   }
+  
    
    $(document).ready(function(){
+
+       var tip = "<?php echo $TIP ?>",
+           bakiye = <?php echo $Cari->bakiye_hesapla() ?>,
+           get_tutar = "<?php echo $TUTAR ?>";
+
+        var pre_tutar = "", char;
+        for( var k = 0; k < get_tutar.length; k++ ){
+            if( k < get_tutar.length - 3 ){
+                if( get_tutar[k] == "." ){
+                    char = "";
+                } else {
+                    char = get_tutar[k];
+                }
+            } else {
+               char = get_tutar[k];
+            }
+            pre_tutar += char;
+        }
+       
+       var UI = {
+           FORM: "tahsilat_makbuzu_form",
+           TIP_BTN: $(".tip_btn"),
+           KES_BTNS: $(".kes_btn"),
+           BAKIYE: $(".bakiye-tm"),
+           TIP_INPUT: $("#makbuz_tip")
+       };
+       
+       function bakiye_guncelle(){
+           if( bakiye > 0 ){
+               UI.BAKIYE.removeClass("negatif").removeClass("sifir").addClass("pozitif").html( format_currency( bakiye) );
+           } else if( bakiye < 0 ){
+               UI.BAKIYE.removeClass("pozitif").removeClass("sifir").addClass("negatif").html( format_currency( bakiye) );
+           } else {
+               UI.BAKIYE.removeClass("sifir").removeClass("pozitif").addClass("negatif").html( format_currency( bakiye) );
+           }
+       }
       
        if( pre_tutar != 0 ){
-             document.getElementById("pesin_tutar").value = pre_tutar;
+             document.getElementById("pesin_tutar").value = input_convert_try_reverse(pre_tutar);
              /*document.getElementById("havale_tutar").value = pre_tutar;
              document.getElementById("kredi_karti_tutar").value = pre_tutar;
              document.getElementById("cek_tutar").value = pre_tutar;*/

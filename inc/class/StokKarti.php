@@ -44,18 +44,23 @@
 			$this->pdo->insert($this->dt_table, array(
 				"stok_kodu" 		=> $this->details["stok_kodu"],
 				"stok_adi"  		=> $input["stok_adi"],
-				"stok_miktar"		=> 0,
 				"urun_grubu" 		=> $urun_grubu_id,
-				"satis_fiyati" 		=> $input["satis_fiyati"],
-				"alis_fiyati" 		=> $input["alis_fiyati"],
-				"kdv_dahil" 		=> $input["kdv_dahil"],
+				"satis_fiyati" 		=> Common::convert_try_reverse($input["satis_fiyati"]),
+				"alis_fiyati" 		=> Common::convert_try_reverse($input["alis_fiyati"]),
+				"kdv_dahil" 		=> Common::convert_try_reverse($input["kdv_dahil"]),
 				"kdv_orani" 		=> $input["kdv_orani"],
 				"birim"				=> $input["birim"]
 			));
+			$this->details["id"] = $this->pdo->lastInsertedId();
 			if( $this->pdo->error() ){
 				$this->return_text = "Bir hata oluştu.[1][".$this->pdo->get_error_message()."]";
 				return false;
 			}
+
+			// stok miktarını faturalardan güncelleyebilmek için, stok miktar kısmına id yi ekliyoruz
+			// datatables formatter için
+			$this->pdo->query("UPDATE " . $this->dt_table . " SET stok_miktar = ? WHERE id = ?", array( $this->details["id"], $this->details["id"]));
+
 			// başlangıç stokları ekle
 			foreach( $this->pdo->query("SELECT * FROM " . DBT_STOK_YERLERI )->results() as $yer ){
 				$this->pdo->insert( DBT_STOK_KARTLARI_STOKLAR, array(
@@ -79,7 +84,7 @@
 				return false;
 			}
 
-			if( $this->mukerrer_kontrol( $input["stok_adi"] ) ) return false;
+			if( $this->details["stok_adi"] != $input["stok_adi"] && $this->mukerrer_kontrol( $input["stok_adi"] ) ) return false;
 			$GelenUrunGrubu = new UrunGrubu( $input["urun_grubu"] );
 			if( !$GelenUrunGrubu->is_ok() ){
 				// gelen urun grubu yoksa ekliyoruz
@@ -111,9 +116,9 @@
 				birim = ? WHERE stok_kodu = ?",array(
 					$input["stok_adi"],
 					$urun_grubu_id,
-					$input["satis_fiyati"],
-					$input["alis_fiyati"],
-					$input["kdv_dahil"],
+					Common::convert_try_reverse($input["satis_fiyati"]),
+					Common::convert_try_reverse($input["alis_fiyati"]),
+					Common::convert_try_reverse($input["kdv_dahil"]),
 					$input["kdv_orani"],
 					$input["birim"],
 					$this->details["stok_kodu"] )
@@ -132,6 +137,37 @@
 			return count($kontrol) > 0;
 		}
 
+		public function stok_detaylari_cikar(){
+
+			// aliş ve satış faturalarını bul, birbirinden çıkar
+			$fatura_stok_itemleri = $this->pdo->query("SELECT * FROM " . DBT_FATURA_STOK_DETAYLARI . " WHERE stok_kodu = ?", array( $this->details["stok_kodu"]))->results();
+			$alislar = 0;
+			$satislar = 0;
+			foreach( $fatura_stok_itemleri as $item ){
+				$Fatura = new Fatura( $item["fatura_id"] );
+				if( $Fatura->is_ok() && $Fatura->get_details("durum") == 1 ){
+					if( $Fatura->get_details("fis_turu") == Fatura::$GR_ALIS || $Fatura->get_details("fis_turu") == Fatura::$ALIS ){
+						$alislar += $item["miktar"];
+					} else if( $Fatura->get_details("fis_turu") == Fatura::$GR_SATIS || $Fatura->get_details("fis_turu") == Fatura::$SATIS ){
+						$satislar += $item["miktar"];
+					}
+				}
+			}
+
+			$stok_hareket_detaylari = $this->pdo->query("SELECT * FROM " . DBT_STOK_HAREKETLERI_URUNLER ." WHERE stok_kodu = ?", array( $this->details["stok_kodu"]))->results();
+			foreach( $stok_hareket_detaylari as $hareket ){
+				$StokHareket = new StokHareket($hareket["hareket_id"]);
+				if( $StokHareket->is_ok() && $StokHareket->get_details("durum") == 1 ){
+					if( $StokHareket->get_details("tip") == "Giriş"){
+						$alislar += $hareket["miktar"];
+					} else {
+						$satislar += $hareket["miktar"];
+					}
+				}
+			}
+			
+			return $alislar - $satislar;
+		}
 
 		// fiş fatura yazarken stok karti eklendiginde, kullaniciya verilen son fiyati alma
 		public function cari_fiyat_gecmisi( Cari $Cari, $fis_turu ){
@@ -156,15 +192,10 @@
 
 		}
 
-		public function stok_verilerini_cikar(){
-			
-		}
-
-
 
 		// fatura / fişe eklemede stok islemleri
 		// kdv dahil sadece mağaza satışlarında anlamlı
-		public function faturaya_ekle( $fatura_id, $fis_turu, $birim_fiyat, $kdv, $miktar, $toplam, $yer, $kdv_dahil  ){
+		public function faturaya_ekle( $fatura_id, $fis_turu, $birim_fiyat, $kdv, $miktar, $birim, $toplam, $yer, $kdv_dahil  ){
 			$fis = false;
 			if( $fis_turu == Fatura::$ALIS || $fis_turu == Fatura::$GR_ALIS ){
 				// stoğa ekliyoruz
@@ -181,10 +212,11 @@
 				"fatura_id" 	=> $fatura_id,
 				"stok_kodu" 	=> $this->details["stok_kodu"],
 				"stok_adi"		=> $this->details["stok_adi"],
-				"birim_fiyat" 	=> $birim_fiyat,
-				"miktar" 		=> $miktar,
+				"birim_fiyat" 	=> Common::convert_try_reverse($birim_fiyat),
+				"miktar" 		=> Common::convert_try_reverse($miktar),
+				"birim"			=> $birim,
 				"kdv_orani" 	=> $kdv,
-				"toplam" 		=> $toplam,
+				"toplam" 		=> Common::convert_try_reverse($toplam),
 				"yer" 			=> $yer,
 				"kdv_dahil"     => $kdv_dahil
 			));
@@ -201,15 +233,18 @@
 			return true;
 		}
 
+		// @DEPRECATED
 		// direk stok hareketi objesiyle halledebilirk ?
 		public function stok_ekle( $yer, $eklenecek_miktar ){
 			return $this->stok_guncelle( $yer, ($eklenecek_miktar)  ); 
 		}
 
+		// @DEPRECATED
 		public function stok_cikar( $yer, $cikarilacak_miktar ){
 			return $this->stok_guncelle( $yer, ($cikarilacak_miktar * -1)  ); 
 		}
 
+		// @DEPRECATED
 		// yer bazlı
 		public function stok_guncelle( $yer, $islem_miktari ){
 			$eski_miktar = $this->pdo->query("SELECT * FROM " . DBT_STOK_KARTLARI_STOKLAR . " WHERE yer = ? && stok_karti = ?", array($yer, $this->details["stok_kodu"]))->results();
@@ -224,6 +259,7 @@
 			return true;
 		}
 
+		// @DEPRECATED
 		// kart tablosundaki sütunu guncelleme
 		private function toplam_stok_guncelle(){
 			$toplam = 0;
@@ -242,7 +278,7 @@
 				"hareket_id" 	=> $hareket_id,
 				"stok_kodu" 	=> $this->details["stok_kodu"],
 				"stok_adi" 		=> $this->details["stok_adi"],
-				"miktar" 		=> $miktar,
+				"miktar" 		=> Common::convert_try_reverse($miktar),
 				"yer"			=> $yer
 			));
 			if( $this->pdo->error() ){
@@ -260,7 +296,7 @@
 
 		public static function ac_arama( $term ){
 			$q = array();
-			foreach( DB::getInstance()->query("SELECT stok_adi FROM " . DBT_STOK_KARTLARI . " WHERE stok_adi LIKE ? || stok_adi LIKE ? || stok_adi LIKE ?", array("%".$term, $term."%", "%".$term."%"))->results() as $res ) $q[] = $res["stok_adi"];
+			foreach( DB::getInstance()->query("SELECT stok_adi FROM " . DBT_STOK_KARTLARI . " WHERE (stok_adi LIKE ? || stok_adi LIKE ? || stok_adi LIKE ?) && durum = ?", array("%".$term, $term."%", "%".$term."%", 1))->results() as $res ) $q[] = $res["stok_adi"];
 			return $q;
 		}
 

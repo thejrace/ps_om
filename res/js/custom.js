@@ -5054,6 +5054,7 @@ if (typeof NProgress != 'undefined') {
 	            error: function( jqXHR, textStatus, errorThrown ){
 	                console.log(textStatus);
 	                console.log(errorThrown);
+	                // console.log(data);
 	            }
 	        });
 	    },
@@ -5129,6 +5130,27 @@ if (typeof NProgress != 'undefined') {
 
 	function replaceAll(str, find, replace) {
 	    return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+	}
+
+	function input_convert_try(data){
+		data = data.toString().replace(",",".");
+		//console.log(data);
+		return data;
+	}
+
+	function input_convert_try_reverse(data){
+		data = data.toString().replace(".",",");
+		//console.log(data);
+		return data;
+	}
+
+	function convert_try_trigger(){
+        var ctry = $(".convert-try");
+        for( var k = 0; k < ctry.length; k++ ){
+            if( ctry[k].value != "" ){
+                ctry[k].value = input_convert_try_reverse( ctry[k].value );
+            }
+        }
 	}
 
 	var FormValidation = {
@@ -5259,15 +5281,18 @@ if (typeof NProgress != 'undefined') {
 			console.log( error_div );
 		},
 		numeric: function( val ){
+			val = input_convert_try(val);
 			return !isNaN(val);
 		},
 		posnum: function( val ){
+			val = input_convert_try(val);
 			// console.log( val );
 			// Bos birakilmissa true don, onu kontrol icin req() fonksiyonu var
 			if( trim(val) == "") return true;
 			return (val - 0) == val && trim( (''+val) ).length > 0 && !( val < 0 );
 		},
 		not_zero: function( val ){
+			val = input_convert_try(val);
 			return !( val <= 0 );
 		},
 		req: function( val ){
@@ -5454,7 +5479,7 @@ if (typeof NProgress != 'undefined') {
 	    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
 	        num = data.toFixed(Math.max(0, ~~n));
 
-	    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ',')) + " <span class=\"simge-tl\">&#8378;</span>";
+	    return '<cur>'+(c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ',')) + "</cur> <span class=\"simge-tl\">&#8378;</span>";
 	}
 
 	function bakiye_dt_format( _data ){
@@ -5481,6 +5506,7 @@ if (typeof NProgress != 'undefined') {
           for( var key in res.data ){
               if( exc_keys.indexOf(key) == -1 ) $(domprefix+key).val( res.data[key] );
           }
+          convert_try_trigger();
           if( typeof cb == 'function' ) cb( res );
       });
    }

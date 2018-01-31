@@ -24,6 +24,7 @@
                </li>
             </ul>
             <a class="btn btn-success" href="<?php echo URL_CARI_DUZENLE_FORM . $Cari->get_details("id") ?>" target="_blank"><i class="fa fa-edit m-right-xs"></i> Düzenle</a>
+            <button type="button" class="btn btn-danger cari-sil" ><i class="fa fa-remove m-right-xs"></i> Sil</button>
             <br />
          </div>
       </div>
@@ -121,7 +122,7 @@
 <script type="text/javascript">
    $(document).ready(function(){
 
-       var bakiye = <?php echo $Cari->get_details("bakiye") ?>,
+       var bakiye = <?php echo $Cari->bakiye_hesapla() ?>,
            bakiye_elem = $(".bakiye-tm");
 
        bakiye_elem.html( bakiye_dt_format(bakiye));
@@ -207,7 +208,20 @@
        // ayni anda init edince ikinci sıçıyor o yuzden delay koydum !! daha önceden çalışıyodu, sebebini bulmak lazim
 
 
-       
+        $(".cari-sil").click(function(){
+            var c = confirm("Cariyi silmek istediğinize emin misiniz?");
+            if( c ){
+                REQ.ACTION("", { req:'cari_sil'}, function(res){
+                    if( res.ok ){
+                        PamiraNotify("success", "İşlem Başarılı", res.text );
+                        setTimeout(function(){ location.reload(); }, 1000);
+                    } else {
+                        PamiraNotify("error", "Hata", res.text );
+                    }
+                });
+            }
+            
+        });
 
         $(document).on("click", ".f_incele", function(){
             window.open("<?php echo URL_FATURA_INCELE ?>"+$(this).parent().parent().find("td").get(0).innerText, "_blank");

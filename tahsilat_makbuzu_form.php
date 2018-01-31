@@ -4,12 +4,14 @@
 	require CLASS_DIR . "Input.php";
 	require CLASS_DIR . "Cari.php";
 	require CLASS_DIR . "RKod.php";
+	require CLASS_DIR . "Fatura.php";
+	require CLASS_DIR . "TahsilatMakbuzu.php";
 
 	if( $_POST ){
 
 		require CLASS_DIR . "InputErrorHandler.php";
 		require CLASS_DIR . "Validation.php";
-		require CLASS_DIR . "TahsilatMakbuzu.php";
+		
 
 		$OK = 1;
         $TEXT = "";
@@ -40,7 +42,8 @@
 					if( !$TahsilatMakbuzu->ekle( $Cari, Input::escape($_POST))){
 						$OK = 0;
 					} else {
-						$DATA = $Cari->get_details("yeni_bakiye");
+						$Cari = new Cari(Input::get("cari"));
+						$DATA = $Cari->bakiye_hesapla();
 					}
 					$TEXT = $TahsilatMakbuzu->get_return_text();
 					

@@ -5,7 +5,7 @@
 		public function __construct( $id = null ){
 			$this->pdo = DB::getInstance();
 			$this->dt_table = DBT_CARILER;
-			if( isset($id) ) $this->check( array("id", "unvan", "eposta", "vkn_tckn"), $id);
+			if( isset($id) ) $this->check( array("id", "unvan"), $id);
 		}
 		
 		public function ekle( $input ){
@@ -34,7 +34,6 @@
 				"iban"						=> $input["cari_iban"],
 				"vkn_tckn"					=> $input["cari_vkn_tckn"],
 				"vergi_dairesi" 			=> $input["cari_vergi_dairesi"],
-				"bakiye" 					=> 0,
 				"durum"						=> 1,
 				"eklenme_tarihi"			=> Common::get_current_datetime(),
 				"son_duzenlenme_tarihi"		=> Common::get_current_datetime()
@@ -48,7 +47,10 @@
 						return false;
 					}
 				}
-			}
+			}	
+			// dt tables, formatter icin
+			$this->pdo->query("UPDATE " . $this->dt_table . " SET bakiye = ? WHERE id = ?",array( $this->details["id"], $this->details["id"]));
+
 			if( $this->pdo->error() ){
 				$this->return_text = "Bir hata oluştu.[1][".$this->pdo->get_error_message()."]";
 				return false;
@@ -154,6 +156,25 @@
 			return true;
 		}
 
+		public function sil(){
+
+			if( !User::izin_kontrol( User::$IZ_CARI_DUZENLE ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
+
+			if( count( $this->get_kesilmis_faturalar() ) > 0 ){
+				$this->return_text = "Bu cari ile işlem yapılmış. Silinemez.";
+				return false;
+			} else {
+				$this->pdo->query("UPDATE " . $this->dt_table . " SET durum = ? WHERE id = ?", array(0, $this->details["id"]));
+				$this->return_text = "Cari silindi.";
+				return true;
+			}
+		}
+
+		// @DEPRECATED
+		// artik kullanmiyoruz faturalari, tahsilatlari toplayarak çıkarıcaz ( 31.01.2018 )
 		public function bakiye_guncelle( $fis_turu, $miktar ){
 			if( class_exists("Fatura") ){
 				if( $fis_turu == Fatura::$ALIS || $fis_turu == Fatura::$GR_ALIS ){
@@ -190,6 +211,40 @@
 			return true;
 		}
 
+		public function bakiye_hesapla(){
+
+			// faturalari bul
+			$faturalar = $this->get_kesilmis_faturalar();
+			$fatura_alacak = 0;
+			$fatura_verecek = 0;
+			$makbuz_alinanlar = 0;
+			$makbuz_verilenler = 0;
+			foreach( $faturalar as $fatura ){
+				$Fatura = new Fatura( $fatura["id"] );
+				if( $Fatura->is_ok() && $Fatura->get_details("durum") == 1 ){
+					if( $Fatura->get_details("fis_turu") == Fatura::$GR_ALIS || $Fatura->get_details("fis_turu") == Fatura::$ALIS ){
+						$fatura_verecek += $Fatura->get_details("genel_toplam");
+					} else if( $Fatura->get_details("fis_turu") == Fatura::$GR_SATIS || $Fatura->get_details("fis_turu") == Fatura::$SATIS ){
+						$fatura_alacak += $Fatura->get_details("genel_toplam");
+					}
+				}
+			}
+			// tahsilat makbuzlarini hesapla
+			$makbuzlar = $this->pdo->query("SELECT * FROM " . DBT_TAHSILAT_MAKBUZLARI . " WHERE cari_id = ? && durum = ?", array( $this->details["id"], 1 ) )->results();
+			foreach( $makbuzlar as $makbuz_item ){
+				$Makbuz = new TahsilatMakbuzu($makbuz_item["id"]);
+				if( $Makbuz->is_ok() && $Makbuz->get_details("durum") == 1 ){
+					if( $Makbuz->get_details("tip") == TahsilatMakbuzu::$ODEME ){
+						$makbuz_verilenler += $Makbuz->get_details("tutar");
+					} else if( $Makbuz->get_details("tip") == TahsilatMakbuzu::$TAHSILAT ){
+						$makbuz_alinanlar += $Makbuz->get_details("tutar");
+					}
+				}
+			}
+			$kalan_odemeler = $fatura_verecek - $makbuz_verilenler;
+			$kalan_alacaklar = $fatura_alacak - $makbuz_alinanlar;
+			return $kalan_alacaklar - $kalan_odemeler;
+		}
 
 		public function item_kayit_ekle( $item_tip, $item_id ){
 			$this->pdo->insert(DBT_ITEM_CARI_KAYITLARI, array(
@@ -219,9 +274,9 @@
 
 		public function get_kesilmis_faturalar( $tur = null  ){
 			if( !isset($tur) ){
-				return $this->pdo->query("SELECT * FROM " . DBT_FATURALAR . " WHERE cari_id = ? ORDER BY duzenlenme_tarihi DESC" . $limit, array( $this->details["id"] ) )->results();
+				return $this->pdo->query("SELECT * FROM " . DBT_FATURALAR . " WHERE cari_id = ? && durum = ? ORDER BY duzenlenme_tarihi DESC", array( $this->details["id"], 1 ) )->results();
 			} else {
-				return $this->pdo->query("SELECT * FROM " . DBT_FATURALAR . " WHERE cari_id = ? && fis_turu = ? ORDER BY duzenlenme_tarihi DESC", array( $this->details["id"], $tur ) )->results();
+				return $this->pdo->query("SELECT * FROM " . DBT_FATURALAR . " WHERE cari_id = ? && fis_turu = ? && durum = ? ORDER BY duzenlenme_tarihi DESC ", array( $this->details["id"], $tur, 1 ) )->results();
 			}
 		}
 
@@ -229,13 +284,10 @@
 			return $this->pdo->query("SELECT * FROM " . DBT_CARI_YETKILILER . " WHERE cari_id = ?", array($this->details["id"]))->results();
 		}
 
-		public function sil(){
-
-		}
 
 		public static function ac_arama( $term ){
 			$q = array();
-			foreach( DB::getInstance()->query("SELECT unvan FROM " . DBT_CARILER . " WHERE unvan LIKE ? || unvan LIKE ? || unvan LIKE ?", array("%".$term, $term."%", "%".$term."%"))->results() as $res ) $q[] = $res["unvan"];
+			foreach( DB::getInstance()->query("SELECT unvan FROM " . DBT_CARILER . " WHERE (unvan LIKE ? || unvan LIKE ? || unvan LIKE ?) && durum = ?", array("%".$term, $term."%", "%".$term."%", 1))->results() as $res ) $q[] = $res["unvan"];
 			return $q;
 		}
 

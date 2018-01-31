@@ -15,18 +15,24 @@
 				return false;
 			}
 
-			$kontrol = $this->pdo->query("SELECT * FROM " . $this->dt_table . " WHERE fis_no = ?", array($input["fis_no"]))->count();
-			if($kontrol > 0 ){
-				$this->return_text = "Bu fiş nolu stok hareketi daha önceden yapılmış.";
-				return false;
+			if( isset($input["fis_no"]) && $input["fis_no"] != 0 ){
+				$kontrol = $this->pdo->query("SELECT * FROM " . $this->dt_table . " WHERE fis_no = ?", array($input["fis_no"]))->count();
+				if($kontrol > 0 ){
+					$this->return_text = "Bu fiş nolu stok hareketi daha önceden yapılmış.";
+					return false;
+				}
+				$fis_no = $input["fis_no"];
+			} else {
+				$fis_no = 0;
 			}
+			
 
 			$this->pdo->insert($this->dt_table, array(
 				"tip" 					=> $input["tip"],
 				"user" 					=> User::get_data("user_id"),
 				"tarih" 				=> Common::date_reverse($input["tarih"]),
 				"eklenme_tarihi" 		=> Common::get_current_datetime(),
-				"fis_no" 				=> $input["fis_no"]
+				"fis_no" 				=> $fis_no
 			));
 			if($this->pdo->error()){
 				$this->return_text = "Bir hata oluştu.[1][".$this->pdo->get_error_message()."]";
@@ -57,6 +63,7 @@
 					$StokKarti = new StokKarti();
 					$kart_data = array(
 						"stok_adi" 		=> $data_array[0],
+						"stok_kodu" 	=> "",
 						"urun_grubu" 	=> "Tanımsız", // def
 						"satis_fiyati" 	=> 0,
 						"alis_fiyati" 	=> 0,
@@ -72,7 +79,7 @@
 					$StokKarti = new StokKarti( $data_array[0] );
 				}
 
-				$StokKarti->stok_guncelle( $data_array[2], (double)$data_array[1] * $miktar_carpan );
+				//$StokKarti->stok_guncelle( $data_array[2], (double)$data_array[1] * $miktar_carpan );
 				$StokKarti->stok_hareket_detay_ekle( $this->details["id"], (double)$data_array[1], $data_array[2] );
 			}
 
@@ -82,7 +89,7 @@
 
 		public function duzenle( $input ){
 
-			if( !User::izin_kontrol( User::$IZ_STOK_HAREKET_GIRIS_CIKIS ) ){
+			if( !User::izin_kontrol( User::$IZ_STOK_HAREKET_DUZENLEME ) ){
 				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
 				return false;
 			}
@@ -128,7 +135,9 @@
 					$fark = 0;
 					foreach( $kayitli_urunler as $kayitli_urun ){
 						if( $kayitli_urun["id"] == $data_array[3] ){
-							$fark = (int)$kayitli_urun["miktar"] - (int)$data_array[1];
+							$this->pdo->query("UPDATE " . DBT_STOK_HAREKETLERI_URUNLER . " SET miktar = ? WHERE id = ?", array( $data_array[1], $kayitli_urun["id"] ));
+
+							/*$fark = (int)$kayitli_urun["miktar"] - (int)$data_array[1];
 							if( $fark < 0 ){
 								// yeni miktar daha fazla
 								// giriş yapılıyorsa stoğa farkı ekle
@@ -147,7 +156,8 @@
 								} else {
 									$StokKarti->stok_guncelle( $data_array[2], $fark * -1 );
 								}
-							}	
+							}	*/
+
 							break;
 						}
 					}
@@ -166,6 +176,7 @@
 						$StokKarti = new StokKarti();
 						$kart_data = array(
 							"stok_adi" 		=> $data_array[0],
+							"stok_kodu" 	=> "",
 							"urun_grubu" 	=> "Tanımsız", // def
 							"satis_fiyati" 	=> 0,
 							"alis_fiyati" 	=> 0,
@@ -181,7 +192,7 @@
 						$StokKarti = new StokKarti( $data_array[0] );
 					}
 
-					$StokKarti->stok_guncelle( $data_array[2], (double)$data_array[1] * $miktar_carpan );
+					//$StokKarti->stok_guncelle( $data_array[2], (double)$data_array[1] * $miktar_carpan );
 					$StokKarti->stok_hareket_detay_ekle( $this->details["id"], (double)$data_array[1], $data_array[2] );
 				}				
 			}
@@ -194,6 +205,30 @@
 			}
 
 			$this->return_text = "Stok hareketi güncellendi.";
+			return true;
+		}
+
+		public function sil(){
+
+			if( !User::izin_kontrol( User::$IZ_STOK_HAREKET_SILME ) ){
+				$this->return_text = "Bu işlemi yapmaya yetkiniz yok.";
+				return false;
+			}
+
+			$this->pdo->query("UPDATE " . $this->dt_table . " SET durum = ? WHERE id = ?", array( 0, $this->details["id"]));
+			foreach( $this->get_urunler() as $urun ){
+				$StokKarti = new StokKarti( $urun["stok_kodu"] );
+				if( !$StokKarti->is_ok() ) continue;
+				if( $this->details["tip"] == "Giriş" ){
+					// giriş silinirse, eklenenleri stoktan düş
+					//$StokKarti->stok_guncelle( $urun["yer"], $urun["miktar"] * -1 );
+				} else {
+					// cikis iptalse, cikanlari geri ekle
+					//$StokKarti->stok_guncelle( $urun["yer"], $urun["miktar"] );
+				}
+				$this->pdo->query("UPDATE " . DBT_STOK_HAREKETLERI_URUNLER . " SET durum = ? WHERE id = ?", array( 0, $urun["id"]));
+			}
+			$this->return_text = "Stok hareketi silindi.";
 			return true;
 		}
 

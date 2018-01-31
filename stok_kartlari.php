@@ -10,6 +10,9 @@
 
 		require CLASS_DIR . 'SSP.php';
 		require CLASS_DIR . 'UrunGrubu.php';
+		require CLASS_DIR . 'Fatura.php';
+		require CLASS_DIR . 'StokHareket.php';
+		require CLASS_DIR . 'StokKarti.php';
 
 		$DATA_TABLES_ROWS = array(
 			"primary_key" 	=> "id",
@@ -23,7 +26,10 @@
 				}),
 			    array( 'db' => 'satis_fiyati',  'dt' => 3 ),
 			    array( 'db' => 'kdv_dahil',    	'dt' => 4 ),
-			    array( 'db' => 'stok_miktar',  	'dt' => 5 ),
+			    array( 'db' => 'stok_miktar',  	'dt' => 5, 'formatter' => function($d, $row){
+			    	$StokKarti = new StokKarti( $d );
+			    	return $StokKarti->stok_detaylari_cikar();
+			    }),
 			    array( 'db' => 'birim',  		'dt' => 6 )
 		    )
 		);

@@ -10,8 +10,8 @@
 		define("RES_VENDORS_DIR", MAIN_DIR . "res/vendors/");
 
 
-		define("MAIN_URL", "http://localhost/pamira_stone/");
-		//define("MAIN_URL", "http://filmograf.com.tr/pamira_stone/");
+		//define("MAIN_URL", "http://localhost/pamira_stone/");
+		define("MAIN_URL", "http://filmograf.com.tr/pamira_stone/");
 
 
 		define("URL_CARILER", MAIN_URL . "cariler.php");
@@ -21,6 +21,7 @@
 
 		define("URL_FATURALAR", MAIN_URL . "faturalar.php");
 		define("URL_FATURA_FORM", MAIN_URL . "fatura_form.php");
+		define("URL_FATURA_DUZENLE", MAIN_URL . "fatura_form.php?item_id=");
 		define("URL_FATURA_FORM_ALIS", URL_FATURA_FORM . "?tur=1");
 		define("URL_FATURA_FORM_SATIS", URL_FATURA_FORM . "?tur=2");
 		define("URL_SATIS_FISI_FORM", URL_FATURA_FORM . "?tur=3");
@@ -79,10 +80,10 @@
 
 
 		// PC local
-		define("DB_NAME", "pamira_stone");
+		/*define("DB_NAME", "pamira_stone");
 		define("DB_USER", "root");
 		define("DB_PASS", "Dogansaringulu9");
-		define("DB_IP", "localhost:3306");
+		define("DB_IP", "localhost:3306");*/
 
 		// hosting
 		/*define("DB_NAME", "pamira_stone");
@@ -91,10 +92,15 @@
 		define("DB_IP", "94.73.147.252");*/
 
 		// radore hosting
-		/*define("DB_NAME", "db037816");
+		define("DB_NAME", "db037816");
 		define("DB_USER", "user037816");
 		define("DB_PASS", "WAzzabii308*");
-		define("DB_IP", "mysql.local.radorehosting.com");*/
+		define("DB_IP", "mysql.local.radorehosting.com");
+
+		/*
+			15814
+			Hlmknbr73-
+		*/
 
 
 		define("DBT_CARILER", "cariler");
@@ -138,9 +144,6 @@
 		} else {
 			// diger sayfalarda giris yapilmamissa login sayfasına yönlendir
 			if( !User::remember() ) header("Location: ".URL_LOGIN);
-
-			require CLASS_DIR . "Pamira.php";
-			Pamira::istatistikleri_al();
 			
 			User::$IZINLER_TEMPLATE = array(
 				User::$SEVIYE_MUHASEBE => array(
@@ -169,7 +172,9 @@
 					User::$IZ_ODEMELER_GORUNTULEME,
 					User::$IZ_STOK_HAREKETLERI_GORUNTULEME,
 					User::$IZ_STOK_HAREKET_GIRIS_CIKIS,
-					User::$IZ_MAGAZA_SATISLARI_GORUNTULEME
+					User::$IZ_MAGAZA_SATISLARI_GORUNTULEME,
+					User::$IZ_STOK_HAREKET_DUZENLEME,
+					User::$IZ_STOK_HAREKET_SILME
 				),
 				User::$SEVIYE_NORMAL => array(
 					User::$IZ_CARILER_GORUNTULEME,
@@ -209,7 +214,9 @@
 					User::$IZ_ODEMELER_GORUNTULEME,
 					User::$IZ_STOK_HAREKETLERI_GORUNTULEME,
 					User::$IZ_STOK_HAREKET_GIRIS_CIKIS,
-					User::$IZ_MAGAZA_SATISLARI_GORUNTULEME
+					User::$IZ_MAGAZA_SATISLARI_GORUNTULEME,
+					User::$IZ_STOK_HAREKET_DUZENLEME,
+					User::$IZ_STOK_HAREKET_SILME
 				)
 
 			);

@@ -17,6 +17,10 @@
 		    return preg_split('/(?<=\G.{'.$len.'})/u', $str,-1,PREG_SPLIT_NO_EMPTY);
 		}
 
+		public function convert_try_reverse( $data ){
+			return str_replace(",", ".", $data);
+		}
+
 		public function date_reverse( $date ){
 			if( trim($date) == "" ) return null;
 			$tarih_parcala = explode( "-", $date );
